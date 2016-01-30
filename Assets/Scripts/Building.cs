@@ -10,23 +10,37 @@ public class Building : MonoBehaviour {
     
     public GameObject[] buildingStates;
 
-    public Building(float h, float w, int hp)
+    public Building(float h, float w, int hp, bool flipped)
     {
         health = hp;
         totalHealth = health;
         height = h;
         width = w;
-        transform.localScale = new Vector3(w, h, 1);
+        if (flipped)
+        {
+            transform.localScale = new Vector3(-w, h, 1);
+        }
+        else
+        {
+            transform.localScale = new Vector3(w, h, 1);
+        }
         setState(0);
     }
 
-    public void setProperties(float h, float w, int hp)
+    public void setProperties(float h, float w, int hp, bool flipped)
     {
         health = hp;
         totalHealth = health;
         height = h;
         width = w;
-        transform.localScale = new Vector3(w, h, 1);
+        if (flipped)
+        {
+            transform.localScale = new Vector3(-w, h, 1);
+        }
+        else
+        {
+            transform.localScale = new Vector3(w, h, 1);
+        }
         setState(0);
     }
 
@@ -52,12 +66,14 @@ public class Building : MonoBehaviour {
 
     public void lowerHealth(int hp)
     {
+        Debug.Log("Health: " + health + ", total: " + totalHealth);
         health -= hp;
         if (health < 0)
         {
             health = 0;
         }
-        float percent = health / totalHealth;
+        float percent = 1.0f * health / totalHealth;
+        Debug.Log("Percent: " + percent);
         int tier = Mathf.CeilToInt(percent * buildingStates.Length);
         setState(buildingStates.Length - tier);
     }
