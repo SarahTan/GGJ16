@@ -18,6 +18,7 @@ public class Hero : MonoBehaviour {
         RIGHT
     }
 
+    public Animator animatorController;
     public Sprite[] spriteList;
     
     private SpriteRenderer _spriteRenderer;
@@ -160,6 +161,7 @@ public class Hero : MonoBehaviour {
 
     IEnumerator move(Vector3 final)
     {
+        animatorController.SetBool("Walk", true);
         while ((transform.position - final).magnitude > 0.1f)
         {
             transform.localScale *= 0.95f;
@@ -168,6 +170,7 @@ public class Hero : MonoBehaviour {
         }
         transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
         moving = false;
+        animatorController.SetBool("Walk", false);
     }
 
     // Snap to position
@@ -199,14 +202,17 @@ public class Hero : MonoBehaviour {
     }    
     IEnumerator MoveToNextQueue(Vector3 final) {
         // Start walking animation
+        animatorController.SetBool("Walk", true);
         while ((transform.localPosition - final).magnitude > 0.1f) {
             transform.localPosition = Vector3.MoveTowards(transform.localPosition, final, 0.1f);
             yield return null;
         }
         // Stop walking animation
+        animatorController.SetBool("Walk", false);
     }
     IEnumerator MoveToCenterQueue() {
         // Start walking animation
+        animatorController.SetBool("Walk", true);
         while ((transform.localPosition - Vector3.zero).magnitude > 0.1f) {
             transform.localPosition = Vector3.MoveTowards(transform.localPosition, Vector3.zero, 0.1f);
             Vector3 scale = transform.localScale * 1.05f;
@@ -217,6 +223,7 @@ public class Hero : MonoBehaviour {
             yield return null;
         }
         // Stop walking animation
+        animatorController.SetBool("Walk", false);
     }
     private void SetAlpha(float alpha) {
         Color spriteColor = _spriteRenderer.color;

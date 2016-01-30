@@ -8,6 +8,8 @@ public class HeroManager {
         TYPE_1,
         TYPE_2,
         TYPE_3,
+        TYPE_4,
+        TYPE_5,
         SIZE
     }
     public enum HERO_POWER {
@@ -51,6 +53,8 @@ public class HeroManager {
         _heroPrefab[(int)HERO_TYPE.TYPE_1] = Resources.Load("Prefabs/Hero1") as GameObject;
         _heroPrefab[(int)HERO_TYPE.TYPE_2] = Resources.Load("Prefabs/Hero2") as GameObject;
         _heroPrefab[(int)HERO_TYPE.TYPE_3] = Resources.Load("Prefabs/Hero3") as GameObject;
+        _heroPrefab[(int)HERO_TYPE.TYPE_4] = Resources.Load("Prefabs/Hero4") as GameObject;
+        _heroPrefab[(int)HERO_TYPE.TYPE_5] = Resources.Load("Prefabs/Hero5") as GameObject;
 
         _powerLevelList = new int[(int)HERO_POWER.SIZE];
         _powerLevelList[(int)HERO_POWER.POWER_SHIT] = -1;
