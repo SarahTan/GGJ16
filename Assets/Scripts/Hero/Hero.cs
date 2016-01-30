@@ -160,7 +160,7 @@ public class Hero : MonoBehaviour {
     {
         side = s;
         moving = true;
-        StartCoroutine(move(transform.position + Vector3.up * 3));
+        StartCoroutine(move(transform.position + Vector3.up * 1.5f));
     }
 
     IEnumerator move(Vector3 final)
