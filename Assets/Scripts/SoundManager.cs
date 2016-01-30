@@ -1,7 +1,8 @@
 //@
 // Sound Manager.
+// for Global Game Jam 2016 
 
-// Updated 2015.11.23
+// Updated 2016.01.29
 // Hill Lu
 //-----------------------------------------------------
 
@@ -19,6 +20,8 @@ public enum  BGMStage
 
 public enum SFXType
 {
+    SYSTEM_CORRECT = 0,
+    SYSTEM_ERROR = 1
     //define Sound Effect type here
 }
 
@@ -55,9 +58,6 @@ public class SoundManager : Singleton<SoundManager>
 
     SoundParam[] bgm = new SoundParam[bgmAmount];   
     SoundParam[][] sfx = new SoundParam[sfxAmount][];
-
-    
-
 
     SoundParam currentBGMsp;
     bool startFallingPitch = false;
@@ -108,8 +108,8 @@ public class SoundManager : Singleton<SoundManager>
 
     void Update()
     {
-        if (Input.GetKeyDown("b")) bgmPlay(BGMStage.BGM);
-        if (Input.GetKeyDown("s")) bgmStop();
+        //if (Input.GetKeyDown("b")) bgmPlay(BGMStage.BGM);
+        //if (Input.GetKeyDown("s")) bgmStop();
     }
 
     //Initialize SFX Param (volumn and pitch of each clip)
