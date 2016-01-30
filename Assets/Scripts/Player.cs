@@ -47,8 +47,13 @@ public class Player : MonoBehaviour {
             _inputController.registerTrigger(() => _comboManager.CheckKey(index, ComboManager.Direction.LEFT), keys[1]);
             _inputController.registerTrigger(() => _comboManager.CheckKey(index, ComboManager.Direction.DOWN), keys[2]);
             _inputController.registerTrigger(() => _comboManager.CheckKey(index, ComboManager.Direction.RIGHT), keys[3]);        
+
     }
 
+    public void triggerDirection(int player, ComboManager.Direction dir)
+    {
+        _comboManager.CheckKey(player, dir);
+    }
 
     public void ComboResult(bool pass)
     {

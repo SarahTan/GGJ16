@@ -264,6 +264,20 @@ public class InputController : Singleton<InputController> {
             case "Right":
             case "right":
                 return KeyCode.RightArrow;
+            case "ENTER":
+            case "enter":
+            case "Enter":
+            case "RETURN":
+            case "return":
+            case "Return":
+                return KeyCode.Return;
+            case "Spacebar":
+            case "SPACEBAR":
+            case "spacebar":
+            case "SPACE":
+            case "space":
+            case "Space":
+                return KeyCode.Space;
             case "MOUSE RIGHT":
             case "Mouse Right":
             case "mouse right":

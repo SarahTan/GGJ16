@@ -4,6 +4,11 @@ using System.Collections;
 
 public class HeroManager {
 
+    public enum HERO_TYPE {
+        TYPE_1,
+        TYPE_2,
+        SIZE
+    }
     public enum HERO_POWER {
         POWER_SHIT,
         POWER_1,
@@ -13,7 +18,7 @@ public class HeroManager {
         SIZE
     }
 
-    private static int HERO_LIMIT = 15;
+    public static int HERO_LIMIT = 15;
 
     private List<Hero> _heroList;
     private Hero _currentHero;
@@ -38,8 +43,9 @@ public class HeroManager {
             _heroParent.localScale = new Vector3(-1, 1, 1);
         }
 
-        _heroPrefab = new GameObject[(int)Hero.HERO_TYPE.SIZE];
-        _heroPrefab[(int)Hero.HERO_TYPE.TYPE_A] = Resources.Load("Prefabs/Hero1") as GameObject;
+        _heroPrefab = new GameObject[(int)HERO_TYPE.SIZE];
+        _heroPrefab[(int)HERO_TYPE.TYPE_1] = Resources.Load("Prefabs/Hero1") as GameObject;
+        _heroPrefab[(int)HERO_TYPE.TYPE_2] = Resources.Load("Prefabs/Hero2") as GameObject;
 
         _powerLevelList = new int[(int)HERO_POWER.SIZE];
         _powerLevelList[(int)HERO_POWER.POWER_SHIT] = -1;
@@ -65,9 +71,9 @@ public class HeroManager {
         NextHero();
     }
 
-    public void UpdatePose(Hero.HERO_POSE heroPose) {
+    public void UpdatePose(ComboManager.Direction poseDirection) {
         if(_currentHero != null) {
-            _currentHero.UpdatePose(heroPose);
+            _currentHero.UpdatePose(poseDirection);
         }
     }
 
@@ -90,7 +96,7 @@ public class HeroManager {
         _heroList.Add(GenerateHero());
     }
     private Hero GenerateHero() {
-        int randomHeroNumber = Random.Range(0, (int)Hero.HERO_TYPE.SIZE);
+        int randomHeroNumber = Random.Range(0, (int)HERO_TYPE.SIZE);
 
         GameObject heroObject = Object.Instantiate(_heroPrefab[randomHeroNumber]) as GameObject;
         heroObject.transform.SetParent(_heroParent);        
