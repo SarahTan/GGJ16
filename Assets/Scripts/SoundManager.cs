@@ -47,6 +47,8 @@ public class SoundManager : Singleton<SoundManager>
     public AudioSource bgmAS;
     public AudioSource[] dialogAS;
 
+
+    public AudioClip[] dialogC;
     //claim AudioClip here
 
     const int bgmAmount = 0;//setnum
@@ -55,6 +57,18 @@ public class SoundManager : Singleton<SoundManager>
 
     SoundParam[] bgm = new SoundParam[bgmAmount];   
     SoundParam[][] sfx = new SoundParam[sfxAmount][];
+
+    
+
+
+    SoundParam currentBGMsp;
+    bool startFallingPitch = false;
+    bool startRisingPitch = false;
+    bool isInSlowMotion;
+    bool canRemoveNow = true;
+    bool soundManagerEffective = true;
+
+    List<GameObject> sfxToBeRemove = new List<GameObject>();
 
     //A class used for regularizing audios' parameters
     class SoundParam
@@ -106,17 +120,17 @@ public class SoundManager : Singleton<SoundManager>
         //bgm initiate
 
         //sfx initiate[]
-        for (j = 0; j <= sfxAmount - 1; j++)
-        {
-            if (j == (int)SFXType.ROBOT_JET)
-            {
-                //define exceptions of sound effects that has multiple clips.
-            }
-            else
-            {
-                sfx[j] = new SoundParam[1];
-            }
-        }
+        //for (j = 0; j <= sfxAmount - 1; j++)
+        //{
+        //    if (j == (int)SFXType.ROBOT_JET)
+        //    {
+        //        define exceptions of sound effects that has multiple clips.
+        //    }
+        //    else
+        //    {
+        //        sfx[j] = new SoundParam[1];
+        //    }
+        //}
             //sfx initiate[][]
 
     }
@@ -127,7 +141,7 @@ public class SoundManager : Singleton<SoundManager>
     {
         Debug.Log("Play BGM");
         StartCoroutine(CoRoutineBgmPlay(bgmAS, stage, 10f, 10f));
-        currentBGMsp = bgm[(int)stage];
+        //currentBGMsp = bgm[(int)stage];
     }
 
     IEnumerator CoRoutineBgmPlay(AudioSource audioS, BGMStage stage, float fadeOutSpeed, float fadeInSpeed)
@@ -164,32 +178,6 @@ public class SoundManager : Singleton<SoundManager>
         AudioPlay(sp.clip, sfxManager, sp.volumn, randomPitch);
     }
 
-    public void sfxPlay3D(SFXType type, Transform colliderGOT)
-    {
-        //Debug.Log("Play SFX3D");
-        GameObject go;
-        AudioSource goAS = new AudioSource();
-        SoundParam sp = new SoundParam();
-        int randomSP;
-        float randomPitch;
-
-        randomSP = Random.Range(0, sfx[(int)type].Length);
-
-        //Debug.Log("start inistantiate 3d sfx");
-        //Set parameters of 3D sound game object and save them as prefabs
-        go = Instantiate(sfxExplosionGO, colliderGOT.position, colliderGOT.rotation) as GameObject;
-        go.transform.parent = sfxManager;
-        sp = sfx[(int)type][randomSP];
-
-        goAS = go.GetComponent<AudioSource>();
-        randomPitch = Random.Range(sp.pitch, sp.pitchUpperBound);
-        goAS.clip = sp.clip;
-        goAS.loop = false;
-        goAS.Play();
-
-        StartCoroutine(AudioDestory(go,goAS.clip.length));
-        //Destroy(go, goAS.clip.length);
-    }
 
 
     //dialog
