@@ -11,8 +11,11 @@ public class GameManager : Singleton<GameManager> {
     public const float BUILDING_Z_INDEX = 0;
     public const float PLAYERS_Z_INDEX = -1;
 
+    public Vector3[] PLAYER_HERO_CENTER;
+
     void Awake()
     {
+        PLAYER_HERO_CENTER = new Vector3[]{new Vector3(-4, -1f, 0), new Vector3(4, -1f, 0) };
         Player player1 = new Player(0);
         Player player2 = new Player(1);
         players = new Player[2];
