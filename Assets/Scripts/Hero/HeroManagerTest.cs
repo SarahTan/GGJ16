@@ -13,11 +13,5 @@ public class HeroManagerTest : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	    if(Input.GetButtonDown("Fire1")) {
-            heroManager.SendOutHero(HeroManager.HERO_POWER.POWER_1);
-        }
-        if (Input.GetButtonDown("Fire2")) {
-            heroManager.UpdatePose(ComboManager.Direction.UP);
-        }
     }
 }
