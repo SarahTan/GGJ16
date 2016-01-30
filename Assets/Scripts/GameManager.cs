@@ -14,6 +14,15 @@ public class GameManager : Singleton<GameManager> {
 
     public Vector3[] PLAYER_HERO_CENTER;
 
+    public enum GameState
+    {
+        Menu,
+        Ready,
+        Playing,
+        End,
+        Pause
+    }
+
     void Awake()
     {
         PLAYER_HERO_CENTER = new Vector3[]{new Vector3(-4, -1f, 0), new Vector3(4, -1f, 0) };

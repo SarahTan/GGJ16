@@ -7,6 +7,7 @@ public class HeroManager {
     public enum HERO_TYPE {
         TYPE_1,
         TYPE_2,
+        TYPE_3,
         SIZE
     }
     public enum HERO_POWER {
@@ -49,6 +50,7 @@ public class HeroManager {
         _heroPrefab = new GameObject[(int)HERO_TYPE.SIZE];
         _heroPrefab[(int)HERO_TYPE.TYPE_1] = Resources.Load("Prefabs/Hero1") as GameObject;
         _heroPrefab[(int)HERO_TYPE.TYPE_2] = Resources.Load("Prefabs/Hero2") as GameObject;
+        _heroPrefab[(int)HERO_TYPE.TYPE_3] = Resources.Load("Prefabs/Hero3") as GameObject;
 
         _powerLevelList = new int[(int)HERO_POWER.SIZE];
         _powerLevelList[(int)HERO_POWER.POWER_SHIT] = -1;
@@ -64,37 +66,41 @@ public class HeroManager {
             AddHero();
         }
 
-        MoveHeroPositions();
-        _currentHero.MoveToCenter();
+        _currentHero.SetToCenter();
     }
 
     public void PowerUp(HERO_POWER heroPower)
     {
         _currentHero.PowerUp(_powerLevelList[(int)heroPower]);
     }
-
-    public void SendOutHero() {
-        // Send out the hero based on whether its a success or failure
-        _currentHero.moveToPlayingField();
-        _gameManager.players[_playerNum].heroList.Add(_currentHero);
-        NextHero();
-    }
-
     public void UpdatePose(ComboManager.Direction poseDirection) {
-        if(_currentHero != null) {
+        if (_currentHero != null) {
             _currentHero.UpdatePose(poseDirection);
         }
     }
-    
+
+    public void SendOutHero() {
+        // Send out the hero based on whether its a success or failure
+        if (_playerNum == 0)
+        {
+            _currentHero.moveToPlayingField(Hero.Side.LEFT);
+        }
+        else
+        {
+            _currentHero.moveToPlayingField(Hero.Side.RIGHT);
+        }
+        _gameManager.players[_playerNum].heroList.Add(_currentHero);
+        NextHero();
+    }    
     private void NextHero() {
         // Remove first element in the list
         if(_heroList.Count > 0) {
             _currentHero = _heroList[0];
             _heroList.RemoveAt(0);
             _currentHero.MoveToCenter();
-        }        
-        AddHero(); // Add hero to the end of the queue
+        }
         MoveHeroPositions();
+        AddHero(); // Add hero to the end of the queue        
     }
     private void MoveHeroPositions() {
         for (int i = 0; i < _heroList.Count; i++) {
@@ -111,6 +117,7 @@ public class HeroManager {
         heroObject.transform.SetParent(_heroParent);        
         Hero hero = heroObject.GetComponent<Hero>();
 		hero.Init(_heroList.Count);
+        hero.SetQueuePosition();
         return hero;
     }
 }

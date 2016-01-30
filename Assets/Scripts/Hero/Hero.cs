@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent (typeof (SpriteRenderer))]
 public class Hero : MonoBehaviour {
 
     public enum HERO_POSE {
@@ -12,40 +11,52 @@ public class Hero : MonoBehaviour {
         DEFAULT,
         POWER_UP,
     }
-    
+
+    public enum Side
+    {
+        LEFT,
+        RIGHT
+    }
+
     public Sprite[] spriteList;
     
     private SpriteRenderer _spriteRenderer;
-	private int _queuePosition;    
-    private int _powerLevel;
+	private int _queuePosition;
+    public int powerLevel { get; private set; }
+    private int _health;
     private float _maxQueue;
     private float _maxScale;
     private float _initXPos;
     private float _maxXPos;
 
+    public Side side;
     public bool fighting;
     public Hero target;
     public bool moving;
+    public bool dead;
 
+    private float _lastHitTime;
+    private float _attackCooldown;
+        
     void Start()
     {
+        _lastHitTime = Time.time;
         moving = false;
         fighting = false;
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
 	public void Init(int queuePosition){
 		_queuePosition = queuePosition;
-		_powerLevel = -1;
+		powerLevel = -1;
         _maxQueue = HeroManager.HERO_LIMIT;
         _maxScale = 1f;
-        _initXPos = -2.5f;
-        _maxXPos = 20f;
+        _initXPos = -1.5f;
+        _maxXPos = 15f;
         ScaleTo(0.5f * _maxScale);
     }
 
     public void UpdatePose(ComboManager.Direction poseDirection) {
-        Debug.Log("Updating psoe");
         switch (poseDirection) {
             case ComboManager.Direction.UP:
                 _spriteRenderer.sprite = spriteList[(int)HERO_POSE.UP];
@@ -64,55 +75,85 @@ public class Hero : MonoBehaviour {
         }
     }
 
-    public void moveLeft()
+    public void attack()
+    {
+        if (!dead && _lastHitTime + _attackCooldown < Time.time)
+        {
+            _lastHitTime = Time.time;
+            target.takeDamage(this, powerLevel);
+        }
+    }
+
+    public void takeDamage(Hero attacker, int amount)
+    {
+        _health -= amount;
+        if (_health <= 0)
+        {
+            Debug.Log("Dead");
+            dead = true;
+            attacker.fighting = false;
+            attacker.target = null;
+            flyOff();
+        }
+    }
+
+    private void flyOff()
+    {
+        float angle = Random.Range(30, 70) * Mathf.PI / 180;
+        if (side.Equals(Side.LEFT))
+        {
+            StartCoroutine(flyOff(new Vector3(-Mathf.Cos(angle), Mathf.Sin(angle), 0)));
+        }
+        else
+        {
+            StartCoroutine(flyOff(new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0)));
+        }
+    }
+
+    IEnumerator flyOff(Vector3 direction)
+    {
+        float totalDistance = 10f;
+        float step = 0.2f;
+        float distance = 0;
+        while (distance < totalDistance)
+        {
+            distance += step;
+            transform.position += direction * step;
+            yield return null;
+        }
+        Destroy(this.gameObject);
+    }
+
+    public void move()
     {
         if (!moving && !fighting)
         {
-            transform.position += 0.02f * Vector3.left;
+            if (side.Equals(Side.RIGHT))
+            {
+                transform.position += 0.02f * Vector3.left;
+            }
+            else
+            {
+                transform.position += 0.02f * Vector3.right;
+            }
         }
     }
 
-    IEnumerator moveLeft(float dist, float step)
-    {
-        float moved = 0;
-        while (moved < dist)
-        {
-            yield return null;
-        }
-        moving = false;
-    }
-
-    public void moveRight()
-    {
-        if (!moving && !fighting)
-        {
-            transform.position += 0.02f * Vector3.right;
-        }
-    }
-
-    IEnumerator moveRight(float dist, float step)
-    {
-        float moved = 0;
-        while (moved < dist)
-        {
-            transform.position += step * Vector3.right;
-            yield return null;
-        }
-        moving = false;
-    }
-
-    public void PowerUp(int powerLevel) {
-        _powerLevel = powerLevel;
+    public void PowerUp(int pl) {
+        powerLevel = pl;
+        _health = powerLevel;
+        _attackCooldown = 100.0f / powerLevel;
         
-        if(_powerLevel < 0) {
+        if(powerLevel < 0) {
             // If poop level, show transformation to poop
         }else{
             // Show transformation to super saiyan
         }
     }
 
-    public void moveToPlayingField()
+    public void moveToPlayingField(Side s)
     {
+        side = s;
         moving = true;
         StartCoroutine(move(transform.position + Vector3.up * 3));
     }
@@ -129,24 +170,54 @@ public class Hero : MonoBehaviour {
         moving = false;
     }
 
-
-    public void MoveToCenter() {
+    // Snap to position
+    public void SetToCenter() {
         MoveToPosition(Vector3.zero);
         ScaleTo(_maxScale);
     }    
-    public void MoveQueuePosition() {
+    public void SetQueuePosition() {
         // Move this sprite forward to the next graphical representation
         // Different representation/size for 0-x
         float ratio = (_queuePosition / _maxQueue);
         float xPosition = _initXPos - ratio * _maxXPos;
-        MoveToPosition(new Vector3(xPosition, 0, 0));
-
-        // Reduce current position
-        if (_queuePosition > 0){
-			_queuePosition--;
-		}
+        transform.localPosition = new Vector3(xPosition, 0, 0);
     }
-
+    // Move to position
+    public void MoveToCenter() {
+        StartCoroutine(MoveToCenterQueue());
+    }
+    public void MoveQueuePosition() {
+        // Move this sprite forward to the next graphical representation
+        // Different representation/size for 0-x        
+        // Reduce current position
+        if (_queuePosition > 0) {
+            _queuePosition--;
+        }
+        float ratio = (_queuePosition / _maxQueue);
+        float xPosition = _initXPos - ratio * _maxXPos;
+        StartCoroutine(MoveToNextQueue(new Vector3(xPosition, 0, 0)));
+    }    
+    IEnumerator MoveToNextQueue(Vector3 final) {
+        // Start walking animation
+        while ((transform.localPosition - final).magnitude > 0.1f) {
+            transform.localPosition = Vector3.MoveTowards(transform.localPosition, final, 0.1f);
+            yield return null;
+        }
+        // Stop walking animation
+    }
+    IEnumerator MoveToCenterQueue() {
+        // Start walking animation
+        while ((transform.localPosition - Vector3.zero).magnitude > 0.1f) {
+            transform.localPosition = Vector3.MoveTowards(transform.localPosition, Vector3.zero, 0.1f);
+            Vector3 scale = transform.localScale * 1.05f;
+            if(scale.x > _maxScale) {
+                scale.x = scale.y = scale.z = _maxScale;
+            }
+            transform.localScale = scale;
+            yield return null;
+        }
+        // Stop walking animation
+    }
     private void SetAlpha(float alpha) {
         Color spriteColor = _spriteRenderer.color;
         spriteColor.a = alpha;
