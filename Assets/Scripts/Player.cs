@@ -9,6 +9,8 @@ public class Player : MonoBehaviour {
     private GameManager _gameManager;
     private BuildingManager _buildingManager;
 
+    public const float DEPLOY_TIME = 0.5f;
+
     public int index { get; private set; }
 
 	public int seqLength;
@@ -22,7 +24,10 @@ public class Player : MonoBehaviour {
 
     public List<Hero> heroList;
 
+    private bool paused;
+
 	public Player (int i) {
+        paused = false;
 		index = i;
 		_comboManager = ComboManager.Instance;
 		_inputController = InputController.Instance;
@@ -68,31 +73,69 @@ public class Player : MonoBehaviour {
         _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.DOWN), keys[1]);
         _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.LEFT), keys[2]);
         _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.RIGHT), keys[3]);
-		Debug.Log("Key maps: " + keys[4]);
-        _inputController.registerTrigger(() => _comboManager.LockIn(index), keys[4]);
+	    _inputController.registerTrigger(() => _comboManager.LockIn(index), keys[4]);
     }
 
     public void triggerDirection(int player, ComboManager.Direction dir)
     {
-        if (_gameManager.gameState.Equals(GameManager.GameState.Playing))
+        if (!paused)
         {
-            _comboManager.CheckKey(player, dir);
-            heroManager.UpdatePose(dir);
+            if (_gameManager.gameState.Equals(GameManager.GameState.Playing))
+            {
+                _comboManager.CheckKey(player, dir);
+                heroManager.UpdatePose(dir);
+            }
         }
     }
 
     public void ComboResult(bool pass)
     {
 		// currentKey is how many keys the player has gotten correct
-		// If it's above the min req number (4), ComboManager sends true, else it sends false
-		Debug.Log("Combo result: " + pass + "!");
+        // If it's above the min req number (4), ComboManager sends true, else it sends false
+        paused = true;
+        if (pass)
+        {
+            
+            switch (currentKey)
+            {
+                case 4:
+                    heroManager.PowerUp(HeroManager.HERO_POWER.POWER_1);
+                    break;
+                case 5:
+                    heroManager.PowerUp(HeroManager.HERO_POWER.POWER_2);
+                    break;
+                case 6:
+                    heroManager.PowerUp(HeroManager.HERO_POWER.POWER_3);
+                    break;
+                case 7:
+                    heroManager.PowerUp(HeroManager.HERO_POWER.POWER_4);
+                    break;
+                case 8:
+                    heroManager.PowerUp(HeroManager.HERO_POWER.POWER_4);
+                    break;
+                default:
+                    heroManager.PowerUp(HeroManager.HERO_POWER.POWER_1);
+                    break;
+            }
 
+        }
+        else
+        {
+            heroManager.PowerUp(HeroManager.HERO_POWER.POWER_SHIT);
+        }
+
+        deploy();
+        //Invoke("deploy", DEPLOY_TIME);
+
+		// Reset this
+		currentKey = 0;
 		if (pass) {
 			// TODO: change seqLength according to whatever pattern
 			_comboManager.generateSeq (index, seqLength);	
 		} else {
 			_comboManager.generateSeq (index, seqLength);
 		}
+
 	}
 
     // Debug purposes
@@ -105,6 +148,7 @@ public class Player : MonoBehaviour {
     public void deploy()
     {
         heroManager.SendOutHero();
+        paused = false;
     }
 
     public void attack()
