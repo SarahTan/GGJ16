@@ -35,10 +35,10 @@ public class Player : MonoBehaviour {
 		Camera cam = Camera.main;
 		if (index == 0) {
 			centerPos = new Vector3 (-cam.orthographicSize * cam.aspect / 2,
-									 -cam.orthographicSize + 1, 5);
+									 -cam.orthographicSize + 1, -5);
 		} else if (index == 1) {
 			centerPos = new Vector3 (cam.orthographicSize * cam.aspect / 2,
-									 -cam.orthographicSize + 1, 5);
+									 -cam.orthographicSize + 1, -5);
 		}
 
         heroManager = new HeroManager(index, _gameManager.PLAYER_HERO_CENTER[index]);
