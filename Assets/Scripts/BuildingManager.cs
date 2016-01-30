@@ -20,6 +20,8 @@ public class BuildingManager : Singleton<BuildingManager> {
 
     public Vector3 leftBuildingAnchor = new Vector3(-7.5f, 0.5f, 0);
     public Vector3 rightBuildingAnchor = new Vector3(7.5f, 0.5f, 0);
+    public Vector3 leftBuildingBase = new Vector3(-3.5f, 0.5f, 0);
+    public Vector3 rightBuildingBase = new Vector3(3.5f, 0.5f, 0);
 
 	GameObject Player1Buildings;
 	GameObject Player2Buildings;
