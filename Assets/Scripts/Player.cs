@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
+    private ComboManager _comboManager;
+
     public int index { get; private set; }
 
 	public KeyCode[] mapping;
@@ -12,6 +14,7 @@ public class Player : MonoBehaviour {
     public Player(int i)
     {
         index = i;
+        _comboManager = ComboManager.Instance;
     }
 
 	// Use this for initialization
@@ -23,6 +26,11 @@ public class Player : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    public void assignKeys(KeyCode[] keys)
+    {
+        _comboManager.AssignKeys(index, keys);
+    }
 
 	public bool KeyIsInMapping (KeyCode key) {
 		foreach (KeyCode mapKey in mapping) {

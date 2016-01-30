@@ -4,6 +4,7 @@ using System.Collections;
 public class GameManager : Singleton<GameManager> {
 
     private BuildingManager _buildingManager;
+    private Config _config;
 
     public Player[] players { get; private set; }
 
@@ -18,6 +19,7 @@ public class GameManager : Singleton<GameManager> {
         players[0] = player1;
         players[1] = player2;
 
+        _config = Config.Instance;
         _buildingManager = BuildingManager.Instance;
 
     }
