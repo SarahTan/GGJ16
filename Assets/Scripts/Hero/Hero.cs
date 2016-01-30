@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent (typeof (SpriteRenderer))]
 public class Hero : MonoBehaviour {
 
     public enum HERO_POSE {
@@ -24,7 +23,7 @@ public class Hero : MonoBehaviour {
     private float _maxXPos;
 
     void Start() {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 	
 	public void Init(int queuePosition){
@@ -32,9 +31,9 @@ public class Hero : MonoBehaviour {
 		_powerLevel = -1;
         _maxQueue = HeroManager.HERO_LIMIT;
         _maxScale = 1f;
-        _initXPos = -2.5f;
-        _maxXPos = 20f;
-        ScaleTo(0.5f * _maxScale);        
+        _initXPos = -1.5f;
+        _maxXPos = 15f;
+        ScaleTo(0.5f * _maxScale);
     }
 
     public void UpdatePose(ComboManager.Direction poseDirection) {
@@ -82,24 +81,54 @@ public class Hero : MonoBehaviour {
         transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
     }
 
-
-    public void MoveToCenter() {
+    // Snap to position
+    public void SetToCenter() {
         MoveToPosition(Vector3.zero);
         ScaleTo(_maxScale);
     }    
-    public void MoveQueuePosition() {
+    public void SetQueuePosition() {
         // Move this sprite forward to the next graphical representation
         // Different representation/size for 0-x
         float ratio = (_queuePosition / _maxQueue);
         float xPosition = _initXPos - ratio * _maxXPos;
-        MoveToPosition(new Vector3(xPosition, 0, 0));
-
-        // Reduce current position
-        if (_queuePosition > 0){
-			_queuePosition--;
-		}
+        transform.localPosition = new Vector3(xPosition, 0, 0);
     }
-
+    // Move to position
+    public void MoveToCenter() {
+        StartCoroutine(MoveToCenterQueue());
+    }
+    public void MoveQueuePosition() {
+        // Move this sprite forward to the next graphical representation
+        // Different representation/size for 0-x        
+        // Reduce current position
+        if (_queuePosition > 0) {
+            _queuePosition--;
+        }
+        float ratio = (_queuePosition / _maxQueue);
+        float xPosition = _initXPos - ratio * _maxXPos;
+        StartCoroutine(MoveToNextQueue(new Vector3(xPosition, 0, 0)));
+    }    
+    IEnumerator MoveToNextQueue(Vector3 final) {
+        // Start walking animation
+        while ((transform.localPosition - final).magnitude > 0.1f) {
+            transform.localPosition = Vector3.MoveTowards(transform.localPosition, final, 0.1f);
+            yield return null;
+        }
+        // Stop walking animation
+    }
+    IEnumerator MoveToCenterQueue() {
+        // Start walking animation
+        while ((transform.localPosition - Vector3.zero).magnitude > 0.1f) {
+            transform.localPosition = Vector3.MoveTowards(transform.localPosition, Vector3.zero, 0.1f);
+            Vector3 scale = transform.localScale * 1.05f;
+            if(scale.x > _maxScale) {
+                scale.x = scale.y = scale.z = _maxScale;
+            }
+            transform.localScale = scale;
+            yield return null;
+        }
+        // Stop walking animation
+    }
     private void SetAlpha(float alpha) {
         Color spriteColor = _spriteRenderer.color;
         spriteColor.a = alpha;
