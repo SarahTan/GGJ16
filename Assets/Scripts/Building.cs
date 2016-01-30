@@ -74,8 +74,8 @@ public class Building : MonoBehaviour {
         }
         float percent = 1.0f * health / totalHealth;
         Debug.Log("Percent: " + percent);
-        int tier = Mathf.CeilToInt(percent * buildingStates.Length);
-        setState(buildingStates.Length - tier);
+        int tier = Mathf.CeilToInt(percent * (buildingStates.Length - 1));
+        setState((buildingStates.Length - 1) - tier);
     }
 
 	// Use this for initialization

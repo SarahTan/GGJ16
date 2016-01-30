@@ -11,8 +11,9 @@ public class BuildingManager : Singleton<BuildingManager> {
     private float _minBuildingHeight;
     private int _globalHealth;
 
-    public const int DEFAULT_BUILDING_COUNT = 11;
-    public const float DEFAULT_BUILDING_FOOTPRINT = 5;
+    public const int DEFAULT_BUILDING_COUNT = 15;
+    public const int BUILDING_MULTIPLIER = 7;
+    public const float DEFAULT_BUILDING_FOOTPRINT = 6;
     public const float DEFAULT_MAX_BUILDING_HEIGHT = 1.5f;
     public const float DEFAULT_MIN_BUILDING_FOOTPRINT = 1f;
     public const int GLOBAL_HEALTH = 1000;
@@ -22,6 +23,8 @@ public class BuildingManager : Singleton<BuildingManager> {
 
 	GameObject Player1Buildings;
 	GameObject Player2Buildings;
+
+    private int[] _damageDistribution;
     
     void Awake()
     {
@@ -111,8 +114,18 @@ public class BuildingManager : Singleton<BuildingManager> {
         _globalHealth = hp;
     }
 
-	// Use this for initialization
-	void Start () {
+    private void generateDamageDistribution()
+    {
+        _damageDistribution = new int[GLOBAL_HEALTH * 2];
+        for (int i = 0; i < _damageDistribution.Length; i++)
+        {
+            //_damageDistribution[i] = Random.Range(
+        }
+    }
+
+    // Use this for initialization
+    void Start()
+    {
         
 	}
 
@@ -126,34 +139,12 @@ public class BuildingManager : Singleton<BuildingManager> {
             buildings[1, 0] = new Building(_maxBuildingHeight, _buildingFootprint, _globalHealth, false);
             buildings[1, 0].place(rightBuildingAnchor);
         }
-        else if (_buildingCount < 7)
-        {
-            float buildingWidth = _buildingFootprint / _buildingCount;
-            float currentProgress = 0;
-            for (int i = 0; i < _buildingCount; i++)
-            {
-                bool flipped = (Random.RandomRange(1, 10) % 2 == 0);
-                float currentBuildingWidth = Random.Range(buildingWidth * 1f, buildingWidth * 1.3f);
-                float currentBuildingHeight = Random.Range(_maxBuildingHeight, _minBuildingHeight);
-                float currentBuildingDepth = Random.Range(0f, 0.2f);
-                GameObject bObj = Instantiate(Resources.Load("Prefabs/Building"), Vector3.zero, Quaternion.identity) as GameObject;
-				bObj.transform.parent = Player1Buildings.transform;
-				Building building = bObj.GetComponent<Building>();
-                building.setProperties(currentBuildingHeight, currentBuildingWidth, _globalHealth / _buildingCount, flipped);
-                buildings[0, i] = building;
-                buildings[0, i].place(leftBuildingAnchor + currentProgress * Vector3.right + currentBuildingDepth * Vector3.forward - currentBuildingHeight * Vector3.up);
-                GameObject bObj2 = Instantiate(Resources.Load("Prefabs/Building"), Vector3.zero, Quaternion.identity) as GameObject;
-				bObj2.transform.parent = Player2Buildings.transform;
-				Building building2 = bObj2.GetComponent<Building>();
-                building2.setProperties(currentBuildingHeight, currentBuildingWidth, _globalHealth / _buildingCount, flipped);
-                buildings[1, i] = building2;
-                buildings[1, i].place(rightBuildingAnchor + currentProgress * Vector3.left + currentBuildingDepth * Vector3.forward - currentBuildingHeight * Vector3.up);
-                currentProgress += currentBuildingWidth * 0.9f;
-            }
-        }
         else
         {
-            float buildingWidth = _buildingFootprint / _buildingCount * 2;
+            int numberOfLayers = _buildingCount / (BUILDING_MULTIPLIER + 1) + 1;
+            int buildingsPerLayer = _buildingCount / numberOfLayers;
+            float buildingWidth = _buildingFootprint / buildingsPerLayer;
+
             float currentProgress = 0;
             for (int i = 0; i < _buildingCount / 2 + 1; i++)
             {
