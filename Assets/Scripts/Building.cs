@@ -8,16 +8,24 @@ public class Building : MonoBehaviour {
     public int health { get; private set; }
     public int totalHealth { get; private set; }
     
-    GameObject buildingSprite;
+    public GameObject[] buildingStates;
 
-    //temp
-    int healthTiers = 4;
-
-    public Building(float height, float width, int hp)
+    public Building(float h, float w, int hp)
     {
         health = hp;
         totalHealth = health;
-        buildingSprite = Instantiate(Resources.Load("Building")) as GameObject;
+        height = h;
+        width = w;
+        transform.localScale = new Vector3(w, h, 1);
+    }
+
+    public void setProperties(float h, float w, int hp)
+    {
+        health = hp;
+        totalHealth = health;
+        height = h;
+        width = w;
+        transform.localScale = new Vector3(w, h, 1);
     }
 
     public void place(Vector3 pos)
@@ -33,7 +41,7 @@ public class Building : MonoBehaviour {
             health = 0;
         }
         float percent = health / totalHealth;
-        int tier = Mathf.CeilToInt(percent * healthTiers);
+        int tier = Mathf.CeilToInt(percent * buildingStates.Length);
 
     }
 

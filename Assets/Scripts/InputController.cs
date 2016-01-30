@@ -27,7 +27,7 @@ public class InputController : Singleton<InputController> {
     public KeyCode[] parseKeys(string[] keys)
     {
         KeyCode[] codes = new KeyCode[keys.Length];
-        for(int i =0; i < keys.Length;i++)
+        for(int i = 0; i < keys.Length; i++)
         {
             codes[i] = parseString(keys[i]);
         }

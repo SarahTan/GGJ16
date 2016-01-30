@@ -3,6 +3,8 @@ using System.Collections;
 
 public class GameManager : Singleton<GameManager> {
 
+    private BuildingManager _buildingManager;
+
     public Player[] players { get; private set; }
 
     public const float BUILDING_Z_INDEX = 0;
@@ -16,11 +18,13 @@ public class GameManager : Singleton<GameManager> {
         players[0] = player1;
         players[1] = player2;
 
+        _buildingManager = BuildingManager.Instance;
+
     }
 
 	// Use this for initialization
 	void Start () {
-	
+        _buildingManager.generateBuildings();
 	}
 	
 	// Update is called once per frame
