@@ -9,23 +9,29 @@ public class Player : MonoBehaviour {
 	public KeyCode[] sequence;
 	public int currentKey;
 
-	// Use this for initialization
+	public Vector3 arrowKeysPos;
+	public GameObject arrows;
+
+	public Player (int i) {
+		index = i;
+
+		arrows = new GameObject ();
+		arrows.name = "Player" + (index+1) + " Arrows";
+
+		if (index == 0) {
+			arrowKeysPos = Vector3.zero;
+		} else if (index == 1) {
+
+		}
+	}
+
 	void Start () {
-	
+		
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
-	}
-
-	public bool KeyIsInMapping (KeyCode key) {
-		foreach (KeyCode mapKey in mapping) {
-			if (key == mapKey) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public void ComboResult (bool pass) {

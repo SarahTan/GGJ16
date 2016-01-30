@@ -12,8 +12,8 @@ public class GameManager : Singleton<GameManager> {
 
     void Awake()
     {
-        Player player1 = new Player();
-        Player player2 = new Player();
+        Player player1 = new Player(0);
+        Player player2 = new Player(1);
         players = new Player[2];
         players[0] = player1;
         players[1] = player2;

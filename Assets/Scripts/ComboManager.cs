@@ -3,6 +3,8 @@ using System.Collections;
 
 public class ComboManager : Singleton<ComboManager> {
 
+	public SpriteRenderer arrowPrefab;
+
 	private GameManager _gameManager;
 
 	int minNum = 4;
@@ -37,7 +39,6 @@ public class ComboManager : Singleton<ComboManager> {
 											KeyCode.UpArrow, 
 											KeyCode.DownArrow};
 			AssignKeys (playerNum, testMapping);
-			Debug.Log ("test");
 		}
 
 		// Generate a player's current sequence
@@ -61,10 +62,22 @@ public class ComboManager : Singleton<ComboManager> {
 
 		// Submit a sequence
 		LockIn(playerNum);
+
+
+		DrawArrows (0);
+	}
+
+	void DrawArrows (int playerNum) {
+		GameObject arrow = Instantiate (arrowPrefab,
+										 Vector3.zero,
+										 Quaternion.identity) as GameObject;
+		//Debug.Log (_gameManager.players [playerNum].arrows.transform);
+		//arrow.transform.parent = _gameManager.players [playerNum].arrows.transform;
 	}
 
 
-	void GenerateSeq (int playerNum, int numKeys) {
+	// Generate a sequence of arrows during game play
+	public void GenerateSeq (int playerNum, int numKeys) {
 		if (numKeys < minNum || numKeys > maxNum) {
 			return;
 		}
@@ -87,26 +100,29 @@ public class ComboManager : Singleton<ComboManager> {
 	}
 
 
+	// Called by InputController
+	// Checks if the correct key is pressed
 	public void CheckKey (KeyCode key) {
 		for (int i = 0; i < numPlayers; i++) {
-			if (_gameManager.players [i].KeyIsInMapping(key)) {
-				bool pass = (key == _gameManager.players [i].sequence [
-										_gameManager.players [i].currentKey]);
+			bool pass = (key == _gameManager.players [i].sequence [
+									_gameManager.players [i].currentKey]);
 
-				// Tell Player to turn into a pile of shit :D
-				if (!pass) {
-					Debug.Log ("Wrong key!");
-					_gameManager.players [i].ComboResult (false);
-				} else {
-					Debug.Log ("Right key!");
-					_gameManager.players [i].currentKey++;
-				}
-
-				break;	// if it's in player 0, it won't be in player 1
+			// Tell Player to turn into a pile of shit :D
+			if (!pass) {
+				Debug.Log ("Wrong key!");
+				_gameManager.players [i].ComboResult (false);
+			} else {
+				Debug.Log ("Right key!");
+				_gameManager.players [i].currentKey++;
 			}
+
+			break;	// if it's in player 0, it won't be in player 1
 		}
 	}
 
+
+	// Called by InputController
+	// Submits the keys the player has pressed for that particular sequence
 	public void LockIn (int playerNum) {
 		if (_gameManager.players [playerNum].currentKey >= minReqKeys) {
 			_gameManager.players [playerNum].ComboResult (true);
@@ -115,6 +131,9 @@ public class ComboManager : Singleton<ComboManager> {
 		}
 	}
 
+
+	// Called by InputController
+	// Saves the arrow key mapping of the player
 	public void AssignKeys (int playerNum, KeyCode[] mapping) {
 		_gameManager.players [playerNum].mapping = new KeyCode[4];
 		_gameManager.players [playerNum].mapping = mapping;
