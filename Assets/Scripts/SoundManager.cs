@@ -32,7 +32,7 @@ public enum DIALOG
 }
 
 [System.Serializable]
-public class SoundManager : GenericSingleton<SoundManager>
+public class SoundManager : Singleton<SoundManager>
 {
 
     protected SoundManager() { }
@@ -49,9 +49,9 @@ public class SoundManager : GenericSingleton<SoundManager>
 
     //claim AudioClip here
 
-    const int bgmAmount = 7;//setnum
-    const int sfxAmount = 14;//setnum
-    const int dialogRoleAmount = 1; //setnum
+    const int bgmAmount = 0;//setnum
+    const int sfxAmount = 0;//setnum
+    const int dialogRoleAmount = 0; //setnum
 
     SoundParam[] bgm = new SoundParam[bgmAmount];   
     SoundParam[][] sfx = new SoundParam[sfxAmount][];
