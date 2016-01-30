@@ -10,6 +10,7 @@ public class Player : MonoBehaviour {
 
     public int index { get; private set; }
 
+	public int seqLength;
 	public ComboManager.Direction[] sequence;
 	public int currentKey;
 
@@ -51,11 +52,11 @@ public class Player : MonoBehaviour {
 		
     public void assignKeys(KeyCode[] keys)
     {
-        _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.UP), keys[0]);
-        _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.DOWN), keys[1]);
-        _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.LEFT), keys[2]);
-        _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.RIGHT), keys[3]);
-        _inputController.registerTrigger(() => _comboManager.LockIn(index), keys[4]);
+            _inputController.registerTrigger(() => _comboManager.CheckKey(index, ComboManager.Direction.UP), keys[0]);
+            _inputController.registerTrigger(() => _comboManager.CheckKey(index, ComboManager.Direction.LEFT), keys[1]);
+            _inputController.registerTrigger(() => _comboManager.CheckKey(index, ComboManager.Direction.DOWN), keys[2]);
+            _inputController.registerTrigger(() => _comboManager.CheckKey(index, ComboManager.Direction.RIGHT), keys[3]);        
+
     }
 
     public void triggerDirection(int player, ComboManager.Direction dir)

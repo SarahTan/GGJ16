@@ -7,8 +7,8 @@ public class HeroManagerTest : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        heroManager = new HeroManager(0, new Vector3(-1, 0, 0));
-        HeroManager heroManager2 = new HeroManager(1, new Vector3(1, 0, 0));
+        heroManager = new HeroManager(0, new Vector3(-5, -2, 0));
+        HeroManager heroManager2 = new HeroManager(1, new Vector3(5, -2, 0));
     }
 	
 	// Update is called once per frame

@@ -3,8 +3,6 @@ using System.Collections;
 
 public class ComboManager : Singleton<ComboManager> {
 
-	public SpriteRenderer arrowPrefab;
-
 	private GameManager _gameManager;
 
 	int minNum = 4;
@@ -12,18 +10,25 @@ public class ComboManager : Singleton<ComboManager> {
 	int numPlayers = 2;
 	int minReqKeys = 1;
 
-    private Direction[] mappings = { Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT }; 
+	GameObject arrowPrefab;
+	float arrowWidth;
+	float arrowGap = 0.1f;
+
+    private Direction[] mappings = { Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT }; 
 
     public enum Direction
     {
         UP,
-        DOWN,
         LEFT,
+        DOWN,
         RIGHT
     }
 
 	void Awake() {
 		_gameManager = GameManager.Instance;
+
+		arrowPrefab = Resources.Load ("Prefabs/UI arrow") as GameObject;
+		arrowWidth = arrowPrefab.transform.localScale.x;
 	}
 
 	// Use this for initialization
@@ -44,6 +49,7 @@ public class ComboManager : Singleton<ComboManager> {
 
 		// Generate a player's current sequence
 		GenerateSeq (playerNum, 6);
+		DrawArrows (playerNum);
 
 		// Check if the key being pressed is correct
 		Direction[] testInput = new Direction[6] {Direction.LEFT, 
@@ -53,6 +59,8 @@ public class ComboManager : Singleton<ComboManager> {
 								Direction.DOWN, 
 								Direction.DOWN};
 		for (int i = 0; i < testInput.Length; i++) {
+			Debug.Log ("Current key: " + _gameManager.players [playerNum].currentKey + "," +
+				" i: " + i);
 			if (i == _gameManager.players [playerNum].currentKey) {
 				CheckKey (playerNum, testInput [i]);
 			} else {
@@ -63,17 +71,22 @@ public class ComboManager : Singleton<ComboManager> {
 
 		// Submit a sequence
 		LockIn(playerNum);
-
-
-		DrawArrows (0);
 	}
 
+
+	// Draw the arrow keys on screen
 	void DrawArrows (int playerNum) {
-		GameObject arrow = Instantiate (arrowPrefab,
-										 Vector3.zero,
-										 Quaternion.identity) as GameObject;
-		//Debug.Log (_gameManager.players [playerNum].arrows.transform);
-		//arrow.transform.parent = _gameManager.players [playerNum].arrows.transform;
+		Vector3 pos = _gameManager.players [playerNum].arrowKeysPos;
+
+		foreach (Direction direction in _gameManager.players[playerNum].sequence) {
+			GameObject arrow = Instantiate (arrowPrefab, pos,
+											Quaternion.Euler(
+											new Vector3(0, 0, 90*(int)direction)))
+											as GameObject;
+			arrow.transform.parent = _gameManager.players [playerNum].arrows.transform;
+
+			pos.x += arrowWidth + arrowGap;
+		}
 	}
 
 
@@ -83,7 +96,16 @@ public class ComboManager : Singleton<ComboManager> {
 			return;
 		}
 
+		// Destroy all the previous arrows
+		foreach (Transform arrow in _gameManager.players [playerNum].arrows.transform) {
+			Destroy (arrow.gameObject);
+		}
+		Debug.Log ("Done destroying");
+
+		// Generate new arrows
+		_gameManager.players [playerNum].seqLength = numKeys;
 		_gameManager.players[playerNum].sequence = new Direction[numKeys];
+
 		for (int i = 0; i < numKeys; i++) {
 			_gameManager.players[playerNum].sequence[i] = mappings[Random.Range(0, 4)];
 		}
@@ -116,9 +138,21 @@ public class ComboManager : Singleton<ComboManager> {
 		// Tell Player to turn into a pile of shit :D
 		if (!pass) {
 			Debug.Log ("Wrong key!");
+
+			// Set animation
+			_gameManager.players [player].arrows.GetComponentsInChildren<Animator>() [
+								_gameManager.players [player].currentKey].SetBool(
+								"Wrong", true);
+			Debug.Log (_gameManager.players [player].arrows.GetComponentsInChildren<Animator> ().Length);
 			_gameManager.players [player].ComboResult (false);
+		
 		} else {
 			Debug.Log ("Right key!");
+
+			// Set animation
+			_gameManager.players [player].arrows.GetComponentsInChildren<Animator>() [
+								_gameManager.players [player].currentKey].SetBool(
+								"Correct", true);
 			_gameManager.players [player].currentKey++;
 		}
 	}
