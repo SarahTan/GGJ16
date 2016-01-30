@@ -13,7 +13,7 @@ public class ComboManager : Singleton<ComboManager> {
 	GameObject arrowPrefab;
 	float arrowWidth;
 	float arrowGap = -0.05f;
-	float bonusGap = 0.3f;
+	float bonusGap = 0.5f;
 
     private Direction[] mappings = { Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT }; 
 
@@ -43,9 +43,7 @@ public class ComboManager : Singleton<ComboManager> {
 	
 	// Update is called once per frame
 	void Update () {
-//		if (Input.GetKeyUp (KeyCode.Space)) {
-//			StartCoroutine (Test ());
-//		}
+
 	}
 
 	// For testing
