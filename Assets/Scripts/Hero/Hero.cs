@@ -21,8 +21,8 @@ public class Hero : MonoBehaviour {
     public Sprite[] spriteList;
     
     private SpriteRenderer _spriteRenderer;
-	private int _queuePosition;    
-    private int _powerLevel;
+	private int _queuePosition;
+    public int powerLevel { get; private set; }
     private int _health;
     private float _maxQueue;
     private float _maxScale;
@@ -48,7 +48,7 @@ public class Hero : MonoBehaviour {
 
 	public void Init(int queuePosition){
 		_queuePosition = queuePosition;
-		_powerLevel = -1;
+		powerLevel = -1;
         _maxQueue = HeroManager.HERO_LIMIT;
         _maxScale = 1f;
         _initXPos = -1.5f;
@@ -80,7 +80,7 @@ public class Hero : MonoBehaviour {
         if (!dead && _lastHitTime + _attackCooldown < Time.time)
         {
             _lastHitTime = Time.time;
-            target.takeDamage(this, _powerLevel);
+            target.takeDamage(this, powerLevel);
         }
     }
 
@@ -139,13 +139,12 @@ public class Hero : MonoBehaviour {
         }
     }
 
-    public void PowerUp(int powerLevel) {
-        Debug.Log("Powered Up");
-        _powerLevel = powerLevel;
+    public void PowerUp(int pl) {
+        powerLevel = pl;
         _health = powerLevel;
         _attackCooldown = 100.0f / powerLevel;
         
-        if(_powerLevel < 0) {
+        if(powerLevel < 0) {
             // If poop level, show transformation to poop
         }else{
             // Show transformation to super saiyan

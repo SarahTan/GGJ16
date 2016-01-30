@@ -5,10 +5,13 @@ using System.Collections.Generic;
 public class FightSimulator : Singleton<FightSimulator> {
 
     private GameManager _gameManager;
+    private BuildingManager _buildingManager;
+
     List<Hero> player1Heroes;
     List<Hero> player2Heroes;
     void Awake()
     {
+        _buildingManager = BuildingManager.Instance;
         _gameManager = GameManager.Instance;
     }
 
@@ -26,6 +29,7 @@ public class FightSimulator : Singleton<FightSimulator> {
         {
             if (player1Heroes[i].dead)
             {
+                _buildingManager.damageBuildings(0, player1Heroes[i].powerLevel);
                 player1Heroes.RemoveAt(i);
                 continue;
             }
@@ -57,6 +61,7 @@ public class FightSimulator : Singleton<FightSimulator> {
         {
             if (player2Heroes[i].dead)
             {
+                _buildingManager.damageBuildings(1, player2Heroes[i].powerLevel);
                 player2Heroes.RemoveAt(i);
                 continue;
             }
