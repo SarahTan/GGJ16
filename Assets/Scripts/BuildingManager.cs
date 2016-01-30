@@ -11,14 +11,14 @@ public class BuildingManager : Singleton<BuildingManager> {
     private float _minBuildingHeight;
     private int _globalHealth;
 
-    public const int DEFAULT_BUILDING_COUNT = 9;
+    public const int DEFAULT_BUILDING_COUNT = 11;
     public const float DEFAULT_BUILDING_FOOTPRINT = 5;
-    public const float DEFAULT_MAX_BUILDING_HEIGHT = 1f;
-    public const float DEFAULT_MIN_BUILDING_FOOTPRINT = 0.5f;
+    public const float DEFAULT_MAX_BUILDING_HEIGHT = 1.7f;
+    public const float DEFAULT_MIN_BUILDING_FOOTPRINT = 1f;
     public const int GLOBAL_HEALTH = 1000;
 
-    public Vector3 leftBuildingAnchor = new Vector3(-8f, 0f, 0);
-    public Vector3 rightBuildingAnchor = new Vector3(8f, 0f, 0);
+    public Vector3 leftBuildingAnchor = new Vector3(-7.5f, 1f, 0);
+    public Vector3 rightBuildingAnchor = new Vector3(7.5f, 1f, 0);
 
 	GameObject Player1Buildings;
 	GameObject Player2Buildings;
@@ -140,13 +140,13 @@ public class BuildingManager : Singleton<BuildingManager> {
 				Building building = bObj.GetComponent<Building>();
                 building.setProperties(currentBuildingHeight, currentBuildingWidth, _globalHealth / _buildingCount);
                 buildings[0, i] = building;
-                buildings[0, i].place(leftBuildingAnchor + currentProgress * Vector3.right + currentBuildingDepth * Vector3.forward - currentBuildingHeight / 2 * Vector3.up);
+                buildings[0, i].place(leftBuildingAnchor + currentProgress * Vector3.right + currentBuildingDepth * Vector3.forward - currentBuildingHeight * Vector3.up);
                 GameObject bObj2 = Instantiate(Resources.Load("Prefabs/Building"), Vector3.zero, Quaternion.identity) as GameObject;
 				bObj2.transform.parent = Player2Buildings.transform;
 				Building building2 = bObj2.GetComponent<Building>();
                 building2.setProperties(currentBuildingHeight, currentBuildingWidth, _globalHealth / _buildingCount);
                 buildings[1, i] = building2;
-                buildings[1, i].place(rightBuildingAnchor + currentProgress * Vector3.left + currentBuildingDepth * Vector3.forward - currentBuildingHeight / 2 * Vector3.up);
+                buildings[1, i].place(rightBuildingAnchor + currentProgress * Vector3.left + currentBuildingDepth * Vector3.forward - currentBuildingHeight * Vector3.up);
                 currentProgress += currentBuildingWidth * 0.9f;
             }
         }
@@ -165,13 +165,13 @@ public class BuildingManager : Singleton<BuildingManager> {
 				Building building = bObj.GetComponent<Building>();
                 building.setProperties(currentBuildingHeight, currentBuildingWidth, _globalHealth / _buildingCount);
                 buildings[0, i] = building;
-                buildings[0, i].place(leftBuildingAnchor + currentProgress * Vector3.right + currentBuildingDepth * Vector3.forward + currentBuildingHeight / 2 * Vector3.up);
+                buildings[0, i].place(leftBuildingAnchor + currentProgress * Vector3.right + currentBuildingDepth * Vector3.forward + currentBuildingHeight * Vector3.up * 1.5f);
                 GameObject bObj2 = Instantiate(Resources.Load("Prefabs/Building"), Vector3.zero, Quaternion.identity) as GameObject;
 				bObj2.transform.parent = Player2Buildings.transform;
 				Building building2 = bObj2.GetComponent<Building>();
                 building2.setProperties(currentBuildingHeight, currentBuildingWidth, _globalHealth / _buildingCount);
                 buildings[1, i] = building2;
-                buildings[1, i].place(rightBuildingAnchor + currentProgress * Vector3.left + currentBuildingDepth * Vector3.forward + currentBuildingHeight / 2 * Vector3.up);
+                buildings[1, i].place(rightBuildingAnchor + currentProgress * Vector3.left + currentBuildingDepth * Vector3.forward + currentBuildingHeight * Vector3.up * 1.5f);
                 currentProgress += currentBuildingWidth * 0.9f;
             }
             currentProgress = 0;
@@ -186,13 +186,13 @@ public class BuildingManager : Singleton<BuildingManager> {
 				Building building = bObj.GetComponent<Building>();
                 building.setProperties(currentBuildingHeight, currentBuildingWidth, _globalHealth / _buildingCount);
                 buildings[0, i] = building;
-                buildings[0, i].place(leftBuildingAnchor + currentProgress * Vector3.right + currentBuildingDepth * Vector3.forward + currentBuildingHeight * Vector3.up);
+                buildings[0, i].place(leftBuildingAnchor + currentProgress * Vector3.right + currentBuildingDepth * Vector3.forward + currentBuildingHeight * Vector3.up * 1.5f);
                 GameObject bObj2 = Instantiate(Resources.Load("Prefabs/Building"), Vector3.zero, Quaternion.identity) as GameObject;
 				bObj2.transform.parent = Player2Buildings.transform;
 				Building building2 = bObj2.GetComponent<Building>();
                 building2.setProperties(currentBuildingHeight, currentBuildingWidth, _globalHealth / _buildingCount);
                 buildings[1, i] = building2;
-                buildings[1, i].place(rightBuildingAnchor + currentProgress * Vector3.left + currentBuildingDepth * Vector3.forward + currentBuildingHeight * Vector3.up);
+                buildings[1, i].place(rightBuildingAnchor + currentProgress * Vector3.left + currentBuildingDepth * Vector3.forward + currentBuildingHeight * Vector3.up * 1.5f);
                 currentProgress += currentBuildingWidth * 0.9f;
             }
         }

@@ -3,6 +3,9 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
+    private ComboManager _comboManager;
+    private InputController _inputController;
+
     public int index { get; private set; }
 
 	public KeyCode[] mapping;
@@ -14,6 +17,8 @@ public class Player : MonoBehaviour {
 
 	public Player (int i) {
 		index = i;
+		_comboManager = ComboManager.Instance;
+		_inputController = InputController.Instance;
 
 		arrows = new GameObject ();
 		arrows.name = "Player" + (index+1) + " Arrows";
@@ -25,6 +30,8 @@ public class Player : MonoBehaviour {
 		}
 	}
 
+
+	// Use this for initialization
 	void Start () {
 		
 	}
@@ -33,6 +40,16 @@ public class Player : MonoBehaviour {
 	void Update () {
 	
 	}
+		
+    public void assignKeys(KeyCode[] keys)
+    {
+        _comboManager.AssignKeys(index, keys);
+        foreach (KeyCode key in keys)
+        {
+            _inputController.registerTrigger(() => _comboManager.CheckKey(key), key);
+        }
+    }
+
 
 	public void ComboResult (bool pass) {
 		// currentKey is how many keys the player has gotten correct

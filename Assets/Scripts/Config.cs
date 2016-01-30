@@ -51,12 +51,12 @@ public class Config : Singleton<Config> {
                                 case "player 1":
                                     String[] keys1 = data[1].Trim().Split(',');
                                     KeyCode[] codes1 = _inputController.parseKeys(keys1);
-                                    //_gameManager.players[0].assignKeys(codes1);
+                                    _gameManager.players[0].assignKeys(codes1);
                                     break;
                                 case "player 2":
                                     String[] keys2 = data[1].Trim().Split(',');
                                     KeyCode[] codes2 = _inputController.parseKeys(keys2);
-                                    //_gameManager.players[1].assignKeys(codes2);
+                                    _gameManager.players[1].assignKeys(codes2);
                                     break;
                                 case "building count":
                                     int buildingCount = int.Parse(data[1].Trim());
