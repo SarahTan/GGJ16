@@ -13,7 +13,7 @@ public class HeroManager {
         SIZE
     }
 
-    private static int HERO_LIMIT = 15;
+    public static int HERO_LIMIT = 15;
 
     private List<Hero> _heroList;
     private Hero _currentHero;
@@ -65,9 +65,9 @@ public class HeroManager {
         NextHero();
     }
 
-    public void UpdatePose(Hero.HERO_POSE heroPose) {
+    public void UpdatePose(ComboManager.Direction poseDirection) {
         if(_currentHero != null) {
-            _currentHero.UpdatePose(heroPose);
+            _currentHero.UpdatePose(poseDirection);
         }
     }
 

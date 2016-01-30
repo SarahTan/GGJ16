@@ -29,23 +29,32 @@ public class Hero : MonoBehaviour {
     private float _maxXPos;
 
     void Start() {
-        
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 	
 	public void Init(int queuePosition){
 		_queuePosition = queuePosition;
 		_powerLevel = -1;
-        _maxQueue = 15f;
+        _maxQueue = HeroManager.HERO_LIMIT;
         _maxScale = 10f;
         _initXPos = -0.5f;
         _maxXPos = 10f;
-        ScaleTo(0.5f * _maxScale);
+        ScaleTo(0.5f * _maxScale);        
     }
 
-    public void UpdatePose(HERO_POSE heroPose) {
-        switch (heroPose) {
-            case HERO_POSE.UP:
-                //_spriteRenderer.sprite = spriteList[(int)HERO_POSE.UP];
+    public void UpdatePose(ComboManager.Direction poseDirection) {
+        switch (poseDirection) {
+            case ComboManager.Direction.UP:
+                _spriteRenderer.sprite = spriteList[(int)HERO_POSE.UP];
+                break;
+            case ComboManager.Direction.DOWN:
+                _spriteRenderer.sprite = spriteList[(int)HERO_POSE.DOWN];
+                break;
+            case ComboManager.Direction.LEFT:
+                _spriteRenderer.sprite = spriteList[(int)HERO_POSE.LEFT];
+                break;
+            case ComboManager.Direction.RIGHT:
+                _spriteRenderer.sprite = spriteList[(int)HERO_POSE.RIGHT];
                 break;
             default:
                 break;         
@@ -60,6 +69,7 @@ public class Hero : MonoBehaviour {
         }else{
             // Show transformation to super saiyan
         }
+        // Move hero to the fighting stage
         MoveToPosition(new Vector3(5f, 0, 0));
     }
     public void MoveToCenter() {
@@ -87,7 +97,7 @@ public class Hero : MonoBehaviour {
         _spriteRenderer.color = spriteColor;
     }
     private void MoveToPosition(Vector3 position) {
-        transform.position = position;
+        transform.localPosition = position;
     }
     private void ScaleTo(Vector3 scale) {
         transform.localScale = scale;
