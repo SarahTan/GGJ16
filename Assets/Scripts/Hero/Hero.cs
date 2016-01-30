@@ -4,10 +4,6 @@ using System.Collections;
 [RequireComponent (typeof (SpriteRenderer))]
 public class Hero : MonoBehaviour {
 
-    public enum HERO_TYPE {
-        TYPE_A,
-        SIZE
-    }
     public enum HERO_POSE {
         UP,
         DOWN,
@@ -15,7 +11,6 @@ public class Hero : MonoBehaviour {
         RIGHT,
         DEFAULT,
         POWER_UP,
-        POWER_DOWN
     }
     
     public Sprite[] spriteList;
@@ -36,9 +31,9 @@ public class Hero : MonoBehaviour {
 		_queuePosition = queuePosition;
 		_powerLevel = -1;
         _maxQueue = HeroManager.HERO_LIMIT;
-        _maxScale = 10f;
-        _initXPos = -0.5f;
-        _maxXPos = 10f;
+        _maxScale = 1f;
+        _initXPos = -2.5f;
+        _maxXPos = 20f;
         ScaleTo(0.5f * _maxScale);        
     }
 
@@ -81,9 +76,7 @@ public class Hero : MonoBehaviour {
         // Different representation/size for 0-x
         float ratio = (_queuePosition / _maxQueue);
         float xPosition = _initXPos - ratio * _maxXPos;
-        Vector3 currentPosition = transform.position;
-        currentPosition.x = xPosition;
-        MoveToPosition(currentPosition);
+        MoveToPosition(new Vector3(xPosition, 0, 0));
 
         // Reduce current position
         if (_queuePosition > 0){
