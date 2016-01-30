@@ -12,6 +12,17 @@ public class ComboManager : Singleton<ComboManager> {
 
 	GameObject arrowPrefab;
 	float arrowWidth;
+	float arrowGap = 0.1f;
+
+    private Direction[] mappings = { Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT }; 
+
+    public enum Direction
+    {
+        UP,
+        LEFT,
+        DOWN,
+        RIGHT
+    }
 
 	void Awake() {
 		_gameManager = GameManager.Instance;
@@ -36,28 +47,22 @@ public class ComboManager : Singleton<ComboManager> {
 	void Test() {
 		int playerNum = 0;
 
-		// Mapping of a player's keys
-		if (_gameManager.players [playerNum].mapping == null) {
-			KeyCode[] testMapping = new KeyCode[4] {KeyCode.LeftArrow, 
-											KeyCode.RightArrow, 
-											KeyCode.UpArrow, 
-											KeyCode.DownArrow};
-			AssignKeys (playerNum, testMapping);
-		}
-
 		// Generate a player's current sequence
 		GenerateSeq (playerNum, 6);
+		DrawArrows (playerNum);
 
 		// Check if the key being pressed is correct
-		KeyCode[] testInput = new KeyCode[6] {KeyCode.LeftArrow, 
-								KeyCode.RightArrow, 
-								KeyCode.UpArrow, 
-								KeyCode.DownArrow, 
-								KeyCode.DownArrow, 
-								KeyCode.DownArrow};
+		Direction[] testInput = new Direction[6] {Direction.LEFT, 
+								Direction.RIGHT, 
+								Direction.UP, 
+								Direction.DOWN, 
+								Direction.DOWN, 
+								Direction.DOWN};
 		for (int i = 0; i < testInput.Length; i++) {
+			Debug.Log ("Current key: " + _gameManager.players [playerNum].currentKey + "," +
+				" i: " + i);
 			if (i == _gameManager.players [playerNum].currentKey) {
-				CheckKey (testInput [i]);
+				CheckKey (playerNum, testInput [i]);
 			} else {
 				break;
 			}
@@ -66,17 +71,22 @@ public class ComboManager : Singleton<ComboManager> {
 
 		// Submit a sequence
 		LockIn(playerNum);
-
-
-		DrawArrows (0);
 	}
 
+
+	// Draw the arrow keys on screen
 	void DrawArrows (int playerNum) {
-		
-		GameObject arrow = Instantiate (arrowPrefab,
-										 Vector3.zero,
-										 Quaternion.identity) as GameObject;
-		arrow.transform.parent = _gameManager.players [playerNum].arrows.transform;
+		Vector3 pos = _gameManager.players [playerNum].arrowKeysPos;
+
+		foreach (Direction direction in _gameManager.players[playerNum].sequence) {
+			GameObject arrow = Instantiate (arrowPrefab, pos,
+											Quaternion.Euler(
+											new Vector3(0, 0, 90*(int)direction)))
+											as GameObject;
+			arrow.transform.parent = _gameManager.players [playerNum].arrows.transform;
+
+			pos.x += arrowWidth + arrowGap;
+		}
 	}
 
 
@@ -86,11 +96,18 @@ public class ComboManager : Singleton<ComboManager> {
 			return;
 		}
 
+		// Destroy all the previous arrows
+		foreach (Transform arrow in _gameManager.players [playerNum].arrows.transform) {
+			Destroy (arrow.gameObject);
+		}
+		Debug.Log ("Done destroying");
+
+		// Generate new arrows
 		_gameManager.players [playerNum].seqLength = numKeys;
-		_gameManager.players[playerNum].sequence = new KeyCode[numKeys];
+		_gameManager.players[playerNum].sequence = new Direction[numKeys];
+
 		for (int i = 0; i < numKeys; i++) {
-			_gameManager.players[playerNum].sequence[i] = 
-				_gameManager.players[playerNum].mapping[Random.Range(0, 4)];
+			_gameManager.players[playerNum].sequence[i] = mappings[Random.Range(0, 4)];
 		}
 
 		_gameManager.players [playerNum].currentKey = 0;
@@ -107,21 +124,36 @@ public class ComboManager : Singleton<ComboManager> {
 
 	// Called by InputController
 	// Checks if the correct key is pressed
-	public void CheckKey (KeyCode key) {
-		for (int i = 0; i < numPlayers; i++) {
-			bool pass = (key == _gameManager.players [i].sequence [
-									_gameManager.players [i].currentKey]);
+	public void CheckKey (int player, Direction dir) 
+    {
 
-			// Tell Player to turn into a pile of shit :D
-			if (!pass) {
-				Debug.Log ("Wrong key!");
-				_gameManager.players [i].ComboResult (false);
-			} else {
-				Debug.Log ("Right key!");
-				_gameManager.players [i].currentKey++;
-			}
+        if (_gameManager.players[player].sequence == null || _gameManager.players[player].sequence.Length == 0)
+        {
+            return;
+        }
 
-			break;	// if it's in player 0, it won't be in player 1
+		bool pass = (dir == _gameManager.players [player].sequence [
+								_gameManager.players [player].currentKey]);
+
+		// Tell Player to turn into a pile of shit :D
+		if (!pass) {
+			Debug.Log ("Wrong key!");
+
+			// Set animation
+			_gameManager.players [player].arrows.GetComponentsInChildren<Animator>() [
+								_gameManager.players [player].currentKey].SetBool(
+								"Wrong", true);
+			Debug.Log (_gameManager.players [player].arrows.GetComponentsInChildren<Animator> ().Length);
+			_gameManager.players [player].ComboResult (false);
+		
+		} else {
+			Debug.Log ("Right key!");
+
+			// Set animation
+			_gameManager.players [player].arrows.GetComponentsInChildren<Animator>() [
+								_gameManager.players [player].currentKey].SetBool(
+								"Correct", true);
+			_gameManager.players [player].currentKey++;
 		}
 	}
 
@@ -136,16 +168,4 @@ public class ComboManager : Singleton<ComboManager> {
 		}
 	}
 
-
-	// Called by InputController
-	// Saves the arrow key mapping of the player
-	public void AssignKeys (int playerNum, KeyCode[] mapping) {
-		_gameManager.players [playerNum].mapping = new KeyCode[4];
-		_gameManager.players [playerNum].mapping = mapping;
-
-		Debug.Log ("Player " + playerNum + "'s keys: " + _gameManager.players [0].mapping[0] + " " +
-														_gameManager.players [0].mapping[1] + " " +
-														_gameManager.players [0].mapping[2] + " " +
-														_gameManager.players [0].mapping[3]);
-	}
 }
