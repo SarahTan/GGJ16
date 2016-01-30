@@ -57,7 +57,6 @@ public class Hero : MonoBehaviour {
     }
 
     public void UpdatePose(ComboManager.Direction poseDirection) {
-        Debug.Log("Updating psoe");
         switch (poseDirection) {
             case ComboManager.Direction.UP:
                 _spriteRenderer.sprite = spriteList[(int)HERO_POSE.UP];
@@ -90,6 +89,7 @@ public class Hero : MonoBehaviour {
         _health -= amount;
         if (_health <= 0)
         {
+            Debug.Log("Dead");
             dead = true;
             attacker.fighting = false;
             attacker.target = null;
@@ -99,17 +99,30 @@ public class Hero : MonoBehaviour {
 
     private void flyOff()
     {
+        float angle = Random.Range(30, 70) * Mathf.PI / 180;
         if (side.Equals(Side.LEFT))
         {
-            
+            StartCoroutine(flyOff(new Vector3(-Mathf.Cos(angle), Mathf.Sin(angle), 0)));
         }
         else
         {
-
+            StartCoroutine(flyOff(new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0)));
         }
     }
 
-    //IEnumerator
+    IEnumerator flyOff(Vector3 direction)
+    {
+        float totalDistance = 10f;
+        float step = 0.2f;
+        float distance = 0;
+        while (distance < totalDistance)
+        {
+            distance += step;
+            transform.position += direction * step;
+            yield return null;
+        }
+        Destroy(this.gameObject);
+    }
 
     public void move()
     {

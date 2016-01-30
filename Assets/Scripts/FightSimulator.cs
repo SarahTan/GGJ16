@@ -24,6 +24,11 @@ public class FightSimulator : Singleton<FightSimulator> {
 	void Update () {
         for (int i = 0; i < player1Heroes.Count; i++)
         {
+            if (player1Heroes[i].dead)
+            {
+                player1Heroes.RemoveAt(i);
+                continue;
+            }
             if (!player1Heroes[i].fighting)
             {
                 player1Heroes[i].move();
@@ -50,6 +55,11 @@ public class FightSimulator : Singleton<FightSimulator> {
 
         for (int i = 0; i < player2Heroes.Count; i++)
         {
+            if (player2Heroes[i].dead)
+            {
+                player2Heroes.RemoveAt(i);
+                continue;
+            }
             if (!player2Heroes[i].fighting)
             {
                 player2Heroes[i].move();
@@ -63,7 +73,7 @@ public class FightSimulator : Singleton<FightSimulator> {
                         player1Heroes[j].fighting = true;
                         player1Heroes[j].target = player2Heroes[i];
                         player2Heroes[i].fighting = true;
-                        player2Heroes[i].target = player2Heroes[j];
+                        player2Heroes[i].target = player1Heroes[j];
                     }
                 }
 
