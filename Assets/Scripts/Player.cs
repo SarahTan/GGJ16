@@ -15,7 +15,7 @@ public class Player : MonoBehaviour {
 	public ComboManager.Direction[] sequence;
 	public int currentKey;
 
-	public Vector3 arrowKeysPos;
+	public Vector3 centerPos;
 	public GameObject arrows;
 
     public HeroManager heroManager;
@@ -32,10 +32,13 @@ public class Player : MonoBehaviour {
 		arrows = new GameObject ();
 		arrows.name = "Player" + (index+1) + " Arrows";
 
+		Camera cam = GameObject.Find ("Main Camera").GetComponent<Camera> ();
 		if (index == 0) {
-			arrowKeysPos = Vector3.zero;
+			centerPos = cam.ScreenToWorldPoint (new Vector3 (Screen.width / 4,
+													Screen.height / 10, 9));
 		} else if (index == 1) {
-
+			centerPos = cam.ScreenToWorldPoint (new Vector3 (Screen.width / 4 * 3,
+													Screen.height / 10, 9));
 		}
 
         Debug.Log(_gameManager.PLAYER_HERO_CENTER[index]);

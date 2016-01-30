@@ -12,7 +12,7 @@ public class ComboManager : Singleton<ComboManager> {
 
 	GameObject arrowPrefab;
 	float arrowWidth;
-	float arrowGap = 0.1f;
+	float arrowGap = -0.05f;
 
     private Direction[] mappings = { Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT }; 
 
@@ -45,10 +45,11 @@ public class ComboManager : Singleton<ComboManager> {
 
 	// For testing
 	IEnumerator Test() {
-		int playerNum = 0;
+		int playerNum = 1;
 
 		// Generate a player's current sequence
-		StartCoroutine (GenerateSeq (playerNum, 6));
+		StartCoroutine (GenerateSeq (0, 8));
+		StartCoroutine (GenerateSeq (1, 8));
 
 		yield return new WaitForSeconds (0.5f);
 
@@ -76,7 +77,12 @@ public class ComboManager : Singleton<ComboManager> {
 
 	// Draw the arrow keys on screen
 	void DrawArrows (int playerNum) {
-		Vector3 pos = _gameManager.players [playerNum].arrowKeysPos;
+		Vector3 pos = _gameManager.players [playerNum].centerPos;
+		pos.x -= ((arrowWidth * (_gameManager.players[playerNum].seqLength-1)) +
+				 (arrowGap * _gameManager.players[playerNum].seqLength)) / 2;
+
+//		Debug.Log ("offset: " + (((arrowWidth * _gameManager.players[playerNum].seqLength) +
+//			(arrowGap * _gameManager.players[playerNum].seqLength)) / 2));
 
 		foreach (Direction direction in _gameManager.players[playerNum].sequence) {
 			GameObject arrow = Instantiate (arrowPrefab, pos,
