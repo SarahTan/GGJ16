@@ -50,6 +50,22 @@ public class InputController : Singleton<InputController> {
         {
             _keyMap[KeyCode.Y]();
         }
+        else if (Input.GetKeyDown("u") && _keyMap.ContainsKey(KeyCode.U))
+        {
+            _keyMap[KeyCode.U]();
+        }
+        else if (Input.GetKeyDown("i") && _keyMap.ContainsKey(KeyCode.I))
+        {
+            _keyMap[KeyCode.I]();
+        }
+        else if (Input.GetKeyDown("o") && _keyMap.ContainsKey(KeyCode.O))
+        {
+            _keyMap[KeyCode.O]();
+        }
+        else if (Input.GetKeyDown("p") && _keyMap.ContainsKey(KeyCode.P))
+        {
+            _keyMap[KeyCode.P]();
+        }
         else if (Input.GetKeyDown("a") && _keyMap.ContainsKey(KeyCode.A))
         {
             _keyMap[KeyCode.A]();
@@ -73,6 +89,18 @@ public class InputController : Singleton<InputController> {
         else if (Input.GetKeyDown("h") && _keyMap.ContainsKey(KeyCode.H))
         {
             _keyMap[KeyCode.H]();
+        }
+        else if (Input.GetKeyDown("j") && _keyMap.ContainsKey(KeyCode.J))
+        {
+            _keyMap[KeyCode.J]();
+        }
+        else if (Input.GetKeyDown("k") && _keyMap.ContainsKey(KeyCode.K))
+        {
+            _keyMap[KeyCode.K]();
+        }
+        else if (Input.GetKeyDown("l") && _keyMap.ContainsKey(KeyCode.L))
+        {
+            _keyMap[KeyCode.L]();
         }
         else if (Input.GetKeyDown("z") && _keyMap.ContainsKey(KeyCode.Z))
         {
@@ -98,29 +126,9 @@ public class InputController : Singleton<InputController> {
         {
             _keyMap[KeyCode.N]();
         }
-        else if (Input.GetKeyDown("i") && _keyMap.ContainsKey(KeyCode.I))
+        else if (Input.GetKeyDown("m") && _keyMap.ContainsKey(KeyCode.M))
         {
-            _keyMap[KeyCode.I]();
-        }
-        else if (Input.GetKeyDown("o") && _keyMap.ContainsKey(KeyCode.O))
-        {
-            _keyMap[KeyCode.O]();
-        }
-        else if (Input.GetKeyDown("p") && _keyMap.ContainsKey(KeyCode.P))
-        {
-            _keyMap[KeyCode.P]();
-        }
-        else if (Input.GetKeyDown("j") && _keyMap.ContainsKey(KeyCode.J))
-        {
-            _keyMap[KeyCode.J]();
-        }
-        else if (Input.GetKeyDown("k") && _keyMap.ContainsKey(KeyCode.K))
-        {
-            _keyMap[KeyCode.K]();
-        }
-        else if (Input.GetKeyDown("l") && _keyMap.ContainsKey(KeyCode.L))
-        {
-            _keyMap[KeyCode.L]();
+            _keyMap[KeyCode.M]();
         }
         else if (Input.GetKeyDown("down") && _keyMap.ContainsKey(KeyCode.DownArrow))
         {
@@ -148,108 +156,4 @@ public class InputController : Singleton<InputController> {
         }
 	}
 
-    public KeyCode parseString(string key)
-    {
-        switch (key)
-        {
-            case "Q":
-            case "q":
-                return KeyCode.Q;
-            case "W":
-            case "w":
-                return KeyCode.W;
-            case "E":
-            case "e":
-                return KeyCode.E;
-            case "R":
-            case "r":
-                return KeyCode.R;
-            case "T":
-            case "t":
-                return KeyCode.T;
-            case "Y":
-            case "y":
-                return KeyCode.Y;
-            case "A":
-            case "a":
-                return KeyCode.A;
-            case "S":
-            case "s":
-                return KeyCode.S;
-            case "D":
-            case "d":
-                return KeyCode.D;
-            case "F":
-            case "f":
-                return KeyCode.F;
-            case "G":
-            case "g":
-                return KeyCode.G;
-            case "H":
-            case "h":
-                return KeyCode.H;
-            case "Z":
-            case "z":
-                return KeyCode.Z;
-            case "X":
-            case "x":
-                return KeyCode.X;
-            case "C":
-            case "c":
-                return KeyCode.C;
-            case "V":
-            case "v":
-                return KeyCode.V;
-            case "B":
-            case "b":
-                return KeyCode.B;
-            case "N":
-            case "n":
-                return KeyCode.N;
-            case "I":
-            case "i":
-                return KeyCode.I;
-            case "O":
-            case "o":
-                return KeyCode.O;
-            case "P":
-            case "p":
-                return KeyCode.P;
-            case "J":
-            case "j":
-                return KeyCode.J;
-            case "K":
-            case "k":
-                return KeyCode.K;
-            case "L":
-            case "l":
-                return KeyCode.L;
-            case "DOWN":
-            case "Down":
-            case "down":
-                return KeyCode.DownArrow;
-            case "UP":
-            case "Up":
-            case "up":
-                return KeyCode.UpArrow;
-            case "LEFT":
-            case "Left":
-            case "left":
-                return KeyCode.LeftArrow;
-            case "RIGHT":
-            case "Right":
-            case "right":
-                return KeyCode.RightArrow;
-            case "MOUSE RIGHT":
-            case "Mouse Right":
-            case "mouse right":
-                return KeyCode.Mouse1;
-            case "MOUSE LEFT":
-            case "Mouse Left":
-            case "mouse left":
-                return KeyCode.Mouse0;
-            default:
-                return KeyCode.Q;
-        }
-    }
 }
