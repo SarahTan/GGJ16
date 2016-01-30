@@ -65,11 +65,12 @@ public class Player : MonoBehaviour {
 
     public void assignKeys(KeyCode[] keys)
     {
-            _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.UP), keys[0]);
-            _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.DOWN), keys[1]);
-            _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.LEFT), keys[2]);
-            _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.RIGHT), keys[3]);
-            _inputController.registerTrigger(() => _comboManager.LockIn(index), keys[4]);
+        _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.UP), keys[0]);
+        _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.DOWN), keys[1]);
+        _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.LEFT), keys[2]);
+        _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.RIGHT), keys[3]);
+		Debug.Log("Key maps: " + keys[4]);
+        _inputController.registerTrigger(() => _comboManager.LockIn(index), keys[4]);
     }
 
     public void triggerDirection(int player, ComboManager.Direction dir)
