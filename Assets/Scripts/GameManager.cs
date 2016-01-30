@@ -3,6 +3,7 @@ using System.Collections;
 
 public class GameManager : Singleton<GameManager> {
 
+	private ComboManager _comboManager;
     private BuildingManager _buildingManager;
     private FightSimulator _fightSimulator;
     private Config _config;
@@ -37,18 +38,20 @@ public class GameManager : Singleton<GameManager> {
         _config = Config.Instance;
         _buildingManager = BuildingManager.Instance;
         _fightSimulator = FightSimulator.Instance;
+		_comboManager = ComboManager.Instance;
     }
 
 	// Use this for initialization
-	void Start () {
-        _buildingManager.generateBuildings();
-
-
+    void Start()
+    {
         gameState = GameState.Menu;
 	}
 
     public void startGame()
     {
+        _buildingManager.generateBuildings();
+        StartCoroutine(_comboManager.GenerateSeq(0, 4));
+        StartCoroutine(_comboManager.GenerateSeq(1, 4));
         gameState = GameState.Playing;
     }
 
