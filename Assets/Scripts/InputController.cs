@@ -139,7 +139,15 @@ public class InputController : Singleton<InputController> {
         else if (Input.GetKeyDown("m") && _keyMap.ContainsKey(KeyCode.M))
         {
             _keyMap[KeyCode.M]();
-        }
+		}
+		else if (Input.GetKeyDown("space") && _keyMap.ContainsKey(KeyCode.Space))
+		{
+			_keyMap[KeyCode.Space]();
+		}
+		else if (Input.GetKeyDown("return") && _keyMap.ContainsKey(KeyCode.Return))
+		{
+			_keyMap[KeyCode.Return]();
+		}
         else if (Input.GetKeyDown("down") && _keyMap.ContainsKey(KeyCode.DownArrow))
         {
             _keyMap[KeyCode.DownArrow]();
