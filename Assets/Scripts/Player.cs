@@ -41,7 +41,6 @@ public class Player : MonoBehaviour {
 									 -cam.orthographicSize + 1, 5);
 		}
 
-        Debug.Log(_gameManager.PLAYER_HERO_CENTER[index]);
         heroManager = new HeroManager(index, _gameManager.PLAYER_HERO_CENTER[index]);
 
         heroList = new List<Hero>();
@@ -75,8 +74,11 @@ public class Player : MonoBehaviour {
 
     public void triggerDirection(int player, ComboManager.Direction dir)
     {
-        _comboManager.CheckKey(player, dir);
-        heroManager.UpdatePose(dir);
+        if (_gameManager.gameState.Equals(GameManager.GameState.Playing))
+        {
+            _comboManager.CheckKey(player, dir);
+            heroManager.UpdatePose(dir);
+        }
     }
 
     public void ComboResult(bool pass)

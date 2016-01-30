@@ -15,6 +15,8 @@ public class GameManager : Singleton<GameManager> {
 
     public Vector3[] PLAYER_HERO_CENTER;
 
+    public GameState gameState;
+
     public enum GameState
     {
         Menu,
@@ -40,12 +42,29 @@ public class GameManager : Singleton<GameManager> {
     }
 
 	// Use this for initialization
-	void Start () {
-        _buildingManager.generateBuildings();
-		StartCoroutine (_comboManager.GenerateSeq (0, 4));
-		StartCoroutine (_comboManager.GenerateSeq (1, 4));
+    void Start()
+    {
+        gameState = GameState.Menu;
 	}
-	
+
+    public void startGame()
+    {
+        _buildingManager.generateBuildings();
+        StartCoroutine(_comboManager.GenerateSeq(0, 4));
+        StartCoroutine(_comboManager.GenerateSeq(1, 4));
+        gameState = GameState.Playing;
+    }
+
+    public void gameOver(int player)
+    {
+        endGame();
+    }
+
+    public void endGame()
+    {
+        gameState = GameState.End;
+    }
+
 	// Update is called once per frame
 	void Update () {
 
