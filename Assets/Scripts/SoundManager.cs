@@ -1,135 +1,395 @@
-﻿using UnityEngine;
+//@
+// Sound Manager.
+
+// Updated 2015.11.23
+// Hill Lu
+//-----------------------------------------------------
+
+using UnityEngine;
 using System.Collections;
+using UnityEngine.Audio;
 using System.Collections.Generic;
 
-public class SoundManager : Singleton<SoundManager>
+
+public enum  BGMStage
+{
+    //define Background Music stage here
+}
+
+public enum SFXType
+{
+    //define Sound Effect type here
+}
+
+public enum DIALOGRole
+{
+    //define Roles of dialog
+}
+
+public enum DIALOG
+{
+    //define dialogs ID here
+}
+
+[System.Serializable]
+public class SoundManager : GenericSingleton<SoundManager>
 {
 
-    private Dictionary<int, AudioClip> soundMap;
-    private List<AudioSource> _audioSource;
-    private int _audioSourceCount = 18;
+    protected SoundManager() { }
 
-    //Music
-    public AudioClip backgroundBeat { get; private set; }
-    public AudioClip tutorialBeat { get; private set; }
-    public AudioClip[,,] playerTriggers { get; private set; }
+    //claims
+    public Transform soundManager;
+    public Transform sfxManager;
 
-    public void playSound(AudioClip sound)
+    public AudioMixerSnapshot amsNormal;
+    public AudioMixerSnapshot amsDialogSpeaking;
+
+    public AudioSource bgmAS;
+    public AudioSource[] dialogAS;
+
+    //claim AudioClip here
+
+    const int bgmAmount = 7;//setnum
+    const int sfxAmount = 14;//setnum
+    const int dialogRoleAmount = 1; //setnum
+
+    SoundParam[] bgm = new SoundParam[bgmAmount];   
+    SoundParam[][] sfx = new SoundParam[sfxAmount][];
+
+    //A class used for regularizing audios' parameters
+    class SoundParam
     {
-        foreach (AudioSource AS in _audioSource)
+        public AudioClip clip;
+        public int length;
+        public float volumn;
+        public float pitch;
+        public float pitchUpperBound; //used for random pitch
+        public bool loop;
+
+        public SoundParam(AudioClip clip, float volumn, float pitch, float pitchUpperBound,bool loop)
         {
-            if (!AS.isPlaying)
+            this.clip = clip;
+            this.volumn = volumn;
+            this.pitch = pitch;
+            this.pitchUpperBound = pitchUpperBound;
+            this.loop = loop;
+        }
+
+        public SoundParam(AudioClip clip, float volumn, float pitch,float pitchUpperBound)
+            : this(clip, volumn, pitch, pitchUpperBound,true)
+        {        }
+
+        public SoundParam(AudioClip clip, float volumn, float pitch)
+            : this(clip,volumn,pitch,pitch)
+        {        }
+
+        public SoundParam()
+        {        }
+    }
+
+    void Start()
+    {
+		// Debug.Log("Sound Manager start working");
+        Initialize();//initialize sound param
+        StartCoroutine("CoRoutineRemoveSFX");
+    }
+
+    void Update()
+    {
+    }
+
+    //Initialize SFX Param (volumn and pitch of each clip)
+    void Initialize() {
+        //Debug.Log("Initialize Sounds");
+        int i,j;
+
+        //bgm initiate
+
+        //sfx initiate[]
+        for (j = 0; j <= sfxAmount - 1; j++)
+        {
+            if (j == (int)SFXType.ROBOT_JET)
             {
-                AS.PlayOneShot(sound);
-                break;
+                //define exceptions of sound effects that has multiple clips.
+            }
+            else
+            {
+                sfx[j] = new SoundParam[1];
             }
         }
+            //sfx initiate[][]
+
     }
 
-    public void playSound(AudioClip sound, int index)
+    //general functions
+    //bgm
+    public void bgmPlay(BGMStage stage)
     {
-        if (index > _audioSourceCount)
-        {
-            index = _audioSourceCount;
-        }
-        _audioSource[index - 1].PlayOneShot(sound);
+        Debug.Log("Play BGM");
+        StartCoroutine(CoRoutineBgmPlay(bgmAS, stage, 10f, 10f));
+        currentBGMsp = bgm[(int)stage];
     }
 
-    public void playSound(AudioClip sound, int index, float volume)
+    IEnumerator CoRoutineBgmPlay(AudioSource audioS, BGMStage stage, float fadeOutSpeed, float fadeInSpeed)
     {
-        if (index > _audioSourceCount)
-        {
-            index = _audioSourceCount;
-        }
-        _audioSource[index - 1].PlayOneShot(sound, volume);
-    }
+        SoundParam sp = new SoundParam();
 
-    public void stopSound(int index)
-    {
-        if (index > _audioSourceCount)
+        StartCoroutine(MusicFadeOut(audioS, fadeOutSpeed, 0.01f, true));
+        while (audioS.isPlaying)
         {
-            index = _audioSourceCount;
-        }
-        StartCoroutine(fadeSound(index, 1));
-    }
-
-    public void stopAllSounds()
-    {
-        foreach (AudioSource AS in _audioSource)
-        {
-             AS.Stop();
-        }
-    }
-
-    // Use this for initialization
-    void Awake()
-    {
-        _audioSource = new List<AudioSource>();
-        soundMap = new Dictionary<int, AudioClip>();
-        for (int i = 0; i < _audioSourceCount; i++)
-        {
-            AudioSource temp = gameObject.AddComponent<AudioSource>();
-            _audioSource.Add(temp);
+            yield return new WaitForSeconds(Time.deltaTime);
         }
 
-        tutorialBeat = _loadSoundClip("Tutorial", 0);
-        backgroundBeat = _loadSoundClip("BG_Music_Quiet", 1);
+        sp = bgm[(int)stage];
 
-        // Indices are in order of: Player count, device count, unique sound count
-        playerTriggers = new AudioClip[4, 2, 10];
-        playerTriggers[0, 0, 0] = _loadSoundClip("Drummer-Basket_0", 2);
-        playerTriggers[0, 1, 0] = _loadSoundClip("Drummer-Basket_1", 3);
-
-        playerTriggers[1, 0, 0] = _loadSoundClip("BassPlayer-Plunger_0", 4);
-        playerTriggers[1, 0, 1] = _loadSoundClip("BassPlayer-Plunger_1", 5);
-        playerTriggers[1, 0, 2] = _loadSoundClip("BassPlayer-Plunger_2", 6);
-        playerTriggers[1, 0, 3] = _loadSoundClip("BassPlayer-Plunger_3", 7);
-        playerTriggers[1, 1, 0] = _loadSoundClip("BassPlayer-Flush_0", 8);
-        playerTriggers[1, 1, 1] = _loadSoundClip("BassPlayer-Flush_1", 9);
-        playerTriggers[1, 1, 2] = _loadSoundClip("BassPlayer-Flush_2", 10);
-        playerTriggers[1, 1, 3] = _loadSoundClip("BassPlayer-Flush_3", 11);
-        playerTriggers[1, 1, 4] = _loadSoundClip("BassPlayer-Flush_4", 12);
-        playerTriggers[1, 1, 5] = _loadSoundClip("BassPlayer-Flush_5", 13);
-        playerTriggers[1, 1, 6] = _loadSoundClip("BassPlayer-Flush_6", 14);
-        playerTriggers[1, 1, 7] = _loadSoundClip("BassPlayer-Flush_7", 15);
-        playerTriggers[1, 1, 8] = _loadSoundClip("BassPlayer-Flush_8", 16);
-        playerTriggers[1, 1, 9] = _loadSoundClip("BassPlayer-Flush_9", 17);
-
-        playerTriggers[2, 0, 0] = _loadSoundClip("KeyboardPlayer-Spray_0", 18);
-        playerTriggers[2, 0, 1] = _loadSoundClip("KeyboardPlayer-Spray_1", 19);
-        playerTriggers[2, 1, 0] = _loadSoundClip("KeyboardPlayer-Wipe_0", 20);
-        playerTriggers[2, 1, 1] = _loadSoundClip("KeyboardPlayer-Wipe_1", 21);
-
-        playerTriggers[3, 0, 0] = _loadSoundClip("GuitarPlayer-Scrub_0", 22);
-        playerTriggers[3, 1, 0] = _loadSoundClip("GuitarPlayer-Scrub_1", 23);
+        bgmAS.clip = sp.clip;
+        bgmAS.pitch = sp.pitch;
+        bgmAS.loop = sp.loop;
+        StartCoroutine(MusicFadeIn(audioS, fadeInSpeed, sp.volumn, true));
     }
 
-    private AudioClip _loadSoundClip(string filename, int i)
+
+    //sfx
+    public void sfxPlay(SFXType type)
     {
-        AudioClip clip = Resources.Load("Sounds/" + filename) as AudioClip;
-        soundMap.Add(i, clip);
-        return clip;
+        //Debug.Log("Play SFX");
+        SoundParam sp = new SoundParam();
+        int randomSP;
+        float randomPitch;
+
+        randomSP = Random.Range(0, sfx[(int)type].Length);
+        sp = sfx[(int)type][randomSP];
+
+        randomPitch = Random.Range(sp.pitch, sp.pitchUpperBound);
+        AudioPlay(sp.clip, sfxManager, sp.volumn, randomPitch);
     }
 
-    public AudioClip getSound(int idx)
+    public void sfxPlay3D(SFXType type, Transform colliderGOT)
     {
-        Debug.Log(soundMap.ContainsKey(idx));
-        ICollection coll = soundMap.Keys;
+        //Debug.Log("Play SFX3D");
+        GameObject go;
+        AudioSource goAS = new AudioSource();
+        SoundParam sp = new SoundParam();
+        int randomSP;
+        float randomPitch;
 
-        return soundMap[idx];
+        randomSP = Random.Range(0, sfx[(int)type].Length);
+
+        //Debug.Log("start inistantiate 3d sfx");
+        //Set parameters of 3D sound game object and save them as prefabs
+        go = Instantiate(sfxExplosionGO, colliderGOT.position, colliderGOT.rotation) as GameObject;
+        go.transform.parent = sfxManager;
+        sp = sfx[(int)type][randomSP];
+
+        goAS = go.GetComponent<AudioSource>();
+        randomPitch = Random.Range(sp.pitch, sp.pitchUpperBound);
+        goAS.clip = sp.clip;
+        goAS.loop = false;
+        goAS.Play();
+
+        StartCoroutine(AudioDestory(go,goAS.clip.length));
+        //Destroy(go, goAS.clip.length);
     }
 
-    IEnumerator fadeSound(int index, float time)
+
+    //dialog
+
+    public void DialogPlay(DIALOGRole role,DIALOG dialogID, float volumn)
     {
-        AudioSource AS = _audioSource[index - 1];
-        float delta = AS.volume / time;
-        while (AS.volume > 0.05f)
+        Debug.Log("Dialog Play");
+        StartCoroutine(CoRoutineDialogPlay((int)role, (int)dialogID, volumn));
+    }
+
+    IEnumerator CoRoutineDialogPlay(int RoleID, int dialogID, float volume)
+    {
+        while (dialogAS[RoleID].isPlaying)
         {
-            AS.volume -= delta * Time.deltaTime;
-            yield return null;
+            //Debug.Log("Sound Manager Warning: Previous dialog doesn't finish. COULD CAUSE SOME SOUNDS ERROR.");
+            yield return new WaitForSeconds(Time.deltaTime);
         }
-        AS.Stop();
-        AS.volume = 1;
+        dialogAS[RoleID].clip = dialogC[dialogID];
+        dialogAS[RoleID].volume = volume;
+        dialogAS[RoleID].Play();
+        amsDialogSpeaking.TransitionTo(.01f);
+        yield return new WaitForSeconds(dialogAS[RoleID].clip.length);
+        amsNormal.TransitionTo(.01f);
+        Debug.Log("Dialog Over");
+        // Debug.Log (dialogAS[RoleID].clip);
+    }
+
+    //special functions
+
+    //private functions
+    IEnumerator MusicFadeIn(AudioSource audios, float fadeInSpeed, float maxVolumn, bool restart)
+    {
+        //Debug.Log("Start fade in.");
+        if (restart)
+        {
+            yield return new WaitForSeconds(Time.deltaTime);
+            audios.Play();
+        }
+        while (audios.volume < maxVolumn)
+        {
+            audios.volume += fadeInSpeed * Time.deltaTime;
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+        //		Debug.Log("Complete fade in.");
+    }
+
+    void MusicFadeInReplay(AudioSource audios, float fadeInSpeed, float maxVolumn)
+    {
+        audios.Stop();
+        audios.volume = 0;
+        audios.pitch = 1f;;
+        StartCoroutine(MusicFadeIn(audios, fadeInSpeed, maxVolumn, true));
+    }
+
+    IEnumerator MusicFadeOut(AudioSource audios, float fadeOutSpeed, float minVolumn,bool stop)
+    {
+        //		Debug.Log("Start fade out.");
+        while (audios.volume >= minVolumn)
+        {
+            audios.volume -= fadeOutSpeed * Time.deltaTime;
+            if (audios.isPlaying)
+            {
+                //Debug.Log("audios.isPlaying = " + audios.isPlaying);
+                yield return new WaitForSeconds(Time.deltaTime);
+            }
+                
+        }
+        if (stop)
+        {
+            audios.Stop();
+        }
+    }
+
+    IEnumerator PitchChange(AudioSource audios, float changeSpeed, float toPitch)
+    {
+        if (!audios.isPlaying)
+        {
+            yield break;
+        }
+        if (changeSpeed > 0)
+        {
+            startRisingPitch = true;
+            while (audios.pitch < toPitch)
+            {
+                audios.pitch += changeSpeed * Time.deltaTime;
+                yield return new WaitForSeconds(Time.deltaTime);
+            }
+            startRisingPitch = false;
+        }
+        else
+        {
+            startFallingPitch = true;
+            while (audios.pitch >= toPitch)
+            {
+                audios.pitch += changeSpeed * Time.deltaTime;
+                yield return new WaitForSeconds(Time.deltaTime);
+                if (startRisingPitch)
+                {
+                    yield break;
+                }
+            }
+            startFallingPitch = false;
+        }
+    }
+
+
+    IEnumerator AudioDestory(GameObject go,float t)
+    {
+        //Debug.Log("Ready to add to list");
+        yield return new WaitForSeconds(t);
+        sfxToBeRemove.Add(go);
+        //Debug.Log("adkd to list");
+    }
+
+    void RemoveSFX()
+    {
+        Debug.Log("Destroy");
+        foreach (GameObject go in sfxToBeRemove)
+        {
+            Destroy(go);
+        }
+        sfxToBeRemove.Clear();
+    }
+
+    IEnumerator CoRoutineRemoveSFX()
+    {
+        Debug.Log("Start coroutine removesfx");
+        while (canRemoveNow)
+        {
+            yield return new WaitForSeconds(2f);
+            if (canRemoveNow)
+            {
+                RemoveSFX();
+            }
+        }
+        Debug.Log("Exit coroutine removesfx");
+    }
+
+
+    /// Plays a sound by creating an empty game object with an AudioSource
+    /// and attaching it to the given transform (so it moves with the transform). Destroys it after it finished playing.
+    void AudioPlay(AudioClip clip, Transform emitter, float volume, float pitch)
+    {
+        //Create an empty game object
+        GameObject go = new GameObject("Audio: " + clip.name);
+        go.transform.position = emitter.position;
+        go.transform.parent = emitter;
+
+        //Create the source
+        AudioSource source = go.AddComponent<AudioSource>();
+        source.clip = clip;
+        source.volume = volume;
+        source.pitch = pitch;
+        source.loop = false;
+        source.Play();
+
+        StartCoroutine(AudioDestory(go,source.clip.length));
+        //Destroy(go, clip.length+5f);
+    }
+
+    void AudioPlay(AudioClip clip)
+    {
+        AudioPlay(clip, soundManager, 1f, 1f);
+    }
+
+    void AudioPlay(AudioClip clip, Transform emitter)
+    {
+        AudioPlay(clip, emitter, 1f, 1f);
+    }
+
+    void AudioPlay(AudioClip clip, Transform emitter, float volume)
+    {
+        AudioPlay(clip, emitter, volume, 1f);
+    }
+
+    // Plays a sound at the given point in space by creating an empty game object with an AudioSource
+    // in that place and destroys it after it finished playing.
+    void AudioPlay(AudioClip clip, Vector3 point, float volume, float pitch)
+    {
+        //Create an empty game object
+        GameObject go = new GameObject("Audio: " + clip.name);
+        go.transform.position = point;
+
+        //Create the source
+        AudioSource source = go.AddComponent<AudioSource>();
+        source.clip = clip;
+        source.volume = volume;
+        source.pitch = pitch;
+        source.Play();
+        StartCoroutine(AudioDestory(go, source.clip.length));
+    }
+
+    void AudioPlay(AudioClip clip, Vector3 point)
+    {
+        AudioPlay(clip, point, 1f, 1f);
+    }
+
+    void AudioPlay(AudioClip clip, Vector3 point, float volume)
+    {
+        AudioPlay(clip, point, volume, 1f);
     }
 
 }
