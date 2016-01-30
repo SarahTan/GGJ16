@@ -66,6 +66,13 @@ public class FightSimulator : Singleton<FightSimulator> {
                                         player2Heroes[j].target = player1Heroes[i];
                                     }
                             }
+
+                            float xPos = _buildingManager.rightBuildingBase.x;
+                            if (Mathf.Abs(h1Pos.x - xPos) < 0.5f)
+                            {
+                                player1Heroes[i].state = Hero.State.Attacking;
+                            }
+
                             break;
                         case Hero.State.Moving:
                             break;
@@ -104,6 +111,13 @@ public class FightSimulator : Singleton<FightSimulator> {
                                         player2Heroes[i].target = player1Heroes[j];
                                     }
                             }
+                            
+                            float xPos = _buildingManager.leftBuildingBase.x;
+                            if (Mathf.Abs(h2Pos.x - xPos) < 0.5f)
+                            {
+                                player2Heroes[i].state = Hero.State.Attacking;
+                            }
+
                             break;
                         case Hero.State.Moving:
                             break;

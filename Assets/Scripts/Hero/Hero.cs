@@ -33,6 +33,8 @@ public class Hero : MonoBehaviour {
     public Sprite[] spriteList;
     
     private SpriteRenderer _spriteRenderer;
+    private BuildingManager _buildingManager;
+    private FightSimulator _fightSimulator;
 	private int _queuePosition;
     public int powerLevel { get; private set; }
     private float _health;
@@ -59,6 +61,8 @@ public class Hero : MonoBehaviour {
         _poweredUp = false;
         _isWalking = false;
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        _buildingManager = BuildingManager.Instance;
+        _fightSimulator = FightSimulator.Instance;
     }
 
 	public void Init(int queuePosition){
@@ -104,6 +108,20 @@ public class Hero : MonoBehaviour {
     public void attackBuilding()
     {
 
+        if (cooledDown())
+        {
+            lastHitTime = Time.time;
+            if (side.Equals(Side.LEFT))
+            {
+                _buildingManager.damageBuildings(1, powerLevel / 10);
+                _fightSimulator.checkBuildingHealth(1);
+            }
+            else
+            {
+                _buildingManager.damageBuildings(0, powerLevel / 10);
+                _fightSimulator.checkBuildingHealth(0);
+            }
+        }
     }
 
     public void attack()
