@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 public enum  BGMStage
 {
-    THE_BGM = 0
+    BGM = 0
     //define Background Music stage here
 }
 
@@ -49,7 +49,7 @@ public class SoundManager : Singleton<SoundManager>
     public AudioClip[] dialogC;
     //claim AudioClip here
 
-    const int bgmAmount = 0;//setnum
+    const int bgmAmount = 1;//setnum
     const int sfxAmount = 0;//setnum
     const int dialogRoleAmount = 0; //setnum
 
@@ -62,7 +62,6 @@ public class SoundManager : Singleton<SoundManager>
     SoundParam currentBGMsp;
     bool startFallingPitch = false;
     bool startRisingPitch = false;
-    bool isInSlowMotion;
     bool canRemoveNow = true;
     bool soundManagerEffective = true;
 
@@ -104,10 +103,13 @@ public class SoundManager : Singleton<SoundManager>
 		// Debug.Log("Sound Manager start working");
         Initialize();//initialize sound param
         StartCoroutine("CoRoutineRemoveSFX");
+        
     }
 
     void Update()
     {
+        if (Input.GetKeyDown("b")) bgmPlay(BGMStage.BGM);
+        if (Input.GetKeyDown("s")) bgmStop();
     }
 
     //Initialize SFX Param (volumn and pitch of each clip)
@@ -116,6 +118,8 @@ public class SoundManager : Singleton<SoundManager>
         int i,j;
 
         //bgm initiate
+        bgm[(int)BGMStage.BGM] = new SoundParam(bgmC, 1f, 1f);
+
 
         //sfx initiate[]
         //for (j = 0; j <= sfxAmount - 1; j++)
@@ -129,7 +133,7 @@ public class SoundManager : Singleton<SoundManager>
         //        sfx[j] = new SoundParam[1];
         //    }
         //}
-            //sfx initiate[][]
+        //sfx initiate[][]
 
     }
 
@@ -140,6 +144,16 @@ public class SoundManager : Singleton<SoundManager>
         Debug.Log("Play BGM");
         StartCoroutine(CoRoutineBgmPlay(bgmAS, stage, 10f, 10f));
         //currentBGMsp = bgm[(int)stage];
+    }
+
+    public void bgmStop(float fadeOutSpeed)
+    {
+        StartCoroutine(MusicFadeOut(bgmAS, fadeOutSpeed, 0.01f, true));
+    }
+
+    public void bgmStop()
+    {
+        bgmStop(10f);
     }
 
     IEnumerator CoRoutineBgmPlay(AudioSource audioS, BGMStage stage, float fadeOutSpeed, float fadeInSpeed)
