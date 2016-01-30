@@ -23,7 +23,17 @@ public class InputController : Singleton<InputController> {
     {
 	
 	}
-	
+
+    public KeyCode[] parseKeys(string[] keys)
+    {
+        KeyCode[] codes = new KeyCode[keys.Length];
+        for(int i =0; i < keys.Length;i++)
+        {
+            codes[i] = parseString(keys[i]);
+        }
+        return codes;
+    }
+
 	// Update is called once per frame
 	void Update () {
         if (Input.GetKeyDown("q") && _keyMap.ContainsKey(KeyCode.Q))
@@ -156,4 +166,114 @@ public class InputController : Singleton<InputController> {
         }
 	}
 
+    public KeyCode parseString(string key)
+    {
+        switch (key)
+        {
+            case "Q":
+            case "q":
+                return KeyCode.Q;
+            case "W":
+            case "w":
+                return KeyCode.W;
+            case "E":
+            case "e":
+                return KeyCode.E;
+            case "R":
+            case "r":
+                return KeyCode.R;
+            case "T":
+            case "t":
+                return KeyCode.T;
+            case "Y":
+            case "y":
+                return KeyCode.Y;
+            case "u":
+            case "U":
+                return KeyCode.U;
+            case "I":
+            case "i":
+                return KeyCode.I;
+            case "O":
+            case "o":
+                return KeyCode.O;
+            case "P":
+            case "p":
+                return KeyCode.P;
+            case "A":
+            case "a":
+                return KeyCode.A;
+            case "S":
+            case "s":
+                return KeyCode.S;
+            case "D":
+            case "d":
+                return KeyCode.D;
+            case "F":
+            case "f":
+                return KeyCode.F;
+            case "G":
+            case "g":
+                return KeyCode.G;
+            case "H":
+            case "h":
+                return KeyCode.H;
+            case "J":
+            case "j":
+                return KeyCode.J;
+            case "K":
+            case "k":
+                return KeyCode.K;
+            case "L":
+            case "l":
+                return KeyCode.L;
+            case "Z":
+            case "z":
+                return KeyCode.Z;
+            case "X":
+            case "x":
+                return KeyCode.X;
+            case "C":
+            case "c":
+                return KeyCode.C;
+            case "V":
+            case "v":
+                return KeyCode.V;
+            case "B":
+            case "b":
+                return KeyCode.B;
+            case "N":
+            case "n":
+                return KeyCode.N;
+            case "m":
+            case "M":
+                return KeyCode.M;
+            case "DOWN":
+            case "Down":
+            case "down":
+                return KeyCode.DownArrow;
+            case "UP":
+            case "Up":
+            case "up":
+                return KeyCode.UpArrow;
+            case "LEFT":
+            case "Left":
+            case "left":
+                return KeyCode.LeftArrow;
+            case "RIGHT":
+            case "Right":
+            case "right":
+                return KeyCode.RightArrow;
+            case "MOUSE RIGHT":
+            case "Mouse Right":
+            case "mouse right":
+                return KeyCode.Mouse1;
+            case "MOUSE LEFT":
+            case "Mouse Left":
+            case "mouse left":
+                return KeyCode.Mouse0;
+            default:
+                return KeyCode.Q;
+        }
+    }
 }

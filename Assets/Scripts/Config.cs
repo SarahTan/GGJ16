@@ -7,11 +7,13 @@ using System.Collections;
 public class Config : Singleton<Config> {
     public string filename = "config.ini";
 
+    private InputController _inputController;
     private GameManager _gameManager;
 
     void Awake()
     {
         //Initialize Singletons
+        _inputController = InputController.Instance;
         _gameManager = GameManager.Instance;
 
         loadFile(filename);
@@ -45,8 +47,14 @@ public class Config : Singleton<Config> {
                             switch (data[0].Trim().ToLower())
                             {
                                 case "player 1":
-                                    String[] keys = data[1].Trim().Split(',');
-                                    //TODO: Eugene
+                                    String[] keys1 = data[1].Trim().Split(',');
+                                    KeyCode[] codes1 = _inputController.parseKeys(keys1);
+                                    break;
+                                //Assign to player 1
+                                case "player 2":
+                                    String[] keys2 = data[1].Trim().Split(',');
+                                    KeyCode[] codes2 = _inputController.parseKeys(keys2);
+                                    //Assign to player 2
                                     break;
                                 default:
                                     break;
