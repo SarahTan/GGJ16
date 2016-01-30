@@ -15,12 +15,12 @@ public class Player : MonoBehaviour {
 	public ComboManager.Direction[] sequence;
 	public int currentKey;
 
-	public Vector3 arrowKeysPos;
+	public Vector3 centerPos;
 	public GameObject arrows;
 
     public HeroManager heroManager;
 
-    private List<Hero> _heroList;
+    public List<Hero> heroList;
 
 	public Player (int i) {
 		index = i;
@@ -32,16 +32,19 @@ public class Player : MonoBehaviour {
 		arrows = new GameObject ();
 		arrows.name = "Player" + (index+1) + " Arrows";
 
+		Camera cam = GameObject.Find ("Main Camera").GetComponent<Camera> ();
 		if (index == 0) {
-			arrowKeysPos = Vector3.zero;
+			centerPos = cam.ScreenToWorldPoint (new Vector3 (Screen.width / 4,
+													Screen.height / 10, 9));
 		} else if (index == 1) {
-
+			centerPos = cam.ScreenToWorldPoint (new Vector3 (Screen.width / 4 * 3,
+													Screen.height / 10, 9));
 		}
 
         Debug.Log(_gameManager.PLAYER_HERO_CENTER[index]);
         heroManager = new HeroManager(index, _gameManager.PLAYER_HERO_CENTER[index]);
 
-        _heroList = new List<Hero>();
+        heroList = new List<Hero>();
 	}
 
 
@@ -52,21 +55,28 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
-		
+
+    public void addHero(Hero hero)
+    {
+        heroList.Add(hero);
+    }
+
     public void assignKeys(KeyCode[] keys)
     {
-            _inputController.registerTrigger(() => _comboManager.CheckKey(index, ComboManager.Direction.UP), keys[0]);
-            _inputController.registerTrigger(() => _comboManager.CheckKey(index, ComboManager.Direction.LEFT), keys[1]);
-            _inputController.registerTrigger(() => _comboManager.CheckKey(index, ComboManager.Direction.DOWN), keys[2]);
-            _inputController.registerTrigger(() => _comboManager.CheckKey(index, ComboManager.Direction.RIGHT), keys[3]);        
-
+            _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.UP), keys[0]);
+            _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.LEFT), keys[1]);
+            _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.DOWN), keys[2]);
+            _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.RIGHT), keys[3]);
+            _inputController.registerTrigger(() => _comboManager.LockIn(index), keys[4]);
     }
 
     public void triggerDirection(int player, ComboManager.Direction dir)
     {
+        Debug.Log("Trigger");
         _comboManager.CheckKey(player, dir);
+        heroManager.UpdatePose(dir);
     }
 
     public void ComboResult(bool pass)

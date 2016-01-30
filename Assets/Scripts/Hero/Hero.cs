@@ -22,10 +22,17 @@ public class Hero : MonoBehaviour {
     private float _initXPos;
     private float _maxXPos;
 
-    void Start() {
-        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+    public bool fighting;
+    public Hero target;
+    public bool moving;
+
+    void Start()
+    {
+        moving = false;
+        fighting = false;
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
-	
+
 	public void Init(int queuePosition){
 		_queuePosition = queuePosition;
 		_powerLevel = -1;
@@ -37,6 +44,7 @@ public class Hero : MonoBehaviour {
     }
 
     public void UpdatePose(ComboManager.Direction poseDirection) {
+        Debug.Log("Updating psoe");
         switch (poseDirection) {
             case ComboManager.Direction.UP:
                 _spriteRenderer.sprite = spriteList[(int)HERO_POSE.UP];
@@ -55,6 +63,43 @@ public class Hero : MonoBehaviour {
         }
     }
 
+    public void moveLeft()
+    {
+        if (!moving && !fighting)
+        {
+            transform.position += 0.02f * Vector3.left;
+        }
+    }
+
+    IEnumerator moveLeft(float dist, float step)
+    {
+        float moved = 0;
+        while (moved < dist)
+        {
+            yield return null;
+        }
+        moving = false;
+    }
+
+    public void moveRight()
+    {
+        if (!moving && !fighting)
+        {
+            transform.position += 0.02f * Vector3.right;
+        }
+    }
+
+    IEnumerator moveRight(float dist, float step)
+    {
+        float moved = 0;
+        while (moved < dist)
+        {
+            transform.position += step * Vector3.right;
+            yield return null;
+        }
+        moving = false;
+    }
+
     public void PowerUp(int powerLevel) {
         _powerLevel = powerLevel;
         
@@ -67,6 +112,7 @@ public class Hero : MonoBehaviour {
 
     public void moveToPlayingField()
     {
+        moving = true;
         StartCoroutine(move(transform.position + Vector3.up * 3));
     }
 
@@ -79,6 +125,7 @@ public class Hero : MonoBehaviour {
             yield return null;
         }
         transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+        moving = false;
     }
 
     // Snap to position
