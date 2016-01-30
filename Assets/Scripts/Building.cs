@@ -66,14 +66,12 @@ public class Building : MonoBehaviour {
 
     public void lowerHealth(int hp)
     {
-        Debug.Log("Health: " + health + ", total: " + totalHealth);
         health -= hp;
         if (health < 0)
         {
             health = 0;
         }
         float percent = 1.0f * health / totalHealth;
-        Debug.Log("Percent: " + percent);
         int tier = Mathf.CeilToInt(percent * (buildingStates.Length - 1));
         setState((buildingStates.Length - 1) - tier);
     }

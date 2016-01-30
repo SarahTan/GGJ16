@@ -22,72 +22,88 @@ public class FightSimulator : Singleton<FightSimulator> {
 
 
 	}
-	
+
+    public void checkBuildingHealth(int player)
+    {
+        float health = _buildingManager.getHealth(player);
+        if (health <= 0)
+        {
+            _gameManager.gameOver(player);
+        }
+    }
+
 	// Update is called once per frame
 	void Update () {
-        for (int i = 0; i < player1Heroes.Count; i++)
-        {
-            if (player1Heroes[i].dead)
-            {
-                _buildingManager.damageBuildings(0, player1Heroes[i].powerLevel);
-                player1Heroes.RemoveAt(i);
-                continue;
-            }
-            if (!player1Heroes[i].fighting)
-            {
-                player1Heroes[i].move();
-
-                Vector2 h1Pos = player1Heroes[i].transform.position.toVector2();
-                for (int j = 0; j < player2Heroes.Count; j++)
+        switch(_gameManager.gameState) {
+            case GameManager.GameState.Playing:
+                for (int i = 0; i < player1Heroes.Count; i++)
                 {
-                    Vector2 h2Pos = player2Heroes[j].transform.position.toVector2();
-                    if ((h1Pos - h2Pos).magnitude < 0.5f)
+                    if (player1Heroes[i].dead)
                     {
-                        player1Heroes[i].fighting = true;
-                        player1Heroes[i].target = player2Heroes[j];
-                        player2Heroes[j].fighting = true;
-                        player2Heroes[j].target = player1Heroes[i];
+                        _buildingManager.damageBuildings(0, player1Heroes[i].powerLevel / 3);
+                        player1Heroes.RemoveAt(i);
+                        checkBuildingHealth(0);
+                        continue;
+                    }
+                    if (!player1Heroes[i].fighting)
+                    {
+                        player1Heroes[i].move();
+
+                        Vector2 h1Pos = player1Heroes[i].transform.position.toVector2();
+                        for (int j = 0; j < player2Heroes.Count; j++)
+                        {
+                            Vector2 h2Pos = player2Heroes[j].transform.position.toVector2();
+                            if ((h1Pos - h2Pos).magnitude < 0.5f)
+                            {
+                                player1Heroes[i].fighting = true;
+                                player1Heroes[i].target = player2Heroes[j];
+                                player2Heroes[j].fighting = true;
+                                player2Heroes[j].target = player1Heroes[i];
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        player1Heroes[i].attack();
                     }
                 }
 
-            }
-            else
-            {
-                player1Heroes[i].attack();
-            }
-        }
-
-        for (int i = 0; i < player2Heroes.Count; i++)
-        {
-            if (player2Heroes[i].dead)
-            {
-                _buildingManager.damageBuildings(1, player2Heroes[i].powerLevel);
-                player2Heroes.RemoveAt(i);
-                continue;
-            }
-            if (!player2Heroes[i].fighting)
-            {
-                player2Heroes[i].move();
-
-                Vector2 h2Pos = player2Heroes[i].transform.position.toVector2();
-                for (int j = 0; j < player1Heroes.Count; j++)
+                for (int i = 0; i < player2Heroes.Count; i++)
                 {
-                    Vector2 h1Pos = player1Heroes[j].transform.position.toVector2();
-                    if ((h1Pos - h2Pos).magnitude < 0.5f)
+                    if (player2Heroes[i].dead)
                     {
-                        player1Heroes[j].fighting = true;
-                        player1Heroes[j].target = player2Heroes[i];
-                        player2Heroes[i].fighting = true;
-                        player2Heroes[i].target = player1Heroes[j];
+                        _buildingManager.damageBuildings(1, player2Heroes[i].powerLevel);
+                        player2Heroes.RemoveAt(i);
+                        checkBuildingHealth(1);
+                        continue;
+                    }
+                    if (!player2Heroes[i].fighting)
+                    {
+                        player2Heroes[i].move();
+
+                        Vector2 h2Pos = player2Heroes[i].transform.position.toVector2();
+                        for (int j = 0; j < player1Heroes.Count; j++)
+                        {
+                            Vector2 h1Pos = player1Heroes[j].transform.position.toVector2();
+                            if ((h1Pos - h2Pos).magnitude < 0.5f)
+                            {
+                                player1Heroes[j].fighting = true;
+                                player1Heroes[j].target = player2Heroes[i];
+                                player2Heroes[i].fighting = true;
+                                player2Heroes[i].target = player1Heroes[j];
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        player2Heroes[i].attack();
                     }
                 }
-
-            }
-            else
-            {
-                player2Heroes[i].attack();
-            }
+                break;
+            default:
+                break;
         }
-
 	}
 }

@@ -18,8 +18,8 @@ public class BuildingManager : Singleton<BuildingManager> {
     public const float DEFAULT_MIN_BUILDING_FOOTPRINT = 1f;
     public const int GLOBAL_HEALTH = 1000;
 
-    public Vector3 leftBuildingAnchor = new Vector3(-7.5f, 1.5f, 0);
-    public Vector3 rightBuildingAnchor = new Vector3(7.5f, 1.5f, 0);
+    public Vector3 leftBuildingAnchor = new Vector3(-7.5f, 0.5f, 0);
+    public Vector3 rightBuildingAnchor = new Vector3(7.5f, 0.5f, 0);
 
 	GameObject Player1Buildings;
 	GameObject Player2Buildings;
@@ -131,7 +131,6 @@ public class BuildingManager : Singleton<BuildingManager> {
 
     public void generateBuildings()
     {
-        Debug.Log("Count: " + _buildingCount);
         if (_buildingCount == 1)
         {
             buildings[0, 0] = new Building(_maxBuildingHeight, _buildingFootprint, _globalHealth, false);
@@ -151,7 +150,6 @@ public class BuildingManager : Singleton<BuildingManager> {
                 bool flipped = (Random.RandomRange(1, 10) % 2 == 0);
                 float currentBuildingWidth = Random.Range(buildingWidth * 1f, buildingWidth * 1.3f);
                 float currentBuildingHeight = Random.Range(_minBuildingHeight * 0.7f, _maxBuildingHeight * 0.7f);
-                Debug.Log("Building Height: " + _maxBuildingHeight + " : " + _minBuildingHeight);
                 float currentBuildingDepth = Random.Range(0f, 0.2f);
                 GameObject bObj = Instantiate(Resources.Load("Prefabs/Building"), Vector3.zero, Quaternion.identity) as GameObject;
 				bObj.transform.parent = Player1Buildings.transform;
@@ -174,7 +172,6 @@ public class BuildingManager : Singleton<BuildingManager> {
                 float currentBuildingDepth = Random.Range(0.25f, 0.45f);
                 float currentBuildingWidth = Random.Range(buildingWidth * 1f, buildingWidth * 1.3f);
                 float currentBuildingHeight = Random.Range(_maxBuildingHeight, _minBuildingHeight);
-                Debug.Log("And Building Height: " + _maxBuildingHeight + " : " + _minBuildingHeight);
                 GameObject bObj = Instantiate(Resources.Load("Prefabs/Building"), Vector3.zero, Quaternion.identity) as GameObject;
 				bObj.transform.parent = Player1Buildings.transform;
 				Building building = bObj.GetComponent<Building>();

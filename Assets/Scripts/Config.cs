@@ -48,6 +48,10 @@ public class Config : Singleton<Config> {
                         {
                             switch (data[0].Trim().ToLower())
                             {
+                                case "start key":
+                                    KeyCode start = _inputController.parseString(data[1].Trim());
+                                    _inputController.registerTrigger(_gameManager.startGame, start);
+                                    break;
                                 case "player 1":
                                     String[] keys1 = data[1].Trim().Split(',');
                                     KeyCode[] codes1 = _inputController.parseKeys(keys1);
