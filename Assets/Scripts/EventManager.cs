@@ -26,16 +26,24 @@ public class EventManager : Singleton<EventManager> {
         }
         _eventSet.Add(evt);
     }
-
-    public bool addEvent(GameEvent gameEvent, float delay)
+    
+    public bool addEvent(GameEvent gameEvent, float delay, bool relative)
     {
         if (_currentEventSet == null)
         {
+            Debug.Log("SD");
             return false;
         }
         else
         {
-            _currentEventSet.Add(new TimedEvent(gameEvent, delay));
+            if (relative)
+            {
+                _currentEventSet.Add(new TimedEvent(gameEvent, startTime + delay));
+            }
+            else
+            {
+                _currentEventSet.Add(new TimedEvent(gameEvent, delay));
+            }
             return true;
         }
     }
@@ -43,12 +51,12 @@ public class EventManager : Singleton<EventManager> {
     void Awake()
     {
         _eventStore = new Dictionary<int, List<TimedEvent>>();
+        startGame();
         
     }
 
 	// Use this for initialization
 	void Start () {
-        //startGame();
 	}
 
     public void startGame(int i)
@@ -59,6 +67,10 @@ public class EventManager : Singleton<EventManager> {
     // Triggers the game to start
     public void startGame()
     {
+        if (!_eventStore.ContainsKey(defaultStage))
+        {
+            _eventStore.Add(defaultStage, new List<TimedEvent>());
+        }
         goToStage(defaultStage);
     }
 
@@ -95,7 +107,13 @@ public class EventManager : Singleton<EventManager> {
 
     private AVL<TimedEvent> retrieveStage(int i)
     {
-        List<TimedEvent> eventList = _eventStore[i];
+        List<TimedEvent> eventList;
+        if (!_eventStore.ContainsKey(i))
+        {
+            _eventStore.Add(i, new List<TimedEvent>());
+            
+        }
+        eventList = _eventStore[i];
         AVL<TimedEvent> eventSet = new AVL<TimedEvent>();
         foreach (TimedEvent evt in eventList)
         {

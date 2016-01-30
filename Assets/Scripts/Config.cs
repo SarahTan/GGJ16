@@ -66,6 +66,30 @@ public class Config : Singleton<Config> {
                                     int buildingFootprint = int.Parse(data[1].Trim());
                                     _buildingManager.setBuildingFootprint(buildingFootprint);
                                     break;
+                                case "player 1 power up":
+                                    KeyCode p1p = _inputController.parseString(data[1].Trim());
+                                    _inputController.registerTrigger(_gameManager.players[0].powerUp, p1p);
+                                    break;
+                                case "player 1 deploy":
+                                    KeyCode p1d = _inputController.parseString(data[1].Trim());
+                                    _inputController.registerTrigger(_gameManager.players[0].deploy, p1d);
+                                    break;
+                                case "player 1 attack":
+                                    KeyCode p1a = _inputController.parseString(data[1].Trim());
+                                    _inputController.registerTrigger(_gameManager.players[0].attack, p1a);
+                                    break;
+                                case "player 2 power up":
+                                    KeyCode p2p = _inputController.parseString(data[1].Trim());
+                                    _inputController.registerTrigger(_gameManager.players[1].powerUp, p2p);
+                                    break;
+                                case "player 2 deploy":
+                                    KeyCode p2d = _inputController.parseString(data[1].Trim());
+                                    _inputController.registerTrigger(_gameManager.players[1].deploy, p2d);
+                                    break;
+                                case "player 2 attack":
+                                    KeyCode p2a = _inputController.parseString(data[1].Trim());
+                                    _inputController.registerTrigger(_gameManager.players[1].attack, p2a);
+                                    break;
                                 default:
                                     break;
                             }
