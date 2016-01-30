@@ -13,12 +13,12 @@ public class BuildingManager : Singleton<BuildingManager> {
 
     public const int DEFAULT_BUILDING_COUNT = 11;
     public const float DEFAULT_BUILDING_FOOTPRINT = 5;
-    public const float DEFAULT_MAX_BUILDING_HEIGHT = 1.7f;
+    public const float DEFAULT_MAX_BUILDING_HEIGHT = 1.5f;
     public const float DEFAULT_MIN_BUILDING_FOOTPRINT = 1f;
     public const int GLOBAL_HEALTH = 1000;
 
-    public Vector3 leftBuildingAnchor = new Vector3(-7.5f, 1f, 0);
-    public Vector3 rightBuildingAnchor = new Vector3(7.5f, 1f, 0);
+    public Vector3 leftBuildingAnchor = new Vector3(-7.5f, 1.5f, 0);
+    public Vector3 rightBuildingAnchor = new Vector3(7.5f, 1.5f, 0);
 
 	GameObject Player1Buildings;
 	GameObject Player2Buildings;
@@ -174,7 +174,7 @@ public class BuildingManager : Singleton<BuildingManager> {
                 buildings[1, i].place(rightBuildingAnchor + currentProgress * Vector3.left + currentBuildingDepth * Vector3.forward + currentBuildingHeight * Vector3.up * 1.5f);
                 currentProgress += currentBuildingWidth * 0.9f;
             }
-            currentProgress = 0;
+            currentProgress = buildingWidth/2;
             for (int i = _buildingCount / 2 + 1; i < _buildingCount; i++)
             {
                 float currentBuildingDepth = Random.Range(0.25f, 0.45f);

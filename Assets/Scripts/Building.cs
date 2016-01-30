@@ -17,6 +17,7 @@ public class Building : MonoBehaviour {
         height = h;
         width = w;
         transform.localScale = new Vector3(w, h, 1);
+        setState(0);
     }
 
     public void setProperties(float h, float w, int hp)
@@ -26,6 +27,22 @@ public class Building : MonoBehaviour {
         height = h;
         width = w;
         transform.localScale = new Vector3(w, h, 1);
+        setState(0);
+    }
+
+    private void setState(int state)
+    {
+        for (int i = 0; i < buildingStates.Length; i++)
+        {
+            if (i == state)
+            {
+                buildingStates[i].SetActive(true);
+            }
+            else
+            {
+                buildingStates[i].SetActive(false);
+            }
+        }
     }
 
     public void place(Vector3 pos)
@@ -42,7 +59,7 @@ public class Building : MonoBehaviour {
         }
         float percent = health / totalHealth;
         int tier = Mathf.CeilToInt(percent * buildingStates.Length);
-
+        setState(buildingStates.Length - tier);
     }
 
 	// Use this for initialization
