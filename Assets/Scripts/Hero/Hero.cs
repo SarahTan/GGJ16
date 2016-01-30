@@ -23,7 +23,7 @@ public class Hero : MonoBehaviour {
     private SpriteRenderer _spriteRenderer;
 	private int _queuePosition;
     public int powerLevel { get; private set; }
-    private int _health;
+    private float _health;
     private float _maxQueue;
     private float _maxScale;
     private float _initXPos;
@@ -34,12 +34,14 @@ public class Hero : MonoBehaviour {
     public Hero target;
     public bool moving;
     public bool dead;
+    private bool _flyingOff;
 
     private float _lastHitTime;
     private float _attackCooldown;
         
     void Start()
     {
+        _flyingOff = false;
         _lastHitTime = Time.time;
         moving = false;
         fighting = false;
@@ -80,25 +82,28 @@ public class Hero : MonoBehaviour {
         if (!dead && _lastHitTime + _attackCooldown < Time.time)
         {
             _lastHitTime = Time.time;
-            target.takeDamage(this, powerLevel);
+            target.takeDamage(this, powerLevel * 0.3f);
         }
     }
 
-    public void takeDamage(Hero attacker, int amount)
+    public void takeDamage(Hero attacker, float amount)
     {
         _health -= amount;
         if (_health <= 0)
         {
-            Debug.Log("Dead");
             dead = true;
             attacker.fighting = false;
             attacker.target = null;
-            flyOff();
+            if (!_flyingOff)
+            {
+                flyOff();
+            }
         }
     }
 
     private void flyOff()
     {
+        _flyingOff = true;
         float angle = Random.Range(30, 70) * Mathf.PI / 180;
         if (side.Equals(Side.LEFT))
         {
@@ -142,7 +147,7 @@ public class Hero : MonoBehaviour {
     public void PowerUp(int pl) {
         powerLevel = pl;
         _health = powerLevel;
-        _attackCooldown = 100.0f / powerLevel;
+        _attackCooldown = 40.0f / powerLevel;
         
         if(powerLevel < 0) {
             // If poop level, show transformation to poop
