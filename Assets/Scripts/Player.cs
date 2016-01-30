@@ -4,6 +4,7 @@ using System.Collections;
 public class Player : MonoBehaviour {
 
     private ComboManager _comboManager;
+    private InputController _inputController;
 
     public int index { get; private set; }
 
@@ -15,6 +16,7 @@ public class Player : MonoBehaviour {
     {
         index = i;
         _comboManager = ComboManager.Instance;
+        _inputController = InputController.Instance;
     }
 
 	// Use this for initialization
@@ -30,7 +32,12 @@ public class Player : MonoBehaviour {
     public void assignKeys(KeyCode[] keys)
     {
         _comboManager.AssignKeys(index, keys);
+        foreach (KeyCode key in keys)
+        {
+            _inputController.registerTrigger(() => _comboManager.CheckKey(key), key);
+        }
     }
+
 
 	public bool KeyIsInMapping (KeyCode key) {
 		foreach (KeyCode mapKey in mapping) {
