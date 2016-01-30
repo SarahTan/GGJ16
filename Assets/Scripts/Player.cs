@@ -8,8 +8,7 @@ public class Player : MonoBehaviour {
 
     public int index { get; private set; }
 
-	public KeyCode[] mapping;
-	public KeyCode[] sequence;
+	public ComboManager.Direction[] sequence;
 	public int currentKey;
 
 	public Vector3 arrowKeysPos;
@@ -43,15 +42,15 @@ public class Player : MonoBehaviour {
 		
     public void assignKeys(KeyCode[] keys)
     {
-        _comboManager.AssignKeys(index, keys);
-        foreach (KeyCode key in keys)
-        {
-            _inputController.registerTrigger(() => _comboManager.CheckKey(key), key);
-        }
+            _inputController.registerTrigger(() => _comboManager.CheckKey(index, ComboManager.Direction.UP), keys[0]);
+            _inputController.registerTrigger(() => _comboManager.CheckKey(index, ComboManager.Direction.DOWN), keys[1]);
+            _inputController.registerTrigger(() => _comboManager.CheckKey(index, ComboManager.Direction.LEFT), keys[2]);
+            _inputController.registerTrigger(() => _comboManager.CheckKey(index, ComboManager.Direction.RIGHT), keys[3]);        
     }
 
 
-	public void ComboResult (bool pass) {
+    public void ComboResult(bool pass)
+    {
 		// currentKey is how many keys the player has gotten correct
 		// If it's above the min req number (4), ComboManager sends true, else it sends false
 		Debug.Log("Combo result: " + pass + "!");
