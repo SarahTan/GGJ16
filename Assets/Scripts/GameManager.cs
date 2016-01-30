@@ -4,6 +4,7 @@ using System.Collections;
 public class GameManager : Singleton<GameManager> {
 
     private BuildingManager _buildingManager;
+    private FightSimulator _fightSimulator;
     private Config _config;
 
     public Player[] players { get; private set; }
@@ -24,7 +25,7 @@ public class GameManager : Singleton<GameManager> {
 
         _config = Config.Instance;
         _buildingManager = BuildingManager.Instance;
-
+        _fightSimulator = FightSimulator.Instance;
     }
 
 	// Use this for initialization
@@ -34,6 +35,6 @@ public class GameManager : Singleton<GameManager> {
 	
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 }
