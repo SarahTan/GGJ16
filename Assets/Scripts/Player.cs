@@ -6,6 +6,7 @@ public class Player : MonoBehaviour {
     private ComboManager _comboManager;
     private InputController _inputController;
     private GameManager _gameManager;
+    private BuildingManager _buildingManager;
 
     public int index { get; private set; }
 
@@ -22,6 +23,7 @@ public class Player : MonoBehaviour {
 		_comboManager = ComboManager.Instance;
 		_inputController = InputController.Instance;
         _gameManager = GameManager.Instance;
+        _buildingManager = BuildingManager.Instance;
 
 		arrows = new GameObject ();
 		arrows.name = "Player" + (index+1) + " Arrows";
@@ -86,7 +88,11 @@ public class Player : MonoBehaviour {
 
     public void attack()
     {
-
+        if (index == 0) {
+            _buildingManager.damageBuildings(1, 10); 
+        } else {
+            _buildingManager.damageBuildings(0, 10); 
+        }
     }
 
 
