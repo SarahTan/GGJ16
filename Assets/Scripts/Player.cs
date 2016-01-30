@@ -9,6 +9,11 @@ public class Player : MonoBehaviour {
 	public KeyCode[] sequence;
 	public int currentKey;
 
+    public Player(int i)
+    {
+        index = i;
+    }
+
 	// Use this for initialization
 	void Start () {
 	
