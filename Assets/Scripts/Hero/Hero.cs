@@ -43,7 +43,7 @@ public class Hero : MonoBehaviour {
         _lastHitTime = Time.time;
         moving = false;
         fighting = false;
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
 	public void Init(int queuePosition){
