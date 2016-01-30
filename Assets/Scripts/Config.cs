@@ -9,12 +9,14 @@ public class Config : Singleton<Config> {
 
     private InputController _inputController;
     private GameManager _gameManager;
+    private BuildingManager _buildingManager;
 
     void Awake()
     {
         //Initialize Singletons
         _inputController = InputController.Instance;
         _gameManager = GameManager.Instance;
+        _buildingManager = BuildingManager.Instance;
 
         loadFile(filename);
         // Other stuff 
@@ -55,6 +57,10 @@ public class Config : Singleton<Config> {
                                     String[] keys2 = data[1].Trim().Split(',');
                                     KeyCode[] codes2 = _inputController.parseKeys(keys2);
                                     //Assign to player 2
+                                    break;
+                                case "building count":
+                                    int buildingCount = int.Parse(data[1].Trim());
+                                    _buildingManager.setBuildingCount(buildingCount);
                                     break;
                                 default:
                                     break;
