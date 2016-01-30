@@ -103,7 +103,8 @@ public class ComboManager : Singleton<ComboManager> {
 	// Generate a sequence of arrows during game play
 	public IEnumerator GenerateSeq (int playerNum, int numKeys) {
 		if (numKeys < minNum || numKeys > maxNum) {
-			return false;
+			Debug.LogError ("You can only generate between 4-8 keys!");
+			yield break;
 		}
 
 		// Destroy all the previous arrows
@@ -113,7 +114,6 @@ public class ComboManager : Singleton<ComboManager> {
 		yield return null;	// Because actual destruction only takes place at end of frame
 
 		// Generate new arrows
-		Debug.Log ("generating");
 		_gameManager.players [playerNum].seqLength = numKeys;
 		_gameManager.players [playerNum].sequence = new Direction[numKeys];
 
