@@ -65,9 +65,14 @@ public class HeroManager {
         _currentHero.MoveToCenter();
     }
 
-    public void SendOutHero(HERO_POWER heroPower) {
-        // Send out the hero based on whether its a success or failure
+    public void PowerUp(HERO_POWER heroPower)
+    {
         _currentHero.PowerUp(_powerLevelList[(int)heroPower]);
+    }
+
+    public void SendOutHero() {
+        // Send out the hero based on whether its a success or failure
+        _currentHero.moveToPlayingField();
         NextHero();
     }
 
@@ -76,7 +81,7 @@ public class HeroManager {
             _currentHero.UpdatePose(poseDirection);
         }
     }
-
+    
     private void NextHero() {
         // Remove first element in the list
         if(_heroList.Count > 0) {

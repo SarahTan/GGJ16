@@ -64,9 +64,25 @@ public class Hero : MonoBehaviour {
         }else{
             // Show transformation to super saiyan
         }
-        // Move hero to the fighting stage
-        MoveToPosition(new Vector3(5f, 0, 0));
     }
+
+    public void moveToPlayingField()
+    {
+        StartCoroutine(move(transform.position + Vector3.up * 3));
+    }
+
+    IEnumerator move(Vector3 final)
+    {
+        while ((transform.position - final).magnitude > 0.1f)
+        {
+            transform.localScale *= 0.95f;
+            transform.position = Vector3.MoveTowards(transform.position, final, 0.1f);
+            yield return null;
+        }
+        transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+    }
+
+
     public void MoveToCenter() {
         MoveToPosition(Vector3.zero);
         ScaleTo(_maxScale);
