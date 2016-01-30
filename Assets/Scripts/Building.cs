@@ -7,7 +7,7 @@ public class Building : MonoBehaviour {
     public float width { get; private set; }
     public int health { get; private set; }
     public int totalHealth { get; private set; }
-
+    
     GameObject buildingSprite;
 
     //temp
@@ -20,10 +20,19 @@ public class Building : MonoBehaviour {
         buildingSprite = Instantiate(Resources.Load("Building")) as GameObject;
     }
 
+    public void place(Vector3 pos)
+    {
+        transform.position = pos;
+    }
+
     public void lowerHealth(int hp)
     {
         health -= hp;
-        float percent = totalHealth / health;
+        if (health < 0)
+        {
+            health = 0;
+        }
+        float percent = health / totalHealth;
         int tier = Mathf.CeilToInt(percent * healthTiers);
 
     }
