@@ -8,7 +8,6 @@ public class Player : MonoBehaviour {
 	public KeyCode[] mapping;
 	public KeyCode[] sequence;
 	public int currentKey;
-	public bool seqFail;
 
 	// Use this for initialization
 	void Start () {
@@ -21,11 +20,21 @@ public class Player : MonoBehaviour {
 	}
 
 	public bool KeyIsInMapping (KeyCode key) {
-
-		return true;
+		foreach (KeyCode mapKey in mapping) {
+			if (key == mapKey) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void ComboResult (bool pass) {
+		// currentKey is how many keys the player has gotten correct
+		// If it's above the min req number (4), ComboManager sends true, else it sends false
+		Debug.Log("Combo result: " + pass + "!");
 
+
+		// Reset this
+		currentKey = 0;
 	}
 }

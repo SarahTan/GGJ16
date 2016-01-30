@@ -8,6 +8,7 @@ public class ComboManager : Singleton<ComboManager> {
 	int minNum = 4;
 	int maxNum = 8;
 	int numPlayers = 2;
+	int minReqKeys = 1;
 
 	void Awake() {
 		_gameManager = GameManager.Instance;
@@ -15,12 +16,14 @@ public class ComboManager : Singleton<ComboManager> {
 
 	// Use this for initialization
 	void Start () {
-		Invoke ("Test", 1f);
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		if (Input.GetKeyUp (KeyCode.Space)) {
+			Test ();
+		}
 	}
 
 	// For testing
@@ -28,25 +31,36 @@ public class ComboManager : Singleton<ComboManager> {
 		int playerNum = 0;
 
 		// Mapping of a player's keys
-		KeyCode[] temp = new KeyCode[4]{KeyCode.LeftArrow, 
-										KeyCode.RightArrow, 
-										KeyCode.UpArrow, 
-										KeyCode.DownArrow};
-		AssignKeys (playerNum, temp);
+		if (_gameManager.players [playerNum].mapping == null) {
+			KeyCode[] testMapping = new KeyCode[4] {KeyCode.LeftArrow, 
+											KeyCode.RightArrow, 
+											KeyCode.UpArrow, 
+											KeyCode.DownArrow};
+			AssignKeys (playerNum, testMapping);
+			Debug.Log ("test");
+		}
 
 		// Generate a player's current sequence
 		GenerateSeq (playerNum, 6);
 
 		// Check if the key being pressed is correct
-		temp = new KeyCode[6] {KeyCode.LeftArrow, 
+		KeyCode[] testInput = new KeyCode[6] {KeyCode.LeftArrow, 
 								KeyCode.RightArrow, 
 								KeyCode.UpArrow, 
 								KeyCode.DownArrow, 
 								KeyCode.DownArrow, 
 								KeyCode.DownArrow};
-		for (int i = 0; i < temp.Length; i++) {
-			CheckKey (temp [i]);
+		for (int i = 0; i < testInput.Length; i++) {
+			if (i == _gameManager.players [playerNum].currentKey) {
+				CheckKey (testInput [i]);
+			} else {
+				break;
+			}
 		}
+
+
+		// Submit a sequence
+		LockIn(playerNum);
 	}
 
 
@@ -82,19 +96,23 @@ public class ComboManager : Singleton<ComboManager> {
 				// Tell Player to turn into a pile of shit :D
 				if (!pass) {
 					Debug.Log ("Wrong key!");
-					_gameManager.players [i].ComboResult (pass);
+					_gameManager.players [i].ComboResult (false);
 				} else {
 					Debug.Log ("Right key!");
+					_gameManager.players [i].currentKey++;
 				}
 
-				_gameManager.players [i].currentKey++;
 				break;	// if it's in player 0, it won't be in player 1
 			}
 		}
 	}
 
 	public void LockIn (int playerNum) {
-
+		if (_gameManager.players [playerNum].currentKey >= minReqKeys) {
+			_gameManager.players [playerNum].ComboResult (true);
+		} else {
+			_gameManager.players [playerNum].ComboResult (false);
+		}
 	}
 
 	public void AssignKeys (int playerNum, KeyCode[] mapping) {
