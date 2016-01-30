@@ -13,6 +13,7 @@ using System.Collections.Generic;
 
 public enum  BGMStage
 {
+    THE_BGM = 0
     //define Background Music stage here
 }
 
@@ -41,13 +42,10 @@ public class SoundManager : Singleton<SoundManager>
     public Transform soundManager;
     public Transform sfxManager;
 
-    public AudioMixerSnapshot amsNormal;
-    public AudioMixerSnapshot amsDialogSpeaking;
-
     public AudioSource bgmAS;
     public AudioSource[] dialogAS;
 
-
+    public AudioClip bgmC;
     public AudioClip[] dialogC;
     //claim AudioClip here
 
@@ -198,9 +196,9 @@ public class SoundManager : Singleton<SoundManager>
         dialogAS[RoleID].clip = dialogC[dialogID];
         dialogAS[RoleID].volume = volume;
         dialogAS[RoleID].Play();
-        amsDialogSpeaking.TransitionTo(.01f);
+        //amsDialogSpeaking.TransitionTo(.01f);
         yield return new WaitForSeconds(dialogAS[RoleID].clip.length);
-        amsNormal.TransitionTo(.01f);
+        //amsNormal.TransitionTo(.01f);
         Debug.Log("Dialog Over");
         // Debug.Log (dialogAS[RoleID].clip);
     }
