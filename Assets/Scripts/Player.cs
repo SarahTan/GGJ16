@@ -10,6 +10,7 @@ public class Player : MonoBehaviour {
 
 	public KeyCode[] mapping;
 	public KeyCode[] sequence;
+	public int seqLength;
 	public int currentKey;
 
 	public Vector3 arrowKeysPos;

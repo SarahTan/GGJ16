@@ -3,8 +3,6 @@ using System.Collections;
 
 public class ComboManager : Singleton<ComboManager> {
 
-	public SpriteRenderer arrowPrefab;
-
 	private GameManager _gameManager;
 
 	int minNum = 4;
@@ -12,8 +10,14 @@ public class ComboManager : Singleton<ComboManager> {
 	int numPlayers = 2;
 	int minReqKeys = 1;
 
+	GameObject arrowPrefab;
+	float arrowWidth;
+
 	void Awake() {
 		_gameManager = GameManager.Instance;
+
+		arrowPrefab = Resources.Load ("Prefabs/UI arrow") as GameObject;
+		arrowWidth = arrowPrefab.transform.localScale.x;
 	}
 
 	// Use this for initialization
@@ -68,11 +72,11 @@ public class ComboManager : Singleton<ComboManager> {
 	}
 
 	void DrawArrows (int playerNum) {
+		
 		GameObject arrow = Instantiate (arrowPrefab,
 										 Vector3.zero,
 										 Quaternion.identity) as GameObject;
-		//Debug.Log (_gameManager.players [playerNum].arrows.transform);
-		//arrow.transform.parent = _gameManager.players [playerNum].arrows.transform;
+		arrow.transform.parent = _gameManager.players [playerNum].arrows.transform;
 	}
 
 
@@ -82,6 +86,7 @@ public class ComboManager : Singleton<ComboManager> {
 			return;
 		}
 
+		_gameManager.players [playerNum].seqLength = numKeys;
 		_gameManager.players[playerNum].sequence = new KeyCode[numKeys];
 		for (int i = 0; i < numKeys; i++) {
 			_gameManager.players[playerNum].sequence[i] = 
