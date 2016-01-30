@@ -10,6 +10,12 @@ public class Hero : MonoBehaviour {
         RIGHT,
         DEFAULT,
         POWER_UP,
+        FLY_LEFT,
+        FLY_RIGHT,
+        PUNCH_LEFT1,
+        PUNCH_LEFT2,
+        PUNCH_RIGHT1,
+        PUNCH_RIGHT2
     }
 
     public enum Side
@@ -124,10 +130,12 @@ public class Hero : MonoBehaviour {
         float angle = Random.Range(30, 70) * Mathf.PI / 180;
         if (side.Equals(Side.LEFT))
         {
+            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.FLY_LEFT];
             StartCoroutine(flyOff(new Vector3(-Mathf.Cos(angle), Mathf.Sin(angle), 0)));
         }
         else
         {
+            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.FLY_RIGHT];
             StartCoroutine(flyOff(new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0)));
         }
     }
