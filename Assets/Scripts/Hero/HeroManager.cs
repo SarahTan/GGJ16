@@ -13,17 +13,33 @@ public class HeroManager {
         SIZE
     }
 
-    private static int HERO_LIMIT = 5;
+    private static int HERO_LIMIT = 15;
 
     private List<Hero> _heroList;
     private Hero _currentHero;
+
+    private Transform _heroParent;
     private GameObject[] _heroPrefab;
     private int[] _powerLevelList;
 
-    public HeroManager() {
+    private int _playerNum;
+    private Vector3 _centerPos;
+
+    public HeroManager(int playerNum, Vector3 centerPos) {
+        _playerNum = playerNum; // Determine which side to generate from
+        _centerPos = centerPos;
+
+        GameObject heroParent = new GameObject();
+        heroParent.name = "Hero Parent";
+        _heroParent = heroParent.transform;
+        _heroParent.position = centerPos;
+        // Player 2 should be inverted
+        if (playerNum == 1) {
+            _heroParent.localScale = new Vector3(-1, 1, 1);
+        }
+
         _heroPrefab = new GameObject[(int)Hero.HERO_TYPE.SIZE];
-        _heroPrefab[(int)Hero.HERO_TYPE.TYPE_A] = Resources.Load("Prefabs/HeroA") as GameObject;
-        _heroPrefab[(int)Hero.HERO_TYPE.TYPE_B] = Resources.Load("Prefabs/HeroA") as GameObject;
+        _heroPrefab[(int)Hero.HERO_TYPE.TYPE_A] = Resources.Load("Prefabs/Hero1") as GameObject;
 
         _powerLevelList = new int[(int)HERO_POWER.SIZE];
         _powerLevelList[(int)HERO_POWER.POWER_SHIT] = -1;
@@ -38,6 +54,9 @@ public class HeroManager {
         for(int i=0; i<HERO_LIMIT; i++) {
             AddHero();
         }
+
+        MoveHeroPositions();
+        _currentHero.MoveToCenter();
     }
 
     public void SendOutHero(HERO_POWER heroPower) {
@@ -57,13 +76,15 @@ public class HeroManager {
         if(_heroList.Count > 0) {
             _currentHero = _heroList[0];
             _heroList.RemoveAt(0);
-        }
-
-        for(int i=0; i<_heroList.Count; i++) {
+            _currentHero.MoveToCenter();
+        }        
+        AddHero(); // Add hero to the end of the queue
+        MoveHeroPositions();
+    }
+    private void MoveHeroPositions() {
+        for (int i = 0; i < _heroList.Count; i++) {
             _heroList[i].MoveQueuePosition();
         }
-
-        AddHero(); // Add hero to the end of the queue
     }
     private void AddHero() {
         _heroList.Add(GenerateHero());
@@ -72,6 +93,7 @@ public class HeroManager {
         int randomHeroNumber = Random.Range(0, (int)Hero.HERO_TYPE.SIZE);
 
         GameObject heroObject = Object.Instantiate(_heroPrefab[randomHeroNumber]) as GameObject;
+        heroObject.transform.SetParent(_heroParent);        
         Hero hero = heroObject.GetComponent<Hero>();
 		hero.Init(_heroList.Count);
         return hero;
