@@ -62,6 +62,10 @@ public class Config : Singleton<Config> {
                                     int buildingCount = int.Parse(data[1].Trim());
                                     _buildingManager.setBuildingCount(buildingCount);
                                     break;
+                                case "building footprint":
+                                    int buildingFootprint = int.Parse(data[1].Trim());
+                                    _buildingManager.setBuildingFootprint(buildingFootprint);
+                                    break;
                                 default:
                                     break;
                             }
