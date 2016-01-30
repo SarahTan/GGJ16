@@ -85,9 +85,9 @@ public class ComboManager : Singleton<ComboManager> {
 					_gameManager.players [i].ComboResult (pass);
 				} else {
 					Debug.Log ("Right key!");
-					_gameManager.players [i].currentKey++;
 				}
 
+				_gameManager.players [i].currentKey++;
 				break;	// if it's in player 0, it won't be in player 1
 			}
 		}
