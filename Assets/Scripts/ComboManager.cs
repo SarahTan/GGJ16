@@ -27,6 +27,10 @@ public class ComboManager : Singleton<ComboManager> {
 	void Awake() {
 		_gameManager = GameManager.Instance;
 
+		Instantiate (Resources.Load ("Prefabs/KeysBG"),
+					 new Vector3 (0, -Camera.main.orthographicSize + 1, -4),
+					 Quaternion.identity);
+
 		arrowPrefab = Resources.Load ("Prefabs/UI arrow") as GameObject;
 		arrowWidth = arrowPrefab.transform.localScale.x;
 	}

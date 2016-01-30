@@ -32,13 +32,13 @@ public class Player : MonoBehaviour {
 		arrows = new GameObject ();
 		arrows.name = "Player" + (index+1) + " Arrows";
 
-		Camera cam = GameObject.Find ("Main Camera").GetComponent<Camera> ();
+		Camera cam = Camera.main;
 		if (index == 0) {
-			centerPos = cam.ScreenToWorldPoint (new Vector3 (Screen.width / 4,
-													Screen.height / 10, 9));
+			centerPos = new Vector3 (-cam.orthographicSize * cam.aspect / 2,
+									 -cam.orthographicSize + 1, 5);
 		} else if (index == 1) {
-			centerPos = cam.ScreenToWorldPoint (new Vector3 (Screen.width / 4 * 3,
-													Screen.height / 10, 9));
+			centerPos = new Vector3 (cam.orthographicSize * cam.aspect / 2,
+									 -cam.orthographicSize + 1, 5);
 		}
 
         Debug.Log(_gameManager.PLAYER_HERO_CENTER[index]);
