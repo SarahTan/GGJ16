@@ -127,10 +127,11 @@ public class BuildingManager : Singleton<BuildingManager> {
             {
                 float currentBuildingWidth = Random.Range(buildingWidth * 1.1f, buildingWidth * 1.5f);
                 float currentBuildingHeight = Random.Range(_maxBuildingHeight, _minBuildingHeight);
+                float currentBuildingDepth = Random.Range(0f, 0.2f);
                 buildings[0, i] = new Building(currentBuildingHeight, currentBuildingWidth, _globalHealth / _buildingCount);
-                buildings[0, i].place(leftBuildingAnchor + currentProgress * Vector3.right);
+                buildings[0, i].place(leftBuildingAnchor + currentProgress * Vector3.right + currentBuildingDepth * Vector3.forward);
                 buildings[1, i] = new Building(currentBuildingHeight, currentBuildingWidth, _globalHealth / _buildingCount);
-                buildings[1, i].place(rightBuildingAnchor + currentProgress * Vector3.left);
+                buildings[1, i].place(rightBuildingAnchor + currentProgress * Vector3.left + currentBuildingDepth * Vector3.forward);
                 currentProgress += currentBuildingWidth * 0.8f;
             }
         }
@@ -141,21 +142,23 @@ public class BuildingManager : Singleton<BuildingManager> {
             {
                 float currentBuildingWidth = Random.Range(buildingWidth * 1.1f, buildingWidth * 1.5f);
                 float currentBuildingHeight = Random.Range(_minBuildingHeight * 0.7f, _maxBuildingHeight * 0.7f);
+                float currentBuildingDepth = Random.Range(0f, 0.2f);
                 buildings[0, i] = new Building(currentBuildingHeight, currentBuildingWidth, _globalHealth / _buildingCount);
-                buildings[0, i].place(leftBuildingAnchor + currentProgress * Vector3.right);
+                buildings[0, i].place(leftBuildingAnchor + currentProgress * Vector3.right + currentBuildingDepth * Vector3.forward);
                 buildings[1, i] = new Building(currentBuildingHeight, currentBuildingWidth, _globalHealth / _buildingCount);
-                buildings[1, i].place(rightBuildingAnchor + currentProgress * Vector3.left);
+                buildings[1, i].place(rightBuildingAnchor + currentProgress * Vector3.left + currentBuildingDepth * Vector3.forward);
                 currentProgress += currentBuildingWidth * 0.8f;
             }
             currentProgress = 0;
             for (int i = _buildingCount / 2 + 1; i < _buildingCount; i++)
             {
+                float currentBuildingDepth = Random.Range(0.25f, 0.45f);
                 float currentBuildingWidth = Random.Range(buildingWidth * 1.1f, buildingWidth * 1.5f);
                 float currentBuildingHeight = Random.Range(_maxBuildingHeight, _minBuildingHeight);
                 buildings[0, i] = new Building(currentBuildingHeight, currentBuildingWidth, _globalHealth / _buildingCount);
-                buildings[0, i].place(leftBuildingAnchor + currentProgress * Vector3.right);
+                buildings[0, i].place(leftBuildingAnchor + currentProgress * Vector3.right + currentBuildingDepth * Vector3.forward);
                 buildings[1, i] = new Building(currentBuildingHeight, currentBuildingWidth, _globalHealth / _buildingCount);
-                buildings[1, i].place(rightBuildingAnchor + currentProgress * Vector3.left);
+                buildings[1, i].place(rightBuildingAnchor + currentProgress * Vector3.left + currentBuildingDepth * Vector3.forward);
                 currentProgress += currentBuildingWidth * 0.8f;
             }
         }
