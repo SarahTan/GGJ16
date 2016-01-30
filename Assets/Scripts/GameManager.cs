@@ -5,6 +5,9 @@ public class GameManager : Singleton<GameManager> {
 
     public Player[] players { get; private set; }
 
+    public const float BUILDING_Z_INDEX = 0;
+    public const float PLAYERS_Z_INDEX = -1;
+
     void Awake()
     {
         Player player1 = new Player();
