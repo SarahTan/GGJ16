@@ -18,6 +18,7 @@ public class HeroManager {
         POWER_2,
         POWER_3,
         POWER_4,
+        POWER_5,
         SIZE
     }
 
@@ -62,6 +63,7 @@ public class HeroManager {
         _powerLevelList[(int)HERO_POWER.POWER_2] = 20;
         _powerLevelList[(int)HERO_POWER.POWER_3] = 40;
         _powerLevelList[(int)HERO_POWER.POWER_4] = 80;
+        _powerLevelList[(int)HERO_POWER.POWER_5] = 160;
 
         _heroList = new List<Hero>(HERO_LIMIT);
         _currentHero = GenerateHero();
@@ -79,7 +81,7 @@ public class HeroManager {
     }
     public void UpdatePose(ComboManager.Direction poseDirection) {
         if (_currentHero != null) {
-            _currentHero.UpdatePose(poseDirection);
+            _currentHero.UpdatePose(poseDirection, _playerNum);
         }
     }
 
