@@ -8,6 +8,8 @@ public class HeroManager {
         TYPE_1,
         TYPE_2,
         TYPE_3,
+        TYPE_4,
+        TYPE_5,
         SIZE
     }
     public enum HERO_POWER {
@@ -16,6 +18,7 @@ public class HeroManager {
         POWER_2,
         POWER_3,
         POWER_4,
+        POWER_5,
         SIZE
     }
 
@@ -51,6 +54,8 @@ public class HeroManager {
         _heroPrefab[(int)HERO_TYPE.TYPE_1] = Resources.Load("Prefabs/Hero1") as GameObject;
         _heroPrefab[(int)HERO_TYPE.TYPE_2] = Resources.Load("Prefabs/Hero2") as GameObject;
         _heroPrefab[(int)HERO_TYPE.TYPE_3] = Resources.Load("Prefabs/Hero3") as GameObject;
+        _heroPrefab[(int)HERO_TYPE.TYPE_4] = Resources.Load("Prefabs/Hero4") as GameObject;
+        _heroPrefab[(int)HERO_TYPE.TYPE_5] = Resources.Load("Prefabs/Hero5") as GameObject;
 
         _powerLevelList = new int[(int)HERO_POWER.SIZE];
         _powerLevelList[(int)HERO_POWER.POWER_SHIT] = -1;
@@ -58,6 +63,7 @@ public class HeroManager {
         _powerLevelList[(int)HERO_POWER.POWER_2] = 120;
         _powerLevelList[(int)HERO_POWER.POWER_3] = 140;
         _powerLevelList[(int)HERO_POWER.POWER_4] = 180;
+        _powerLevelList[(int)HERO_POWER.POWER_5] = 200;
 
         _heroList = new List<Hero>(HERO_LIMIT);
         _currentHero = GenerateHero();
@@ -75,7 +81,7 @@ public class HeroManager {
     }
     public void UpdatePose(ComboManager.Direction poseDirection) {
         if (_currentHero != null) {
-            _currentHero.UpdatePose(poseDirection);
+            _currentHero.UpdatePose(poseDirection, _playerNum);
         }
     }
 

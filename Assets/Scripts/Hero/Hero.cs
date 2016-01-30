@@ -28,6 +28,8 @@ public class Hero : MonoBehaviour {
 
     }
 
+    public Animator animatorController;
+    public Animator auraAnimatorController;
     public Sprite[] spriteList;
     
     private SpriteRenderer _spriteRenderer;
@@ -38,6 +40,8 @@ public class Hero : MonoBehaviour {
     private float _maxScale;
     private float _initXPos;
     private float _maxXPos;
+    private bool _poweredUp;
+    private bool _isWalking;
 
     public State state;
     public Side side;
@@ -52,6 +56,8 @@ public class Hero : MonoBehaviour {
         state = State.Idle;
         _flyingOff = false;
         lastHitTime = Time.time;
+        _poweredUp = false;
+        _isWalking = false;
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
@@ -65,22 +71,33 @@ public class Hero : MonoBehaviour {
         ScaleTo(0.5f * _maxScale);
     }
 
-    public void UpdatePose(ComboManager.Direction poseDirection) {
-        switch (poseDirection) {
-            case ComboManager.Direction.UP:
-                _spriteRenderer.sprite = spriteList[(int)HERO_POSE.UP];
-                break;
-            case ComboManager.Direction.DOWN:
-                _spriteRenderer.sprite = spriteList[(int)HERO_POSE.DOWN];
-                break;
-            case ComboManager.Direction.LEFT:
-                _spriteRenderer.sprite = spriteList[(int)HERO_POSE.LEFT];
-                break;
-            case ComboManager.Direction.RIGHT:
-                _spriteRenderer.sprite = spriteList[(int)HERO_POSE.RIGHT];
-                break;
-            default:
-                break;         
+    public void UpdatePose(ComboManager.Direction poseDirection, int playerNum) {
+        if(!_poweredUp) {
+            switch (poseDirection) {
+                case ComboManager.Direction.UP:
+                    _spriteRenderer.sprite = spriteList[(int)HERO_POSE.UP];
+                    break;
+                case ComboManager.Direction.DOWN:
+                    _spriteRenderer.sprite = spriteList[(int)HERO_POSE.DOWN];
+                    break;
+                case ComboManager.Direction.LEFT:
+                    if(playerNum == 0) {
+                        _spriteRenderer.sprite = spriteList[(int)HERO_POSE.LEFT];
+                    }else{
+                        _spriteRenderer.sprite = spriteList[(int)HERO_POSE.RIGHT];
+                    }
+                    break;
+                case ComboManager.Direction.RIGHT:
+                    if (playerNum == 0) {
+                        _spriteRenderer.sprite = spriteList[(int)HERO_POSE.RIGHT];
+                    }
+                    else {
+                        _spriteRenderer.sprite = spriteList[(int)HERO_POSE.LEFT];
+                    }
+                    break;
+                default:
+                    break;         
+            }
         }
     }
 
@@ -181,11 +198,16 @@ public class Hero : MonoBehaviour {
         powerLevel = pl;
         _health = powerLevel;
         _attackCooldown = 40.0f / powerLevel;
-        
-        if(powerLevel < 0) {
+
+        _poweredUp = true;
+
+        if (powerLevel < 0) {
             // If poop level, show transformation to poop
         }else{
             // Show transformation to super saiyan
+            Debug.Log(spriteList[(int)HERO_POSE.POWER_UP]);
+            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.POWER_UP];
+            auraAnimatorController.SetBool("PowerUp", true);
         }
     }
 
@@ -193,6 +215,7 @@ public class Hero : MonoBehaviour {
     {
         side = s;
         state = State.Moving;
+        auraAnimatorController.SetBool("PowerUp", false);
         StartCoroutine(move(transform.position + Vector3.up * 1.5f));
     }
 
@@ -237,14 +260,17 @@ public class Hero : MonoBehaviour {
     }    
     IEnumerator MoveToNextQueue(Vector3 final) {
         // Start walking animation
+        StartWalkingAnimation();
         while ((transform.localPosition - final).magnitude > 0.1f) {
             transform.localPosition = Vector3.MoveTowards(transform.localPosition, final, 0.1f);
             yield return null;
         }
         // Stop walking animation
+        StopWalkingAnimation();
     }
     IEnumerator MoveToCenterQueue() {
         // Start walking animation
+        StartWalkingAnimation();
         while ((transform.localPosition - Vector3.zero).magnitude > 0.1f) {
             transform.localPosition = Vector3.MoveTowards(transform.localPosition, Vector3.zero, 0.1f);
             Vector3 scale = transform.localScale * 1.05f;
@@ -255,6 +281,24 @@ public class Hero : MonoBehaviour {
             yield return null;
         }
         // Stop walking animation
+        StopWalkingAnimation();
+    }
+    private void StartWalkingAnimation() {
+        _isWalking = true;
+        StartCoroutine(StartWalking());
+    }
+    private void StopWalkingAnimation() {
+        _isWalking = false;
+        StopCoroutine(StartWalking());
+    }
+    private IEnumerator StartWalking() {
+        while(_isWalking) {
+            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.LEFT];
+            yield return new WaitForSeconds(0.2f);
+            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.RIGHT];
+            yield return new WaitForSeconds(0.2f);
+        }
+        yield break;
     }
     private void SetAlpha(float alpha) {
         Color spriteColor = _spriteRenderer.color;

@@ -13,6 +13,7 @@ public class ComboManager : Singleton<ComboManager> {
 	GameObject arrowPrefab;
 	float arrowWidth;
 	float arrowGap = -0.05f;
+	float bonusGap = 0.3f;
 
     private Direction[] mappings = { Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT }; 
 
@@ -83,9 +84,14 @@ public class ComboManager : Singleton<ComboManager> {
 		pos.x -= ((arrowWidth * (_gameManager.players[playerNum].seqLength-1)) +
 				 (arrowGap * _gameManager.players[playerNum].seqLength)) / 2;
 
+		if (_gameManager.players [playerNum].seqLength > 4) {
+			pos.x -= bonusGap / 2;
+		}
+
 //		Debug.Log ("offset: " + (((arrowWidth * _gameManager.players[playerNum].seqLength) +
 //			(arrowGap * _gameManager.players[playerNum].seqLength)) / 2));
 
+		int i = 1;
 		foreach (Direction direction in _gameManager.players[playerNum].sequence) {
 			GameObject arrow = Instantiate (arrowPrefab, pos,
 											Quaternion.Euler(
@@ -94,12 +100,21 @@ public class ComboManager : Singleton<ComboManager> {
 			arrow.transform.parent = _gameManager.players [playerNum].arrows.transform;
 
 			pos.x += arrowWidth + arrowGap;
+
+			if (i == 4) {
+				pos.x += bonusGap;
+			}
+			i++;
 		}
 	}
 
+	public void generateSeq(int playerNum, int numKeys) 
+	{
+		StartCoroutine (GenerateSeq (playerNum, numKeys));
+	}
 
 	// Generate a sequence of arrows during game play
-	public IEnumerator GenerateSeq (int playerNum, int numKeys) {
+	IEnumerator GenerateSeq (int playerNum, int numKeys) {
 		if (numKeys < minNum || numKeys > maxNum) {
 			Debug.LogError ("You can only generate between 4-8 keys!");
 			yield break;
