@@ -31,7 +31,6 @@ public class EventManager : Singleton<EventManager> {
     {
         if (_currentEventSet == null)
         {
-            Debug.Log("SD");
             return false;
         }
         else

@@ -38,68 +38,79 @@ public class FightSimulator : Singleton<FightSimulator> {
             case GameManager.GameState.Playing:
                 for (int i = 0; i < player1Heroes.Count; i++)
                 {
-                    if (player1Heroes[i].dead)
+                    switch (player1Heroes[i].state)
                     {
-                        _buildingManager.damageBuildings(0, player1Heroes[i].powerLevel / 3);
-                        player1Heroes.RemoveAt(i);
-                        checkBuildingHealth(0);
-                        continue;
-                    }
-                    if (!player1Heroes[i].fighting)
-                    {
-                        player1Heroes[i].move();
-
-                        Vector2 h1Pos = player1Heroes[i].transform.position.toVector2();
-                        for (int j = 0; j < player2Heroes.Count; j++)
-                        {
-                            Vector2 h2Pos = player2Heroes[j].transform.position.toVector2();
-                            if ((h1Pos - h2Pos).magnitude < 0.5f)
+                        case Hero.State.Dead:
+                            _buildingManager.damageBuildings(0, player1Heroes[i].powerLevel / 3);
+                            player1Heroes.RemoveAt(i);
+                            checkBuildingHealth(0);
+                            break;
+                        case Hero.State.Attacking:
+                            player1Heroes[i].attackBuilding();
+                            break;
+                        case Hero.State.Fighting:
+                            player1Heroes[i].attack();
+                            break;
+                        case Hero.State.Idle:
+                            player1Heroes[i].move();
+                            Vector2 h1Pos = player1Heroes[i].transform.position.toVector2();
+                            
+                            for (int j = 0; j < player2Heroes.Count; j++)
                             {
-                                player1Heroes[i].fighting = true;
-                                player1Heroes[i].target = player2Heroes[j];
-                                player2Heroes[j].fighting = true;
-                                player2Heroes[j].target = player1Heroes[i];
+                                    Vector2 h2Pos = player2Heroes[j].transform.position.toVector2();
+                                    if ((h1Pos - h2Pos).magnitude < 0.5f)
+                                    {
+                                        player1Heroes[i].state = Hero.State.Fighting;
+                                        player1Heroes[i].target = player2Heroes[j];
+                                        player2Heroes[j].state = Hero.State.Fighting;
+                                        player2Heroes[j].target = player1Heroes[i];
+                                    }
                             }
-                        }
-
-                    }
-                    else
-                    {
-                        player1Heroes[i].attack();
+                            break;
+                        case Hero.State.Moving:
+                            break;
+                        default:
+                            break;
                     }
                 }
 
                 for (int i = 0; i < player2Heroes.Count; i++)
                 {
-                    if (player2Heroes[i].dead)
+                    switch (player2Heroes[i].state)
                     {
-                        _buildingManager.damageBuildings(1, player2Heroes[i].powerLevel);
-                        player2Heroes.RemoveAt(i);
-                        checkBuildingHealth(1);
-                        continue;
-                    }
-                    if (!player2Heroes[i].fighting)
-                    {
-                        player2Heroes[i].move();
+                        case Hero.State.Dead:
+                            _buildingManager.damageBuildings(1, player2Heroes[i].powerLevel / 3);
+                            player2Heroes.RemoveAt(i);
+                            checkBuildingHealth(1);
+                            break;
+                        case Hero.State.Attacking:
+                            player2Heroes[i].attackBuilding();
+                            break;
+                        case Hero.State.Fighting:
+                            player2Heroes[i].attack();
+                            break;
+                        case Hero.State.Idle:
+                            player2Heroes[i].move();
 
-                        Vector2 h2Pos = player2Heroes[i].transform.position.toVector2();
-                        for (int j = 0; j < player1Heroes.Count; j++)
-                        {
-                            Vector2 h1Pos = player1Heroes[j].transform.position.toVector2();
-                            if ((h1Pos - h2Pos).magnitude < 0.5f)
+                            Vector2 h2Pos = player2Heroes[i].transform.position.toVector2();
+                            for (int j = 0; j < player1Heroes.Count; j++)
                             {
-                                player1Heroes[j].fighting = true;
-                                player1Heroes[j].target = player2Heroes[i];
-                                player2Heroes[i].fighting = true;
-                                player2Heroes[i].target = player1Heroes[j];
+                                    Vector2 h1Pos = player1Heroes[j].transform.position.toVector2();
+                                    if ((h1Pos - h2Pos).magnitude < 0.5f)
+                                    {
+                                        player1Heroes[j].state = Hero.State.Fighting;
+                                        player1Heroes[j].target = player2Heroes[i];
+                                        player2Heroes[i].state = Hero.State.Fighting;
+                                        player2Heroes[i].target = player1Heroes[j];
+                                    }
                             }
-                        }
+                            break;
+                        case Hero.State.Moving:
+                            break;
+                        default:
+                            break;
+                    }
 
-                    }
-                    else
-                    {
-                        player2Heroes[i].attack();
-                    }
                 }
                 break;
             default:

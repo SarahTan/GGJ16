@@ -42,9 +42,7 @@ public class ComboManager : Singleton<ComboManager> {
 	
 	// Update is called once per frame
 	void Update () {
-//		if (Input.GetKeyUp (KeyCode.Space)) {
-//			StartCoroutine (Test ());
-//		}
+
 	}
 
 	// For testing

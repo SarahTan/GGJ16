@@ -18,6 +18,16 @@ public class Hero : MonoBehaviour {
         RIGHT
     }
 
+    public enum State
+    {
+        Moving,
+        Attacking,
+        Fighting,
+        Idle,
+        Dead
+
+    }
+
     public Sprite[] spriteList;
     
     private SpriteRenderer _spriteRenderer;
@@ -29,22 +39,19 @@ public class Hero : MonoBehaviour {
     private float _initXPos;
     private float _maxXPos;
 
+    public State state;
     public Side side;
-    public bool fighting;
     public Hero target;
-    public bool moving;
-    public bool dead;
     private bool _flyingOff;
 
-    private float _lastHitTime;
+    public float lastHitTime;
     private float _attackCooldown;
         
     void Start()
     {
+        state = State.Idle;
         _flyingOff = false;
-        _lastHitTime = Time.time;
-        moving = false;
-        fighting = false;
+        lastHitTime = Time.time;
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
@@ -77,13 +84,39 @@ public class Hero : MonoBehaviour {
         }
     }
 
+    public void attackBuilding()
+    {
+
+    }
+
     public void attack()
     {
-        if (!dead && _lastHitTime + _attackCooldown < Time.time)
+        if (cooledDown())
         {
-            _lastHitTime = Time.time;
-            target.takeDamage(this, powerLevel * 0.3f);
+            if (target.cooledDown())
+            {
+                if (target.powerLevel > powerLevel)
+                {
+                    target.lastHitTime = Time.time;
+                    takeDamage(target, target.powerLevel * 0.4f);
+                }
+                else
+                {
+                    lastHitTime = Time.time;
+                    target.takeDamage(this, powerLevel * 0.4f);
+                }
+            }
+            else
+            {
+                lastHitTime = Time.time;
+                target.takeDamage(this, powerLevel * 0.4f);
+            }
         }
+    }
+
+    public bool cooledDown()
+    {
+        return (!state.Equals(State.Dead) && lastHitTime + _attackCooldown < Time.time);
     }
 
     public void takeDamage(Hero attacker, float amount)
@@ -91,8 +124,8 @@ public class Hero : MonoBehaviour {
         _health -= amount;
         if (_health <= 0)
         {
-            dead = true;
-            attacker.fighting = false;
+            state = State.Dead;
+            attacker.state = State.Idle;
             attacker.target = null;
             if (!_flyingOff)
             {
@@ -131,7 +164,7 @@ public class Hero : MonoBehaviour {
 
     public void move()
     {
-        if (!moving && !fighting)
+        if (state.Equals(State.Idle))
         {
             if (side.Equals(Side.RIGHT))
             {
@@ -159,7 +192,7 @@ public class Hero : MonoBehaviour {
     public void moveToPlayingField(Side s)
     {
         side = s;
-        moving = true;
+        state = State.Moving;
         StartCoroutine(move(transform.position + Vector3.up * 1.5f));
     }
 
@@ -172,7 +205,7 @@ public class Hero : MonoBehaviour {
             yield return null;
         }
         transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-        moving = false;
+        state = State.Idle;
     }
 
     // Snap to position
