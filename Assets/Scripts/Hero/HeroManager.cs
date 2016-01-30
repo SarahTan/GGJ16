@@ -18,6 +18,8 @@ public class HeroManager {
         SIZE
     }
 
+    private GameManager _gameManager;
+
     public static int HERO_LIMIT = 15;
 
     private List<Hero> _heroList;
@@ -31,6 +33,7 @@ public class HeroManager {
     private Vector3 _centerPos;
 
     public HeroManager(int playerNum, Vector3 centerPos) {
+        _gameManager = GameManager.Instance;
         _playerNum = playerNum; // Determine which side to generate from
         _centerPos = centerPos;
 
@@ -73,6 +76,7 @@ public class HeroManager {
     public void SendOutHero() {
         // Send out the hero based on whether its a success or failure
         _currentHero.moveToPlayingField();
+        _gameManager.players[_playerNum].heroList.Add(_currentHero);
         NextHero();
     }
 

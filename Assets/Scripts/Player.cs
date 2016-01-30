@@ -20,7 +20,7 @@ public class Player : MonoBehaviour {
 
     public HeroManager heroManager;
 
-    private List<Hero> _heroList;
+    public List<Hero> heroList;
 
 	public Player (int i) {
 		index = i;
@@ -41,7 +41,7 @@ public class Player : MonoBehaviour {
         Debug.Log(_gameManager.PLAYER_HERO_CENTER[index]);
         heroManager = new HeroManager(index, _gameManager.PLAYER_HERO_CENTER[index]);
 
-        _heroList = new List<Hero>();
+        heroList = new List<Hero>();
 	}
 
 
@@ -52,9 +52,14 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
-		
+
+    public void addHero(Hero hero)
+    {
+        heroList.Add(hero);
+    }
+
     public void assignKeys(KeyCode[] keys)
     {
             _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.UP), keys[0]);
