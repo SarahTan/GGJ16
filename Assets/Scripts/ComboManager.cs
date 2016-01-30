@@ -39,17 +39,18 @@ public class ComboManager : Singleton<ComboManager> {
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyUp (KeyCode.Space)) {
-			Test ();
+			StartCoroutine (Test ());
 		}
 	}
 
 	// For testing
-	void Test() {
+	IEnumerator Test() {
 		int playerNum = 0;
 
 		// Generate a player's current sequence
-		GenerateSeq (playerNum, 6);
-		DrawArrows (playerNum);
+		StartCoroutine (GenerateSeq (playerNum, 6));
+
+		yield return new WaitForSeconds (0.5f);
 
 		// Check if the key being pressed is correct
 		Direction[] testInput = new Direction[6] {Direction.LEFT, 
@@ -59,10 +60,9 @@ public class ComboManager : Singleton<ComboManager> {
 								Direction.DOWN, 
 								Direction.DOWN};
 		for (int i = 0; i < testInput.Length; i++) {
-			Debug.Log ("Current key: " + _gameManager.players [playerNum].currentKey + "," +
-				" i: " + i);
 			if (i == _gameManager.players [playerNum].currentKey) {
 				CheckKey (playerNum, testInput [i]);
+				yield return new WaitForSeconds (0.3f);
 			} else {
 				break;
 			}
@@ -91,69 +91,68 @@ public class ComboManager : Singleton<ComboManager> {
 
 
 	// Generate a sequence of arrows during game play
-	public void GenerateSeq (int playerNum, int numKeys) {
+	public IEnumerator GenerateSeq (int playerNum, int numKeys) {
 		if (numKeys < minNum || numKeys > maxNum) {
-			return;
+			return false;
 		}
 
 		// Destroy all the previous arrows
 		foreach (Transform arrow in _gameManager.players [playerNum].arrows.transform) {
 			Destroy (arrow.gameObject);
 		}
-		Debug.Log ("Done destroying");
+		yield return null;	// Because actual destruction only takes place at end of frame
 
 		// Generate new arrows
+		Debug.Log ("generating");
 		_gameManager.players [playerNum].seqLength = numKeys;
-		_gameManager.players[playerNum].sequence = new Direction[numKeys];
+		_gameManager.players [playerNum].sequence = new Direction[numKeys];
 
 		for (int i = 0; i < numKeys; i++) {
-			_gameManager.players[playerNum].sequence[i] = mappings[Random.Range(0, 4)];
+			_gameManager.players [playerNum].sequence [i] = mappings [Random.Range (0, 4)];
 		}
 
 		_gameManager.players [playerNum].currentKey = 0;
+		DrawArrows (playerNum);
 
-		Debug.Log ("Player 0's sequence: " + _gameManager.players [0].sequence[0] + " " +
-											_gameManager.players [0].sequence[1] + " " +
-											_gameManager.players [0].sequence[2] + " " +
-											_gameManager.players [0].sequence[3] + " " +
-											_gameManager.players [0].sequence[4] + " " +
-											_gameManager.players [0].sequence[5]);
+//		Debug.Log ("Player 0's sequence: " + _gameManager.players [0].sequence[0] + " " +
+//											_gameManager.players [0].sequence[1] + " " +
+//											_gameManager.players [0].sequence[2] + " " +
+//											_gameManager.players [0].sequence[3] + " " +
+//											_gameManager.players [0].sequence[4] + " " +
+//											_gameManager.players [0].sequence[5]);
 
 	}
 
 
 	// Called by InputController
 	// Checks if the correct key is pressed
-	public void CheckKey (int player, Direction dir) 
-    {
-
-        if (_gameManager.players[player].sequence == null || _gameManager.players[player].sequence.Length == 0)
-        {
+	public void CheckKey (int playerNum, Direction dir) {
+        if (_gameManager.players[playerNum].sequence == null ||
+				_gameManager.players[playerNum].sequence.Length == 0) {
             return;
         }
 
-		bool pass = (dir == _gameManager.players [player].sequence [
-								_gameManager.players [player].currentKey]);
+		bool pass = (dir == _gameManager.players [playerNum].sequence [
+								_gameManager.players [playerNum].currentKey]);
 
 		// Tell Player to turn into a pile of shit :D
 		if (!pass) {
 			Debug.Log ("Wrong key!");
 
 			// Set animation
-			_gameManager.players [player].arrows.GetComponentsInChildren<Animator>() [
-								_gameManager.players [player].currentKey].SetBool(
+			_gameManager.players [playerNum].arrows.GetComponentsInChildren<Animator>() [
+								_gameManager.players [playerNum].currentKey].SetBool(
 								"Wrong", true);
-			Debug.Log (_gameManager.players [player].arrows.GetComponentsInChildren<Animator> ().Length);
-			_gameManager.players [player].ComboResult (false);
+			_gameManager.players [playerNum].ComboResult (false);
 		
 		} else {
 			Debug.Log ("Right key!");
 
 			// Set animation
-			_gameManager.players [player].arrows.GetComponentsInChildren<Animator>() [
-								_gameManager.players [player].currentKey].SetBool(
+			_gameManager.players [playerNum].arrows.GetComponentsInChildren<Animator>() [
+								_gameManager.players [playerNum].currentKey].SetBool(
 								"Correct", true);
-			_gameManager.players [player].currentKey++;
+			_gameManager.players [playerNum].currentKey++;
 		}
 	}
 
