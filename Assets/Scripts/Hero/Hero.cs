@@ -11,23 +11,36 @@ public class Hero : MonoBehaviour {
         DEFAULT,
         POWER_UP,
     }
-    
+
+    public enum Side
+    {
+        LEFT,
+        RIGHT
+    }
+
     public Sprite[] spriteList;
     
     private SpriteRenderer _spriteRenderer;
 	private int _queuePosition;    
     private int _powerLevel;
+    private int _health;
     private float _maxQueue;
     private float _maxScale;
     private float _initXPos;
     private float _maxXPos;
 
+    public Side side;
     public bool fighting;
     public Hero target;
     public bool moving;
+    public bool dead;
 
+    private float _lastHitTime;
+    private float _attackCooldown;
+        
     void Start()
     {
+        _lastHitTime = Time.time;
         moving = false;
         fighting = false;
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -63,45 +76,61 @@ public class Hero : MonoBehaviour {
         }
     }
 
-    public void moveLeft()
+    public void attack()
+    {
+        if (!dead && _lastHitTime + _attackCooldown < Time.time)
+        {
+            _lastHitTime = Time.time;
+            target.takeDamage(this, _powerLevel);
+        }
+    }
+
+    public void takeDamage(Hero attacker, int amount)
+    {
+        _health -= amount;
+        if (_health <= 0)
+        {
+            dead = true;
+            attacker.fighting = false;
+            attacker.target = null;
+            flyOff();
+        }
+    }
+
+    private void flyOff()
+    {
+        if (side.Equals(Side.LEFT))
+        {
+            
+        }
+        else
+        {
+
+        }
+    }
+
+    //IEnumerator
+
+    public void move()
     {
         if (!moving && !fighting)
         {
-            transform.position += 0.02f * Vector3.left;
+            if (side.Equals(Side.RIGHT))
+            {
+                transform.position += 0.02f * Vector3.left;
+            }
+            else
+            {
+                transform.position += 0.02f * Vector3.right;
+            }
         }
-    }
-
-    IEnumerator moveLeft(float dist, float step)
-    {
-        float moved = 0;
-        while (moved < dist)
-        {
-            yield return null;
-        }
-        moving = false;
-    }
-
-    public void moveRight()
-    {
-        if (!moving && !fighting)
-        {
-            transform.position += 0.02f * Vector3.right;
-        }
-    }
-
-    IEnumerator moveRight(float dist, float step)
-    {
-        float moved = 0;
-        while (moved < dist)
-        {
-            transform.position += step * Vector3.right;
-            yield return null;
-        }
-        moving = false;
     }
 
     public void PowerUp(int powerLevel) {
+        Debug.Log("Powered Up");
         _powerLevel = powerLevel;
+        _health = powerLevel;
+        _attackCooldown = 100.0f / powerLevel;
         
         if(_powerLevel < 0) {
             // If poop level, show transformation to poop
@@ -110,8 +139,9 @@ public class Hero : MonoBehaviour {
         }
     }
 
-    public void moveToPlayingField()
+    public void moveToPlayingField(Side s)
     {
+        side = s;
         moving = true;
         StartCoroutine(move(transform.position + Vector3.up * 3));
     }
