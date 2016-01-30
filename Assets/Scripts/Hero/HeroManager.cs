@@ -75,7 +75,14 @@ public class HeroManager {
 
     public void SendOutHero() {
         // Send out the hero based on whether its a success or failure
-        _currentHero.moveToPlayingField();
+        if (_playerNum == 0)
+        {
+            _currentHero.moveToPlayingField(Hero.Side.LEFT);
+        }
+        else
+        {
+            _currentHero.moveToPlayingField(Hero.Side.RIGHT);
+        }
         _gameManager.players[_playerNum].heroList.Add(_currentHero);
         NextHero();
     }
