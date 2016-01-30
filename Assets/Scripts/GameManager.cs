@@ -50,8 +50,8 @@ public class GameManager : Singleton<GameManager> {
     public void startGame()
     {
         _buildingManager.generateBuildings();
-        StartCoroutine(_comboManager.GenerateSeq(0, 4));
-        StartCoroutine(_comboManager.GenerateSeq(1, 4));
+        _comboManager.generateSeq(0, 8);
+        _comboManager.generateSeq(1, 8);
         gameState = GameState.Playing;
     }
 

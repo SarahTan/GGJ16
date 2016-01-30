@@ -87,9 +87,12 @@ public class Player : MonoBehaviour {
 		// If it's above the min req number (4), ComboManager sends true, else it sends false
 		Debug.Log("Combo result: " + pass + "!");
 
-
-		// Reset this
-		currentKey = 0;
+		if (pass) {
+			// TODO: change seqLength according to whatever pattern
+			_comboManager.generateSeq (index, seqLength);	
+		} else {
+			_comboManager.generateSeq (index, seqLength);
+		}
 	}
 
     // Debug purposes
