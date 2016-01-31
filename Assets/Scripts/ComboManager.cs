@@ -156,7 +156,6 @@ public class ComboManager : Singleton<ComboManager> {
 				_gameManager.players[playerNum].sequence.Length == 0) {
             return;
         }
-
 		// They finished it but pressed wrong key instead of locking in
 		if (_gameManager.players [playerNum].currentKey >=
 				_gameManager.players [playerNum].seqLength) {
