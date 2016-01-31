@@ -21,7 +21,8 @@ public enum  BGMStage
 public enum SFXType
 {
     SYSTEM_CORRECT = 0,
-    SYSTEM_ERROR = 1
+    SYSTEM_ERROR = 1,
+    SYSTEM_EXTCORRECT = 2
     //define Sound Effect type here
 }
 
@@ -49,11 +50,16 @@ public class SoundManager : Singleton<SoundManager>
     public AudioSource[] dialogAS;
 
     public AudioClip bgmC;
+
+    public AudioClip sfxSysCrtC;
+    public AudioClip sfxSysErrC;
+    public AudioClip sfxSysExtraCrtC;
+
     public AudioClip[] dialogC;
     //claim AudioClip here
 
     const int bgmAmount = 1;//setnum
-    const int sfxAmount = 0;//setnum
+    const int sfxAmount = 3;//setnum
     const int dialogRoleAmount = 0; //setnum
 
     SoundParam[] bgm = new SoundParam[bgmAmount];   
@@ -108,8 +114,11 @@ public class SoundManager : Singleton<SoundManager>
 
     void Update()
     {
-        //if (Input.GetKeyDown("b")) bgmPlay(BGMStage.BGM);
+        if (Input.GetKeyDown("b")) bgmPlay(BGMStage.BGM);
         //if (Input.GetKeyDown("s")) bgmStop();
+        if (Input.GetKeyDown("c")) sfxPlay(SFXType.SYSTEM_CORRECT);
+        if (Input.GetKeyDown("e")) sfxPlay(SFXType.SYSTEM_ERROR);
+        if (Input.GetKeyDown("v")) sfxPlay(SFXType.SYSTEM_EXTCORRECT);
     }
 
     //Initialize SFX Param (volumn and pitch of each clip)
@@ -118,22 +127,19 @@ public class SoundManager : Singleton<SoundManager>
         int i,j;
 
         //bgm initiate
-        bgm[(int)BGMStage.BGM] = new SoundParam(bgmC, 1f, 1f);
+        bgm[(int)BGMStage.BGM] = new SoundParam(bgmC, 0.1f, 1f);
 
 
         //sfx initiate[]
-        //for (j = 0; j <= sfxAmount - 1; j++)
-        //{
-        //    if (j == (int)SFXType.ROBOT_JET)
-        //    {
-        //        define exceptions of sound effects that has multiple clips.
-        //    }
-        //    else
-        //    {
-        //        sfx[j] = new SoundParam[1];
-        //    }
-        //}
+        for (j = 0; j <= sfxAmount - 1; j++)
+        {
+                sfx[j] = new SoundParam[1];
+        }
         //sfx initiate[][]
+        sfx[(int)SFXType.SYSTEM_CORRECT][0] = new SoundParam(sfxSysCrtC, 0.3f, 1.0f);
+        sfx[(int)SFXType.SYSTEM_ERROR][0] = new SoundParam(sfxSysErrC, 0.5f, 1.0f);
+        sfx[(int)SFXType.SYSTEM_EXTCORRECT][0] = new SoundParam(sfxSysExtraCrtC, 0.5f, 1.0f);
+
 
     }
 

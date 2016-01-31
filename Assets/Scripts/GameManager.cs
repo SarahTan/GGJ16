@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager> {
 
 	private ComboManager _comboManager;
     private BuildingManager _buildingManager;
     private FightSimulator _fightSimulator;
+    private EventManager _eventManager;
     private Config _config;
 
     public Player[] players { get; private set; }
@@ -40,6 +40,7 @@ public class GameManager : Singleton<GameManager> {
         _buildingManager = BuildingManager.Instance;
         _fightSimulator = FightSimulator.Instance;
 		_comboManager = ComboManager.Instance;
+        _eventManager = EventManager.Instance;
     }
 
 	// Use this for initialization
@@ -51,38 +52,19 @@ public class GameManager : Singleton<GameManager> {
     public void startGame()
     {
         _buildingManager.generateBuildings();
-        _comboManager.generateSeq(0, 8);
-        _comboManager.generateSeq(1, 8);
+        _comboManager.generateSeq(0, 4);
+        _comboManager.generateSeq(1, 4);
         gameState = GameState.Playing;
     }
 
-    public void gameOver(int loser)
+    public void gameOver(int player)
     {
         endGame();
-
-		// Handle UI
-		Transform canvas = GameObject.Find ("EndGame Canvas").transform;
-
-		// The BG overlay
-		canvas.GetChild (0).gameObject.SetActive (true);
-
-		// Player 1 and 2
-		for (int i = 0; i < 2; i++) {
-			GameObject p = canvas.GetChild (i+1).gameObject;
-			p.SetActive (true);
-
-			if (i == loser) {
-				p.GetComponent<Text> ().text = "You lose!";
-			} else {
-				p.GetComponent<Text> ().text = "You win!";
-			}
-		}
     }
 
     public void endGame()
     {
         gameState = GameState.End;
-
     }
 
 	// Update is called once per frame

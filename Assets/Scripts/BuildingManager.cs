@@ -149,7 +149,7 @@ public class BuildingManager : Singleton<BuildingManager> {
             float currentProgress = 0;
             for (int i = 0; i < _buildingCount / 2 + 1; i++)
             {
-                bool flipped = (Random.RandomRange(1, 10) % 2 == 0);
+                bool flipped = (Random.Range(1, 10) % 2 == 0);
                 float currentBuildingWidth = Random.Range(buildingWidth * 1f, buildingWidth * 1.3f);
                 float currentBuildingHeight = Random.Range(_minBuildingHeight * 0.7f, _maxBuildingHeight * 0.7f);
                 float currentBuildingDepth = Random.Range(0f, 0.2f);
@@ -170,7 +170,7 @@ public class BuildingManager : Singleton<BuildingManager> {
             currentProgress = buildingWidth/2;
             for (int i = _buildingCount / 2 + 1; i < _buildingCount; i++)
             {
-                bool flipped = (Random.RandomRange(1, 10) % 2 == 0);
+                bool flipped = (Random.Range(1, 10) % 2 == 0);
                 float currentBuildingDepth = Random.Range(0.25f, 0.45f);
                 float currentBuildingWidth = Random.Range(buildingWidth * 1f, buildingWidth * 1.3f);
                 float currentBuildingHeight = Random.Range(_maxBuildingHeight, _minBuildingHeight);
