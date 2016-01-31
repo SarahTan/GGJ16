@@ -48,6 +48,15 @@ public class Config : Singleton<Config> {
                         {
                             switch (data[0].Trim().ToLower())
                             {
+                                case "restart key":
+                                    _gameManager.restartKey = data[1].Trim();
+                                    KeyCode restart = _inputController.parseString(_gameManager.restartKey);
+                                    _inputController.registerTrigger(_gameManager.restart, restart);
+                                    break;
+                                case "pause key":
+                                    KeyCode pause = _inputController.parseString(data[1].Trim());
+                                    _inputController.registerTrigger(_gameManager.pauseGame, pause);
+                                    break;
                                 case "start key":
                                     KeyCode start = _inputController.parseString(data[1].Trim());
                                     _inputController.registerTrigger(_gameManager.startGame, start);

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections;
 
-public class HeroManager {
+public class HeroManager : MonoBehaviour {
 
     public enum HERO_TYPE {
         TYPE_1,
@@ -35,18 +35,37 @@ public class HeroManager {
 
     private int _playerNum;
     private Vector3 _centerPos;
+    GameObject heroParent;
 
-    public HeroManager(int playerNum, Vector3 centerPos) {
+    public HeroManager() {
+
         _gameManager = GameManager.Instance;
+    }
+
+    public void init(int playerNum, Vector3 centerPos)
+    {
+
         _playerNum = playerNum; // Determine which side to generate from
         _centerPos = centerPos;
 
-        GameObject heroParent = new GameObject();
+        if (heroParent != null)
+        {
+            Destroy(heroParent);
+        }
+
+        heroParent = new GameObject();
         heroParent.name = "Hero Parent";
+
+        if (_heroParent != null)
+        {
+            Destroy(_heroParent);
+        }
+
         _heroParent = heroParent.transform;
         _heroParent.position = centerPos;
         // Player 2 should be inverted
-        if (playerNum == 1) {
+        if (playerNum == 1)
+        {
             _heroParent.localScale = new Vector3(-1, 1, 1);
         }
 
@@ -68,7 +87,8 @@ public class HeroManager {
         _heroList = new List<Hero>(HERO_LIMIT);
         _currentHero = GenerateHero();
 
-        for(int i=0; i<HERO_LIMIT; i++) {
+        for (int i = 0; i < HERO_LIMIT; i++)
+        {
             AddHero();
         }
 

@@ -168,9 +168,7 @@ public class ComboManager : Singleton<ComboManager> {
 
 		// Tell Player to turn into a pile of shit :D
 		Animator[] anim = _gameManager.players [playerNum].arrows.
-			GetComponentsInChildren<Animator> ();
-		Debug.Log ("anim length: " + anim.Length);
-
+							GetComponentsInChildren<Animator> ();
 		if (anim.Length > 0) {
 			if (!pass) {
 				anim[_gameManager.players [playerNum].currentKey].SetBool("Wrong", true);
