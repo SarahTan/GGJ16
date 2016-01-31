@@ -16,6 +16,8 @@ public class ComboManager : Singleton<ComboManager> {
 	float arrowGap = -0.03f;
 	float bonusGap = 0.2f;
 
+    GameObject keysBG;
+
     private Direction[] mappings = { Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT }; 
 
     public enum Direction
@@ -30,14 +32,14 @@ public class ComboManager : Singleton<ComboManager> {
 		_gameManager = GameManager.Instance;
 		_soundManager = SoundManager.Instance;
 
-		Instantiate (Resources.Load ("Prefabs/KeysBG"),
-					 new Vector3 (0, -Camera.main.orthographicSize + 1, -4),
-					 Quaternion.identity);
-
+        keysBG = Instantiate(Resources.Load("Prefabs/KeysBG"),
+                     new Vector3(0, -Camera.main.orthographicSize + 1, -4),
+                     Quaternion.identity) as GameObject;
+        //keysBG.SetActive(false);
 		arrowPrefab = Resources.Load ("Prefabs/UI arrow") as GameObject;
 		arrowWidth = arrowPrefab.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
 	}
-
+    
 	// Use this for initialization
 	void Start () {
 
