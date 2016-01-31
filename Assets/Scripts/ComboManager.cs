@@ -4,6 +4,7 @@ using System.Collections;
 public class ComboManager : Singleton<ComboManager> {
 
 	private GameManager _gameManager;
+	private SoundManager _soundManager;
 
 	int minNum = 4;
 	int maxNum = 8;
@@ -27,6 +28,7 @@ public class ComboManager : Singleton<ComboManager> {
 
 	void Awake() {
 		_gameManager = GameManager.Instance;
+		_soundManager = SoundManager.Instance;
 
 		Instantiate (Resources.Load ("Prefabs/KeysBG"),
 					 new Vector3 (0, -Camera.main.orthographicSize + 1, -4),
@@ -154,18 +156,18 @@ public class ComboManager : Singleton<ComboManager> {
 				_gameManager.players[playerNum].sequence.Length == 0) {
             return;
         }
-        if (_gameManager.players[playerNum].currentKey >= _gameManager.players[playerNum].sequence.Length)
-        {
-            _gameManager.players[playerNum].ComboResult(false);
-            return;
-        } 
-		    
-        bool pass = (dir == _gameManager.players [playerNum].sequence [_gameManager.players [playerNum].currentKey]);
-        
+		// They finished it but pressed wrong key instead of locking in
+		if (_gameManager.players [playerNum].currentKey >=
+				_gameManager.players [playerNum].seqLength) {
+			_gameManager.players[playerNum].ComboResult(false);
+			return;
+		}
+
+		bool pass = (dir == _gameManager.players [playerNum].sequence [
+								_gameManager.players [playerNum].currentKey]);
+
 		// Tell Player to turn into a pile of shit :D
 		if (!pass) {
-			Debug.Log ("Wrong key!");
-
 			// Set animation
 			_gameManager.players [playerNum].arrows.GetComponentsInChildren<Animator>() [
 								_gameManager.players [playerNum].currentKey].SetBool(
@@ -173,12 +175,11 @@ public class ComboManager : Singleton<ComboManager> {
 			_gameManager.players [playerNum].ComboResult (false);
 		
 		} else {
-			Debug.Log ("Right key!");
-
 			// Set animation
 			_gameManager.players [playerNum].arrows.GetComponentsInChildren<Animator>() [
 								_gameManager.players [playerNum].currentKey].SetBool(
 								"Correct", true);
+			
 			_gameManager.players [playerNum].currentKey++;
 		}
 	}

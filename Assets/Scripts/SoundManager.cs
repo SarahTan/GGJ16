@@ -108,7 +108,7 @@ public class SoundManager : Singleton<SoundManager>
     {
 		// Debug.Log("Sound Manager start working");
         Initialize();//initialize sound param
-        StartCoroutine("CoRoutineRemoveSFX");
+        //StartCoroutine("CoRoutineRemoveSFX");
         
     }
 
@@ -352,8 +352,8 @@ public class SoundManager : Singleton<SoundManager>
         source.loop = false;
         source.Play();
 
-        StartCoroutine(AudioDestory(go,source.clip.length));
-        //Destroy(go, clip.length+5f);
+        //StartCoroutine(AudioDestory(go,source.clip.length));
+        Destroy(go, clip.length+5f);
     }
 
     void AudioPlay(AudioClip clip)

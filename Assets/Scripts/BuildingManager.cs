@@ -16,7 +16,7 @@ public class BuildingManager : Singleton<BuildingManager> {
     public const float DEFAULT_BUILDING_FOOTPRINT = 6;
     public const float DEFAULT_MAX_BUILDING_HEIGHT = 1.5f;
     public const float DEFAULT_MIN_BUILDING_FOOTPRINT = 1f;
-    public const int GLOBAL_HEALTH = 1000;
+    public const int GLOBAL_HEALTH = 4000;
 
     public Vector3 leftBuildingAnchor = new Vector3(-7.5f, 0.5f, 0);
     public Vector3 rightBuildingAnchor = new Vector3(7.5f, 0.5f, 0);
