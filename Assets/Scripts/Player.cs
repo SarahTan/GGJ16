@@ -151,7 +151,7 @@ public class Player : MonoBehaviour {
             heroManager.PowerUp(HeroManager.HERO_POWER.POWER_SHIT);
         }
 
-        _eventManager.addEvent(deploy, 0.25f, true);
+        _eventManager.addEvent(deploy, 1f, true);
 
 		// Reset this
 		currentKey = 0;
