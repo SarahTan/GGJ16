@@ -10,6 +10,7 @@ public class FightSimulator : Singleton<FightSimulator> {
     public static float heroDamageMultiplier;
 
 	GameObject[] cityHealth;
+	Vector3[] healthScale;
 	float halfScreenWidth;
 	float healthFactor;
 
@@ -40,6 +41,7 @@ public class FightSimulator : Singleton<FightSimulator> {
 								new Vector3 (halfScreenWidth / 2, -3, -5),
 								Quaternion.identity) as GameObject;
 		cityHealth = new GameObject[2] {healthBar1, healthBar2};
+		healthScale = new Vector3[2] { healthBar1.transform.localScale, healthBar2.transform.localScale };
         lastRollTime = Time.time;
     }
 
@@ -53,7 +55,9 @@ public class FightSimulator : Singleton<FightSimulator> {
         spawnedBefore = false;
         player1Heroes = _gameManager.players[0].heroList;
         player2Heroes = _gameManager.players[1].heroList;
-        
+
+		cityHealth [0].transform.localScale = healthScale[0];
+		cityHealth [1].transform.localScale = healthScale[1];
     }
 
     public void checkBuildingHealth(int player)
