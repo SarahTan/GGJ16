@@ -168,21 +168,19 @@ public class ComboManager : Singleton<ComboManager> {
 								_gameManager.players [playerNum].currentKey]);
 
 		// Tell Player to turn into a pile of shit :D
-		if (!pass) {
-			// Set animation
-			_gameManager.players [playerNum].arrows.GetComponentsInChildren<Animator>() [
-								_gameManager.players [playerNum].currentKey].SetBool(
-								"Wrong", true);
-			_gameManager.players [playerNum].ComboResult (false);
-		
-		} else {
-			// Set animation
-			_gameManager.players [playerNum].arrows.GetComponentsInChildren<Animator>() [
-								_gameManager.players [playerNum].currentKey].SetBool(
-								"Correct", true);
-			
-			_gameManager.players [playerNum].currentKey++;
+		Animator[] anim = _gameManager.players [playerNum].arrows.
+							GetComponentsInChildren<Animator> ();
+		if (anim.Length > 0) {
+			if (!pass) {
+				anim[_gameManager.players [playerNum].currentKey].SetBool("Wrong", true);
+				_gameManager.players [playerNum].ComboResult (false);
+
+			} else {
+				anim[_gameManager.players [playerNum].currentKey].SetBool("Correct", true);			
+				_gameManager.players [playerNum].currentKey++;
+			}
 		}
+
 	}
 
 
