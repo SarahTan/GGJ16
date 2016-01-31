@@ -104,7 +104,7 @@ public class HeroManager : MonoBehaviour {
         //Debug.Log(_currentHero.powerLevel);
     }
     public void UpdatePose(ComboManager.Direction poseDirection) {
-        if (_currentHero != null) {            
+        if (_currentHero != null) {
             _currentHero.UpdatePose(poseDirection, _playerNum);
         }
     }
