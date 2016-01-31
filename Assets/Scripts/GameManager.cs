@@ -10,6 +10,7 @@ public class GameManager : Singleton<GameManager> {
     private EventManager _eventManager;
     private Config _config;
 	private SoundManager _soundManager;
+    private bool _gameStarted;
     public Player[] players { get; private set; }
     public bool paused { get; private set; }
 
@@ -52,6 +53,7 @@ public class GameManager : Singleton<GameManager> {
 		_comboManager = ComboManager.Instance;
         _eventManager = EventManager.Instance;
 		_soundManager = SoundManager.Instance;
+        _gameStarted = false;
 
         pauseCanvas = GameObject.Find("PauseGame Canvas").transform;
         endCanvas = GameObject.Find("EndGame Canvas").transform;
@@ -61,8 +63,7 @@ public class GameManager : Singleton<GameManager> {
 
 		countdownCanvas.gameObject.SetActive (false);
 		keyCanvas.SetActive (false);
-
-        StartCoroutine(BlinkingStartGame());		
+        ShowStartCanvas();
     }
 
 	// Use this for initialization
@@ -84,21 +85,8 @@ public class GameManager : Singleton<GameManager> {
 
     public void startGame()
     {
-		foreach (Transform child in endCanvas) {
-			child.gameObject.SetActive (false);
-		}
-		foreach (Transform child in pauseCanvas) {
-			child.gameObject.SetActive (false);
-		}
-		keyCanvas.SetActive (false);
-
-		// Player 1 and 2
-		for (int i = 0; i < 2; i++)
-		{
-			GameObject p = endCanvas.GetChild(i + 1).gameObject;
-			p.SetActive(false);
-		}
-
+        _gameStarted = true;
+        
 		players[0].init(0);
 		players[1].init(1);
 		_fightSimulator.startGame();
@@ -109,6 +97,25 @@ public class GameManager : Singleton<GameManager> {
 
 		HideStartCanvas();
 		StartCoroutine (CountDown ());
+    }
+
+    public void resetGame() {
+        foreach (Transform child in endCanvas) {
+            child.gameObject.SetActive(false);
+        }
+        foreach (Transform child in pauseCanvas) {
+            child.gameObject.SetActive(false);
+        }
+        keyCanvas.SetActive(false);
+
+        // Player 1 and 2
+        for (int i = 0; i < 2; i++) {
+            GameObject p = endCanvas.GetChild(i + 1).gameObject;
+            p.SetActive(false);
+        }
+        ShowStartCanvas();
+        gameState = GameState.Menu;
+        _soundManager.bgmStop();
     }
 
     public void gameOver(int loser)
@@ -137,7 +144,9 @@ public class GameManager : Singleton<GameManager> {
         {
             pauseGame();
         }
-        startGame();
+        
+        _gameStarted = false;
+        resetGame();
     }
 
     public void pauseGame()
@@ -179,7 +188,7 @@ public class GameManager : Singleton<GameManager> {
     private IEnumerator BlinkingStartGame() {
         Transform startText = startCanvas.FindChild("StartGame");
         if(startText != null) {
-            while (gameState == GameState.Menu) {
+            while (!_gameStarted) {
                 startText.gameObject.SetActive(false);
                 yield return new WaitForSeconds(0.5f);
                 startText.gameObject.SetActive(true);
@@ -189,7 +198,12 @@ public class GameManager : Singleton<GameManager> {
         startText.gameObject.SetActive(false);
         yield break;
     }
-
+    private void ShowStartCanvas() {
+        foreach (Transform child in startCanvas) {
+            child.gameObject.SetActive(true);
+        }
+        StartCoroutine(BlinkingStartGame());
+    }
     private void HideStartCanvas() {
         StopCoroutine(BlinkingStartGame());
         foreach (Transform child in startCanvas) {
