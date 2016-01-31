@@ -13,7 +13,8 @@ public class Hero : MonoBehaviour {
         FLY_LEFT,
         FLY_RIGHT,
         PUNCH_LEFT1,
-        PUNCH_LEFT2
+        PUNCH_LEFT2,
+        POO
     }
 
     public enum Side
@@ -48,8 +49,9 @@ public class Hero : MonoBehaviour {
     private float _initXPos;
     private float _maxXPos;
     private bool _poweredUp;
+    private bool _isReadyToSend;
     private bool _isWalking;
-    private HERO_POSE _currentPunchPose;
+    private HERO_POSE _currentPose;
 
     public State state;
     public Side side;
@@ -65,6 +67,7 @@ public class Hero : MonoBehaviour {
         _flyingOff = false;
         lastHitTime = Time.time;
         _poweredUp = false;
+        _isReadyToSend = false;
         _isWalking = false;
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         _buildingManager = BuildingManager.Instance;
@@ -82,27 +85,28 @@ public class Hero : MonoBehaviour {
     }
 
     public void UpdatePose(ComboManager.Direction poseDirection, int playerNum) {
-        if(!_poweredUp) {
+        if(!_isReadyToSend) {
             switch (poseDirection) {
                 case ComboManager.Direction.UP:
-                    _spriteRenderer.sprite = spriteList[(int)HERO_POSE.UP];
+                    SetSprite(HERO_POSE.UP);
                     break;
                 case ComboManager.Direction.DOWN:
-                    _spriteRenderer.sprite = spriteList[(int)HERO_POSE.DOWN];
+                    SetSprite(HERO_POSE.DOWN);
                     break;
                 case ComboManager.Direction.LEFT:
                     if(playerNum == 0) {
-                        _spriteRenderer.sprite = spriteList[(int)HERO_POSE.LEFT];
-                    }else{
-                        _spriteRenderer.sprite = spriteList[(int)HERO_POSE.RIGHT];
+                        SetSprite(HERO_POSE.LEFT);
+                    }
+                    else{
+                        SetSprite(HERO_POSE.RIGHT);
                     }
                     break;
                 case ComboManager.Direction.RIGHT:
-                    if (playerNum == 0) {
-                        _spriteRenderer.sprite = spriteList[(int)HERO_POSE.RIGHT];
+                    if(playerNum == 0) {
+                        SetSprite(HERO_POSE.LEFT);
                     }
-                    else {
-                        _spriteRenderer.sprite = spriteList[(int)HERO_POSE.LEFT];
+                    else{
+                        SetSprite(HERO_POSE.RIGHT);
                     }
                     break;
                 default:
@@ -160,14 +164,19 @@ public class Hero : MonoBehaviour {
         }
     }
 
-    private void TogglePunchPose() {        
-        if (_currentPunchPose.Equals(HERO_POSE.PUNCH_LEFT1)) {
-            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.PUNCH_LEFT2];
-            _currentPunchPose = HERO_POSE.PUNCH_LEFT2;
+    private void TogglePunchPose() {             
+        if (_poweredUp) {
+            if (_currentPose.Equals(HERO_POSE.PUNCH_LEFT1)) {
+                SetSprite(HERO_POSE.PUNCH_LEFT2);
+                _currentPose = HERO_POSE.PUNCH_LEFT2;
             }
+            else {
+                SetSprite(HERO_POSE.PUNCH_LEFT1);
+                _currentPose = HERO_POSE.PUNCH_LEFT1;
+            }
+        }
         else {
-            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.PUNCH_LEFT1];
-            _currentPunchPose = HERO_POSE.PUNCH_LEFT1;
+            SetSprite(HERO_POSE.POO);
         }
     }
 
@@ -203,7 +212,12 @@ public class Hero : MonoBehaviour {
         {
             StartCoroutine(flyOff(new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0)));
         }
-        _spriteRenderer.sprite = spriteList[(int)HERO_POSE.FLY_LEFT];
+        if(_poweredUp) {
+            SetSprite(HERO_POSE.FLY_LEFT);
+        }
+        else {
+            SetSprite(HERO_POSE.POO);
+        }
     }
 
     IEnumerator flyOff(Vector3 direction)
@@ -241,14 +255,16 @@ public class Hero : MonoBehaviour {
         totalPowerLevel = powerLevel;
         _attackCooldown = 40.0f / powerLevel;
 
-        _poweredUp = true;
+        _isReadyToSend = true; 
 
-        if (powerLevel < 0) {
+        if (powerLevel < 20) {
             // If poop level, show transformation to poop
+            SetSprite(HERO_POSE.POO);
         }else{
-            // Show transformation to super saiyan           
+            // Show transformation to super saiyan         
+            _poweredUp = true;
             auraAnimatorController.SetBool("PowerUp", true);
-            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.POWER_UP];            
+            SetSprite(HERO_POSE.POWER_UP);
         }
     }
 
@@ -256,8 +272,13 @@ public class Hero : MonoBehaviour {
     {
         side = s;
         state = State.Moving;
-        auraAnimatorController.SetBool("PowerUp", false);
-        _spriteRenderer.sprite = spriteList[(int)HERO_POSE.PUNCH_LEFT1];
+        if(_poweredUp) {
+            auraAnimatorController.SetBool("PowerUp", false);
+            SetSprite(HERO_POSE.PUNCH_LEFT1);
+        }
+        else {
+            SetSprite(HERO_POSE.POO);
+        }
         StartCoroutine(move(transform.position + Vector3.up * 1.5f));
     }
 
@@ -332,12 +353,13 @@ public class Hero : MonoBehaviour {
     private void StopWalkingAnimation() {
         _isWalking = false;
         StopCoroutine(StartWalking());
+        SetSprite(HERO_POSE.DEFAULT);
     }
     private IEnumerator StartWalking() {
         while(_isWalking) {
-            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.LEFT];
+            SetSprite(HERO_POSE.LEFT);
             yield return new WaitForSeconds(0.2f);
-            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.RIGHT];
+            SetSprite(HERO_POSE.RIGHT);
             yield return new WaitForSeconds(0.2f);
         }
         yield break;
@@ -355,5 +377,11 @@ public class Hero : MonoBehaviour {
     }
     private void ScaleTo(float scale) {
         transform.localScale = new Vector3(scale, scale, scale);
+    }
+    private void SetSprite(HERO_POSE newPose) {
+        if(_currentPose != HERO_POSE.POO) {
+            _currentPose = newPose;
+            _spriteRenderer.sprite = spriteList[(int)_currentPose];
+        }
     }
 }

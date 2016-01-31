@@ -137,10 +137,10 @@ public class Player : MonoBehaviour {
                     heroManager.PowerUp(HeroManager.HERO_POWER.POWER_4);
                     break;
                 case 8:
-                    heroManager.PowerUp(HeroManager.HERO_POWER.POWER_4);
+                    heroManager.PowerUp(HeroManager.HERO_POWER.POWER_5);
                     break;
                 default:
-                    heroManager.PowerUp(HeroManager.HERO_POWER.POWER_1);
+                    heroManager.PowerUp(HeroManager.HERO_POWER.POWER_SHIT);
                     break;
             }
 
@@ -160,7 +160,7 @@ public class Player : MonoBehaviour {
 
     public void powerUp()
     {
-        heroManager.PowerUp(HeroManager.HERO_POWER.POWER_4);
+        heroManager.PowerUp(HeroManager.HERO_POWER.POWER_SHIT);
     }
 
     public void deploy()
