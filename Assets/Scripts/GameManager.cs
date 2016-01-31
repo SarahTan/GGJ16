@@ -63,6 +63,17 @@ public class GameManager : Singleton<GameManager> {
 
     public void startGame()
     {
+
+        // The BG overlay
+        endCanvas.GetChild(0).gameObject.SetActive(false);
+
+        // Player 1 and 2
+        for (int i = 0; i < 2; i++)
+        {
+            GameObject p = endCanvas.GetChild(i + 1).gameObject;
+            p.SetActive(false);
+        }
+
         players[0].init(0);
         players[1].init(1);
         _fightSimulator.startGame();
