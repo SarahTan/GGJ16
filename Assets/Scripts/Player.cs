@@ -36,12 +36,13 @@ public class Player : MonoBehaviour {
         _gameManager = GameManager.Instance;
         _buildingManager = BuildingManager.Instance;
         _eventManager = EventManager.Instance;
+        heroManager = new HeroManager();
     }
 
     public void init(int i)
     {
         index = i;
-        heroManager = new HeroManager(index, _gameManager.PLAYER_HERO_CENTER[index]);
+        heroManager.init(index, _gameManager.PLAYER_HERO_CENTER[index]);
         heroList = new List<Hero>();
 
         paused = false;

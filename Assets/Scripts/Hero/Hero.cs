@@ -131,14 +131,15 @@ public class Hero : MonoBehaviour {
             lastHitTime = Time.time;
             if (side.Equals(Side.LEFT))
             {
-                _buildingManager.damageBuildings(0, (int)(totalPowerLevel * buildingDamageMultiplier));
+                _buildingManager.damageBuildings(1, (int)(powerLevel * buildingDamageMultiplier));
                 _fightSimulator.checkBuildingHealth(1);
             }
             else
             {
-                _buildingManager.damageBuildings(0, (int)(totalPowerLevel * buildingDamageMultiplier));
+                _buildingManager.damageBuildings(0, (int)(powerLevel * buildingDamageMultiplier));
                 _fightSimulator.checkBuildingHealth(0);
             }
+            powerLevel = (int)(powerLevel * 0.8f);
             TogglePunchPose();
         }
     }

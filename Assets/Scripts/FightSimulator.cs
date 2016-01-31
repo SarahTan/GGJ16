@@ -40,6 +40,10 @@ public class FightSimulator : Singleton<FightSimulator> {
 
 	// Update is called once per frame
 	void Update () {
+        if (_gameManager.paused)
+        {
+            return;
+        }
         switch(_gameManager.gameState) {
             case GameManager.GameState.Playing:
                 for (int i = 0; i < player1Heroes.Count; i++)

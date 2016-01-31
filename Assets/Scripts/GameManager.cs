@@ -11,6 +11,7 @@ public class GameManager : Singleton<GameManager> {
     private Config _config;
 	private SoundManager _soundManager;
     public Player[] players { get; private set; }
+    public bool paused { get; private set; }
 
     public const float BUILDING_Z_INDEX = 0;
     public const float PLAYERS_Z_INDEX = -1;
@@ -18,6 +19,10 @@ public class GameManager : Singleton<GameManager> {
     public Vector3[] PLAYER_HERO_CENTER;
 
     public GameState gameState;
+
+    // Handle UI
+    Transform pauseCanvas;
+    public string restartKey;
 
     public enum GameState
     {
@@ -43,6 +48,9 @@ public class GameManager : Singleton<GameManager> {
 		_comboManager = ComboManager.Instance;
         _eventManager = EventManager.Instance;
 		_soundManager = SoundManager.Instance;
+
+        pauseCanvas = GameObject.Find("PauseGame Canvas").transform;
+
     }
 
 	// Use this for initialization
@@ -85,6 +93,44 @@ public class GameManager : Singleton<GameManager> {
 				p.GetComponent<Text> ().text = "You win!";
 			}
 		}
+    }
+
+    public void restart()
+    {
+        if (paused)
+        {
+            pauseGame();
+        }
+        startGame();
+    }
+
+    public void pauseGame()
+    {
+        if (paused)
+        {   
+            // The BG overlay
+            pauseCanvas.GetChild(0).gameObject.SetActive(false);
+            GameObject gMT = pauseCanvas.FindChild("main text").gameObject;
+            GameObject sMT = pauseCanvas.FindChild("secondary text").gameObject;
+            gMT.SetActive(false);
+            sMT.SetActive(false);
+
+            Time.timeScale = 1.0f;
+            paused = false;
+        }
+        else
+        {   
+            // The BG overlay
+            pauseCanvas.GetChild(0).gameObject.SetActive(true);
+            GameObject gMT = pauseCanvas.FindChild("main text").gameObject;
+            GameObject sMT = pauseCanvas.FindChild("secondary text").gameObject;
+            sMT.GetComponent<Text>().text = "Press " + restartKey + " to restart";
+            gMT.SetActive(true);
+            sMT.SetActive(true);
+
+            Time.timeScale = 0.0f;
+            paused = true;
+        }
     }
 
     public void endGame()
