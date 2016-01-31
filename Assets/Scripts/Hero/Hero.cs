@@ -13,7 +13,8 @@ public class Hero : MonoBehaviour {
         FLY_LEFT,
         FLY_RIGHT,
         PUNCH_LEFT1,
-        PUNCH_LEFT2
+        PUNCH_LEFT2,
+        POO
     }
 
     public enum Side
@@ -47,6 +48,7 @@ public class Hero : MonoBehaviour {
     private float _initXPos;
     private float _maxXPos;
     private bool _poweredUp;
+    private bool _isReadyToSend;
     private bool _isWalking;
     private HERO_POSE _currentPunchPose;
 
@@ -64,6 +66,7 @@ public class Hero : MonoBehaviour {
         _flyingOff = false;
         lastHitTime = Time.time;
         _poweredUp = false;
+        _isReadyToSend = false;
         _isWalking = false;
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         _buildingManager = BuildingManager.Instance;
@@ -81,7 +84,7 @@ public class Hero : MonoBehaviour {
     }
 
     public void UpdatePose(ComboManager.Direction poseDirection, int playerNum) {
-        if(!_poweredUp) {
+        if(!_isReadyToSend) {
             switch (poseDirection) {
                 case ComboManager.Direction.UP:
                     _spriteRenderer.sprite = spriteList[(int)HERO_POSE.UP];
@@ -159,14 +162,19 @@ public class Hero : MonoBehaviour {
         }
     }
 
-    private void TogglePunchPose() {        
-        if (_currentPunchPose.Equals(HERO_POSE.PUNCH_LEFT1)) {
-            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.PUNCH_LEFT2];
-            _currentPunchPose = HERO_POSE.PUNCH_LEFT2;
+    private void TogglePunchPose() {             
+        if (_poweredUp) {
+            if (_currentPunchPose.Equals(HERO_POSE.PUNCH_LEFT1)) {
+                _spriteRenderer.sprite = spriteList[(int)HERO_POSE.PUNCH_LEFT2];
+                _currentPunchPose = HERO_POSE.PUNCH_LEFT2;
             }
+            else {
+                _spriteRenderer.sprite = spriteList[(int)HERO_POSE.PUNCH_LEFT1];
+                _currentPunchPose = HERO_POSE.PUNCH_LEFT1;
+            }
+        }
         else {
-            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.PUNCH_LEFT1];
-            _currentPunchPose = HERO_POSE.PUNCH_LEFT1;
+            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.POO];
         }
     }
 
@@ -202,7 +210,12 @@ public class Hero : MonoBehaviour {
         {
             StartCoroutine(flyOff(new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0)));
         }
-        _spriteRenderer.sprite = spriteList[(int)HERO_POSE.FLY_LEFT];
+        if(_poweredUp) {
+            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.FLY_LEFT];
+        }
+        else {
+            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.POO];
+        }
     }
 
     IEnumerator flyOff(Vector3 direction)
@@ -239,12 +252,14 @@ public class Hero : MonoBehaviour {
         _health = powerLevel;
         _attackCooldown = 40.0f / powerLevel;
 
-        _poweredUp = true;
+        _isReadyToSend = true; 
 
-        if (powerLevel < 0) {
+        if (powerLevel < 20) {
             // If poop level, show transformation to poop
+            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.POO];
         }else{
-            // Show transformation to super saiyan           
+            // Show transformation to super saiyan         
+            _poweredUp = true;
             auraAnimatorController.SetBool("PowerUp", true);
             _spriteRenderer.sprite = spriteList[(int)HERO_POSE.POWER_UP];            
         }
@@ -254,8 +269,13 @@ public class Hero : MonoBehaviour {
     {
         side = s;
         state = State.Moving;
-        auraAnimatorController.SetBool("PowerUp", false);
-        _spriteRenderer.sprite = spriteList[(int)HERO_POSE.PUNCH_LEFT1];
+        if(_poweredUp) {
+            auraAnimatorController.SetBool("PowerUp", false);
+            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.PUNCH_LEFT1];
+        }
+        else {
+            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.POO];
+        }
         StartCoroutine(move(transform.position + Vector3.up * 1.5f));
     }
 
@@ -330,6 +350,7 @@ public class Hero : MonoBehaviour {
     private void StopWalkingAnimation() {
         _isWalking = false;
         StopCoroutine(StartWalking());
+        _spriteRenderer.sprite = spriteList[(int)HERO_POSE.DEFAULT];
     }
     private IEnumerator StartWalking() {
         while(_isWalking) {

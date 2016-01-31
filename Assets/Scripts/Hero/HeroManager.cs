@@ -58,7 +58,7 @@ public class HeroManager {
         _heroPrefab[(int)HERO_TYPE.TYPE_5] = Resources.Load("Prefabs/Hero5") as GameObject;
 
         _powerLevelList = new int[(int)HERO_POWER.SIZE];
-        _powerLevelList[(int)HERO_POWER.POWER_SHIT] = -1;
+        _powerLevelList[(int)HERO_POWER.POWER_SHIT] = 10;
         _powerLevelList[(int)HERO_POWER.POWER_1] = 100;
         _powerLevelList[(int)HERO_POWER.POWER_2] = 120;
         _powerLevelList[(int)HERO_POWER.POWER_3] = 140;
