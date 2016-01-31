@@ -7,6 +7,8 @@ public class FightSimulator : Singleton<FightSimulator> {
     private GameManager _gameManager;
     private BuildingManager _buildingManager;
 
+    public static float heroDamageMultiplier;
+
     List<Hero> player1Heroes;
     List<Hero> player2Heroes;
     void Awake()
@@ -17,11 +19,15 @@ public class FightSimulator : Singleton<FightSimulator> {
 
 	// Use this for initialization
 	void Start () {
+        
+	}
+
+    public void startGame()
+    {
         player1Heroes = _gameManager.players[0].heroList;
         player2Heroes = _gameManager.players[1].heroList;
-
-
-	}
+        
+    }
 
     public void checkBuildingHealth(int player)
     {
@@ -41,7 +47,7 @@ public class FightSimulator : Singleton<FightSimulator> {
                     switch (player1Heroes[i].state)
                     {
                         case Hero.State.Dead:
-                            _buildingManager.damageBuildings(0, player1Heroes[i].totalPowerLevel / 2);
+                            _buildingManager.damageBuildings(0, (int)(player1Heroes[i].totalPowerLevel * heroDamageMultiplier));
                             player1Heroes.RemoveAt(i);
                             checkBuildingHealth(0);
                             break;
@@ -86,7 +92,7 @@ public class FightSimulator : Singleton<FightSimulator> {
                     switch (player2Heroes[i].state)
                     {
                         case Hero.State.Dead:
-                            _buildingManager.damageBuildings(1, player2Heroes[i].totalPowerLevel / 2);
+                            _buildingManager.damageBuildings(1, (int)(player2Heroes[i].totalPowerLevel * heroDamageMultiplier));
                             player2Heroes.RemoveAt(i);
                             checkBuildingHealth(1);
                             break;

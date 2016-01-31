@@ -51,7 +51,10 @@ public class Hero : MonoBehaviour {
     private bool _poweredUp;
     private bool _isReadyToSend;
     private bool _isWalking;
+    private bool _togglePose;
     private HERO_POSE _currentPose;
+
+    public static float buildingDamageMultiplier;
 
     public State state;
     public Side side;
@@ -69,6 +72,7 @@ public class Hero : MonoBehaviour {
         _poweredUp = false;
         _isReadyToSend = false;
         _isWalking = false;
+        _togglePose = false;
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         _buildingManager = BuildingManager.Instance;
         _fightSimulator = FightSimulator.Instance;        
@@ -86,6 +90,7 @@ public class Hero : MonoBehaviour {
 
     public void UpdatePose(ComboManager.Direction poseDirection, int playerNum) {
         if(!_isReadyToSend) {
+            ScaleTo(2f);
             switch (poseDirection) {
                 case ComboManager.Direction.UP:
                     SetSprite(HERO_POSE.UP);
@@ -112,6 +117,7 @@ public class Hero : MonoBehaviour {
                 default:
                     break;         
             }
+            ScaleTo(1f);
         }
     }
 
@@ -123,12 +129,12 @@ public class Hero : MonoBehaviour {
             lastHitTime = Time.time;
             if (side.Equals(Side.LEFT))
             {
-                _buildingManager.damageBuildings(1, totalPowerLevel / 3);
+                _buildingManager.damageBuildings(0, (int)(totalPowerLevel * buildingDamageMultiplier));
                 _fightSimulator.checkBuildingHealth(1);
             }
             else
             {
-                _buildingManager.damageBuildings(0, totalPowerLevel / 3);
+                _buildingManager.damageBuildings(0, (int)(totalPowerLevel * buildingDamageMultiplier));
                 _fightSimulator.checkBuildingHealth(0);
             }
             TogglePunchPose();
