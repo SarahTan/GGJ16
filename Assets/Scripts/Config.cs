@@ -94,6 +94,38 @@ public class Config : Singleton<Config> {
                                     KeyCode p2a = _inputController.parseString(data[1].Trim());
                                     _inputController.registerTrigger(_gameManager.players[1].attack, p2a);
                                     break;
+                                case "hero power shit":
+                                    int powerShit = int.Parse(data[1].Trim());
+                                    Constants.HERO_POWER_SHIT = powerShit;
+                                    break;
+                                case "hero power 1":
+                                    int powerLevel1 = int.Parse(data[1].Trim());
+                                    Constants.HERO_POWER_1 = powerLevel1;
+                                    break;
+                                case "hero power 2":
+                                    int powerLevel2 = int.Parse(data[1].Trim());
+                                    Constants.HERO_POWER_2 = powerLevel2;
+                                    break;
+                                case "hero power 3":
+                                    int powerLevel3 = int.Parse(data[1].Trim());
+                                    Constants.HERO_POWER_3 = powerLevel3;
+                                    break;
+                                case "hero power 4":
+                                    int powerLevel4 = int.Parse(data[1].Trim());
+                                    Constants.HERO_POWER_4 = powerLevel4;
+                                    break;
+                                case "hero power 5":
+                                    int powerLevel5 = int.Parse(data[1].Trim());
+                                    Constants.HERO_POWER_5 = powerLevel5;
+                                    break;
+                                case "power decrease multiplier":
+                                    float powerDecreaseMultiplier = float.Parse(data[1].Trim());
+                                    Constants.POWER_DECREASE_MULTIPLIER = powerDecreaseMultiplier;
+                                    break;
+                                case "hero sending delay":
+                                    float heroSendingDelay = float.Parse(data[1].Trim());
+                                    Constants.HERO_SENDING_DELAY = heroSendingDelay;
+                                    break;
                                 default:
                                     break;
                             }

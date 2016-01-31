@@ -37,6 +37,8 @@ public class GameManager : Singleton<GameManager> {
         players[1] = player2;
 
         _config = Config.Instance;
+        player1.InitHeroPowerLevel();
+        player2.InitHeroPowerLevel();
         _buildingManager = BuildingManager.Instance;
         _fightSimulator = FightSimulator.Instance;
 		_comboManager = ComboManager.Instance;

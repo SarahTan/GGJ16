@@ -64,6 +64,9 @@ public class Player : MonoBehaviour {
 
         heroList = new List<Hero>();
     }
+    public void InitHeroPowerLevel() {
+        heroManager.SetHeroPowerLevels();
+    }
 
 	// Use this for initialization
 	void Start () {
@@ -151,7 +154,7 @@ public class Player : MonoBehaviour {
             heroManager.PowerUp(HeroManager.HERO_POWER.POWER_SHIT);
         }
 
-        _eventManager.addEvent(deploy, 0.25f, true);
+        _eventManager.addEvent(deploy, Constants.HERO_SENDING_DELAY, true);
 
 		// Reset this
 		currentKey = 0;
