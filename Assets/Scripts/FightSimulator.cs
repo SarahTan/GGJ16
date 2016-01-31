@@ -41,7 +41,7 @@ public class FightSimulator : Singleton<FightSimulator> {
                     switch (player1Heroes[i].state)
                     {
                         case Hero.State.Dead:
-                            _buildingManager.damageBuildings(0, player1Heroes[i].powerLevel / 3);
+                            _buildingManager.damageBuildings(0, player1Heroes[i].totalPowerLevel / 2);
                             player1Heroes.RemoveAt(i);
                             checkBuildingHealth(0);
                             break;
@@ -86,7 +86,7 @@ public class FightSimulator : Singleton<FightSimulator> {
                     switch (player2Heroes[i].state)
                     {
                         case Hero.State.Dead:
-                            _buildingManager.damageBuildings(1, player2Heroes[i].powerLevel / 3);
+                            _buildingManager.damageBuildings(1, player2Heroes[i].totalPowerLevel / 2);
                             player2Heroes.RemoveAt(i);
                             checkBuildingHealth(1);
                             break;

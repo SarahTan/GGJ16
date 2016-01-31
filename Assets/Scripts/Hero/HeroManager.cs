@@ -78,6 +78,7 @@ public class HeroManager {
     public void PowerUp(HERO_POWER heroPower)
     {
         _currentHero.PowerUp((int)(_powerLevelList[(int)heroPower] * Random.Range(0.85f, 1.15f)));
+        Debug.Log(_currentHero.powerLevel);
     }
     public void UpdatePose(ComboManager.Direction poseDirection) {
         if (_currentHero != null) {
