@@ -119,12 +119,12 @@ public class Hero : MonoBehaviour {
             lastHitTime = Time.time;
             if (side.Equals(Side.LEFT))
             {
-                _buildingManager.damageBuildings(1, powerLevel / 10);
+                _buildingManager.damageBuildings(1, totalPowerLevel / 3);
                 _fightSimulator.checkBuildingHealth(1);
             }
             else
             {
-                _buildingManager.damageBuildings(0, powerLevel / 10);
+                _buildingManager.damageBuildings(0, totalPowerLevel / 3);
                 _fightSimulator.checkBuildingHealth(0);
             }
             TogglePunchPose();
