@@ -65,8 +65,7 @@ public class GameManager : Singleton<GameManager> {
 		keyCanvas.SetActive (false);
 	}
 
-    public void startGame()
-    {
+	IEnumerator StartingGame () {
 		foreach (Transform child in endCanvas) {
 			child.gameObject.SetActive (false);
 		}
@@ -75,22 +74,27 @@ public class GameManager : Singleton<GameManager> {
 		}
 		keyCanvas.SetActive (true);
 
-        // Player 1 and 2
-        for (int i = 0; i < 2; i++)
-        {
-            GameObject p = endCanvas.GetChild(i + 1).gameObject;
-            p.SetActive(false);
-        }
+		// Player 1 and 2
+		for (int i = 0; i < 2; i++)
+		{
+			GameObject p = endCanvas.GetChild(i + 1).gameObject;
+			p.SetActive(false);
+		}
 
-        players[0].init(0);
-        players[1].init(1);
-        _fightSimulator.startGame();
-        _buildingManager.generateBuildings();
-        _comboManager.generateSeq(0, 8);
+		players[0].init(0);
+		players[1].init(1);
+		_fightSimulator.startGame();
+		_buildingManager.generateBuildings();
+		_comboManager.generateSeq(0, 8);
 		_comboManager.generateSeq(1, 8);
 		_soundManager.bgmPlay (BGMStage.BGM);
 
-        gameState = GameState.Playing;
+		gameState = GameState.Playing;
+	}
+
+    public void startGame()
+    {
+		StartCoroutine (StartingGame ());
     }
 
     public void gameOver(int loser)
