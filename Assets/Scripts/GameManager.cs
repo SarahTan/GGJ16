@@ -23,6 +23,7 @@ public class GameManager : Singleton<GameManager> {
     // Handle UI
     Transform pauseCanvas;
     Transform endCanvas;
+    Transform startCanvas;
     public string restartKey;
 
     public enum GameState
@@ -52,7 +53,8 @@ public class GameManager : Singleton<GameManager> {
 
         pauseCanvas = GameObject.Find("PauseGame Canvas").transform;
         endCanvas = GameObject.Find("EndGame Canvas").transform;
-        
+        startCanvas = GameObject.Find("StartGame Canvas").transform;
+        StartCoroutine(BlinkingStartGame());
     }
 
 	// Use this for initialization
@@ -73,7 +75,9 @@ public class GameManager : Singleton<GameManager> {
 
         gameState = GameState.Playing;
 
-		foreach (Transform child in pauseCanvas) {
+        HideStartCanvas();
+        
+        foreach (Transform child in pauseCanvas) {
 			child.gameObject.SetActive (false);
 		}
     }
@@ -139,6 +143,25 @@ public class GameManager : Singleton<GameManager> {
     public void endGame()
     {
         gameState = GameState.End;
+    }
+
+    private IEnumerator BlinkingStartGame() {
+        Transform startText = startCanvas.FindChild("StartGame");
+        if(startText != null) {
+            while (gameState == GameState.Menu) {
+                startText.gameObject.SetActive(false);
+                yield return new WaitForSeconds(0.5f);
+                startText.gameObject.SetActive(true);
+                yield return new WaitForSeconds(0.5f);
+            }
+        }
+        yield break;
+    }
+    private void HideStartCanvas() {
+        StopCoroutine(BlinkingStartGame());
+        foreach (Transform child in startCanvas) {
+            child.gameObject.SetActive(false);
+        }
     }
 
 	// Update is called once per frame
