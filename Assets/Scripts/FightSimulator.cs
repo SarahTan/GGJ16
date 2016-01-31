@@ -21,10 +21,16 @@ public class FightSimulator : Singleton<FightSimulator> {
         _gameManager = GameManager.Instance;
 
 		halfScreenWidth = Camera.main.orthographicSize * Camera.main.aspect;
-		GameObject healthBar1 = Instantiate (Resources.Load ("Prefabs/HealthBar"),
+		GameObject healthBar = Resources.Load ("Prefabs/HealthBar") as GameObject;
+		Vector3 scale = healthBar.transform.localScale;
+		scale.x = halfScreenWidth /
+			healthBar.GetComponent<SpriteRenderer> ().sprite.bounds.size.x;
+		healthBar.transform.localScale = scale;
+
+		GameObject healthBar1 = Instantiate (healthBar,
 			                    new Vector3 (-halfScreenWidth / 2, -3, -5),
 								Quaternion.identity) as GameObject;
-		GameObject healthBar2 = Instantiate (Resources.Load ("Prefabs/HealthBar"),
+		GameObject healthBar2 = Instantiate (healthBar,
 								new Vector3 (halfScreenWidth / 2, -3, -5),
 								Quaternion.identity) as GameObject;
 		cityHealth = new GameObject[2] {healthBar1, healthBar2};
