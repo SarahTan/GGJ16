@@ -146,7 +146,36 @@ public class HeroManager : MonoBehaviour {
         GameObject heroObject = Object.Instantiate(_heroPrefab[randomHeroNumber]) as GameObject;
         heroObject.transform.SetParent(_heroParent);        
         Hero hero = heroObject.GetComponent<Hero>();
-		hero.Init(_heroList.Count);
+        SFXType normalSFX, henshinSFX;
+
+        switch((HERO_TYPE)randomHeroNumber) {
+            case HERO_TYPE.TYPE_1:
+                normalSFX = SFXType.CHAR1_NORMAL;
+                henshinSFX = SFXType.CHAR1_HENSHIN;
+                break;
+            case HERO_TYPE.TYPE_2:
+                normalSFX = SFXType.CHAR2_NORMAL;
+                henshinSFX = SFXType.CHAR2_HENSHIN;
+                break;
+            case HERO_TYPE.TYPE_3:
+                normalSFX = SFXType.CHAR3_NORMAL;
+                henshinSFX = SFXType.CHAR3_HENSHIN;
+                break;
+            case HERO_TYPE.TYPE_4:
+                normalSFX = SFXType.CHAR4_NORMAL;
+                henshinSFX = SFXType.CHAR4_HENSHIN;
+                break;
+            case HERO_TYPE.TYPE_5:
+                normalSFX = SFXType.CHAR5_NORMAL;
+                henshinSFX = SFXType.CHAR5_HENSHIN;
+                break;
+            default:
+                normalSFX = SFXType.CHAR1_NORMAL;
+                henshinSFX = SFXType.CHAR1_HENSHIN;
+                break;
+        }
+
+		hero.Init(_heroList.Count, normalSFX, henshinSFX);
         hero.SetQueuePosition();
         return hero;
     }
