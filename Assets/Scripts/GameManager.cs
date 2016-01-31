@@ -11,6 +11,7 @@ public class GameManager : Singleton<GameManager> {
     private Config _config;
 	private SoundManager _soundManager;
     public Player[] players { get; private set; }
+    public bool paused { get; private set; }
 
     public const float BUILDING_Z_INDEX = 0;
     public const float PLAYERS_Z_INDEX = -1;
@@ -19,7 +20,9 @@ public class GameManager : Singleton<GameManager> {
 
     public GameState gameState;
 
-	Transform canvas;
+    // Handle UI
+    Transform pauseCanvas;
+    public string restartKey;
 
     public enum GameState
     {
@@ -46,7 +49,7 @@ public class GameManager : Singleton<GameManager> {
         _eventManager = EventManager.Instance;
 		_soundManager = SoundManager.Instance;
 
-		canvas = GameObject.Find("EndGame Canvas").transform;
+        pauseCanvas = GameObject.Find("PauseGame Canvas").transform;
     }
 
 	// Use this for initialization
@@ -67,7 +70,7 @@ public class GameManager : Singleton<GameManager> {
 
         gameState = GameState.Playing;
 
-		foreach (Transform child in canvas) {
+		foreach (Transform child in pauseCanvas) {
 			child.gameObject.SetActive (false);
 		}
     }
@@ -77,11 +80,11 @@ public class GameManager : Singleton<GameManager> {
 		endGame();
 
 		// The BG overlay
-		canvas.GetChild(0).gameObject.SetActive(true);
+		pauseCanvas.GetChild(0).gameObject.SetActive(true);
 
 		// Player 1 and 2
 		for (int i = 0; i < 2; i++) {
-			GameObject p = canvas.GetChild (i + 1).gameObject;
+			GameObject p = pauseCanvas.GetChild (i + 1).gameObject;
 			p.SetActive (true);
 
 			if (i == loser) {
@@ -90,6 +93,44 @@ public class GameManager : Singleton<GameManager> {
 				p.GetComponent<Text> ().text = "You win!";
 			}
 		}
+    }
+
+    public void restart()
+    {
+        if (paused)
+        {
+            pauseGame();
+        }
+        startGame();
+    }
+
+    public void pauseGame()
+    {
+        if (paused)
+        {   
+            // The BG overlay
+            pauseCanvas.GetChild(0).gameObject.SetActive(false);
+            GameObject gMT = pauseCanvas.FindChild("main text").gameObject;
+            GameObject sMT = pauseCanvas.FindChild("secondary text").gameObject;
+            gMT.SetActive(false);
+            sMT.SetActive(false);
+
+            Time.timeScale = 1.0f;
+            paused = false;
+        }
+        else
+        {   
+            // The BG overlay
+            pauseCanvas.GetChild(0).gameObject.SetActive(true);
+            GameObject gMT = pauseCanvas.FindChild("main text").gameObject;
+            GameObject sMT = pauseCanvas.FindChild("secondary text").gameObject;
+            sMT.GetComponent<Text>().text = "Press " + restartKey + " to restart";
+            gMT.SetActive(true);
+            sMT.SetActive(true);
+
+            Time.timeScale = 0.0f;
+            paused = true;
+        }
     }
 
     public void endGame()

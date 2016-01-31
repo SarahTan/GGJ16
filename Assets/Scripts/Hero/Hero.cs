@@ -46,6 +46,7 @@ public class Hero : MonoBehaviour {
     private float _health;
     private float _maxQueue;
     private float _maxScale;
+    private float _scaleRatio;
     private float _initXPos;
     private float _maxXPos;
     private bool _poweredUp;
@@ -83,6 +84,7 @@ public class Hero : MonoBehaviour {
 		powerLevel = -1;
         _maxQueue = HeroManager.HERO_LIMIT;
         _maxScale = 1f;
+        _scaleRatio = 1f;
         _initXPos = -1.5f;
         _maxXPos = 15f;
         ScaleTo(0.5f * _maxScale);
@@ -129,14 +131,15 @@ public class Hero : MonoBehaviour {
             lastHitTime = Time.time;
             if (side.Equals(Side.LEFT))
             {
-                _buildingManager.damageBuildings(0, (int)(totalPowerLevel * buildingDamageMultiplier));
+                _buildingManager.damageBuildings(1, (int)(powerLevel * buildingDamageMultiplier));
                 _fightSimulator.checkBuildingHealth(1);
             }
             else
             {
-                _buildingManager.damageBuildings(0, (int)(totalPowerLevel * buildingDamageMultiplier));
+                _buildingManager.damageBuildings(0, (int)(powerLevel * buildingDamageMultiplier));
                 _fightSimulator.checkBuildingHealth(0);
             }
+            powerLevel = (int)(powerLevel * 0.8f);
             TogglePunchPose();
         }
     }
@@ -151,20 +154,20 @@ public class Hero : MonoBehaviour {
                 {
                     target.lastHitTime = Time.time;
                     takeDamage(target, target.powerLevel * 0.4f);
-                    powerLevel -= (int)(target.powerLevel * 0.3f);
+                    powerLevel -= (int)(target.powerLevel * Constants.POWER_DECREASE_MULTIPLIER);
                 }
                 else
                 {
                     lastHitTime = Time.time;
                     target.takeDamage(this, powerLevel * 0.4f);
-                    powerLevel -= (int)(powerLevel * 0.3f);
+                    powerLevel -= (int)(powerLevel * Constants.POWER_DECREASE_MULTIPLIER);
                 }
             }
             else
             {
                 lastHitTime = Time.time;
                 target.takeDamage(this, powerLevel * 0.4f);
-                powerLevel -= (int)(powerLevel * 0.3f);
+                powerLevel -= (int)(powerLevel * Constants.POWER_DECREASE_MULTIPLIER);
             }
             TogglePunchPose();
         }
@@ -255,21 +258,22 @@ public class Hero : MonoBehaviour {
         }
     }
 
-    public void PowerUp(int pl) {
+    public void PowerUp(int pl, float scaleRatio) {
         powerLevel = pl;
         _health = powerLevel;
         totalPowerLevel = powerLevel;
         _attackCooldown = 40.0f / powerLevel;
-
+        _scaleRatio = scaleRatio;
         _isReadyToSend = true; 
 
-        if (powerLevel < 20) {
+        if (powerLevel < (Constants.HERO_POWER_SHIT*1.2)) {
             // If poop level, show transformation to poop
             SetSprite(HERO_POSE.POO);
         }else{
             // Show transformation to super saiyan         
             _poweredUp = true;
             auraAnimatorController.SetBool("PowerUp", true);
+            ScaleTo(1.0f + 0.3f * scaleRatio);
             SetSprite(HERO_POSE.POWER_UP);
         }
     }
@@ -296,7 +300,8 @@ public class Hero : MonoBehaviour {
             transform.position = Vector3.MoveTowards(transform.position, final, 0.1f);
             yield return null;
         }
-        transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+        //ScaleTo(0.4f + 0.2f*_scaleRatio);
+        ScaleTo(0.4f);
         state = State.Idle;
     }
 

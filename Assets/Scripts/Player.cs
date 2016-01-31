@@ -36,12 +36,13 @@ public class Player : MonoBehaviour {
         _gameManager = GameManager.Instance;
         _buildingManager = BuildingManager.Instance;
         _eventManager = EventManager.Instance;
+        heroManager = new HeroManager();
     }
 
     public void init(int i)
     {
         index = i;
-        heroManager = new HeroManager(index, _gameManager.PLAYER_HERO_CENTER[index]);
+        heroManager.init(index, _gameManager.PLAYER_HERO_CENTER[index]);
         heroList = new List<Hero>();
 
         paused = false;
@@ -149,7 +150,7 @@ public class Player : MonoBehaviour {
             heroManager.PowerUp(HeroManager.HERO_POWER.POWER_SHIT);
         }
 
-        _eventManager.addEvent(deploy, 1f, true);
+         _eventManager.addEvent(deploy, Constants.HERO_SENDING_DELAY, true);
 
 		// Reset this
 		currentKey = 0;

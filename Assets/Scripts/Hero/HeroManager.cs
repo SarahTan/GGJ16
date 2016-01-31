@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections;
 
-public class HeroManager {
+public class HeroManager : MonoBehaviour {
 
     public enum HERO_TYPE {
         TYPE_1,
@@ -35,18 +35,37 @@ public class HeroManager {
 
     private int _playerNum;
     private Vector3 _centerPos;
+    GameObject heroParent;
 
-    public HeroManager(int playerNum, Vector3 centerPos) {
+    public HeroManager() {
+
         _gameManager = GameManager.Instance;
+    }
+
+    public void init(int playerNum, Vector3 centerPos)
+    {
+
         _playerNum = playerNum; // Determine which side to generate from
         _centerPos = centerPos;
 
-        GameObject heroParent = new GameObject();
+        if (heroParent != null)
+        {
+            Destroy(heroParent);
+        }
+
+        heroParent = new GameObject();
         heroParent.name = "Hero Parent";
+
+        if (_heroParent != null)
+        {
+            Destroy(_heroParent);
+        }
+
         _heroParent = heroParent.transform;
         _heroParent.position = centerPos;
         // Player 2 should be inverted
-        if (playerNum == 1) {
+        if (playerNum == 1)
+        {
             _heroParent.localScale = new Vector3(-1, 1, 1);
         }
 
@@ -57,28 +76,33 @@ public class HeroManager {
         _heroPrefab[(int)HERO_TYPE.TYPE_4] = Resources.Load("Prefabs/Hero4") as GameObject;
         _heroPrefab[(int)HERO_TYPE.TYPE_5] = Resources.Load("Prefabs/Hero5") as GameObject;
 
-        _powerLevelList = new int[(int)HERO_POWER.SIZE];
-        _powerLevelList[(int)HERO_POWER.POWER_SHIT] = 10;
-        _powerLevelList[(int)HERO_POWER.POWER_1] = 100;
-        _powerLevelList[(int)HERO_POWER.POWER_2] = 120;
-        _powerLevelList[(int)HERO_POWER.POWER_3] = 140;
-        _powerLevelList[(int)HERO_POWER.POWER_4] = 180;
-        _powerLevelList[(int)HERO_POWER.POWER_5] = 200;
+        SetHeroPowerLevels();
 
         _heroList = new List<Hero>(HERO_LIMIT);
         _currentHero = GenerateHero();
 
-        for(int i=0; i<HERO_LIMIT; i++) {
+        for (int i = 0; i < HERO_LIMIT; i++)
+        {
             AddHero();
         }
 
         _currentHero.SetToCenter();
     }
+    private void SetHeroPowerLevels() {
+        _powerLevelList = new int[(int)HERO_POWER.SIZE];
+        _powerLevelList[(int)HERO_POWER.POWER_SHIT] = Constants.HERO_POWER_SHIT;
+        _powerLevelList[(int)HERO_POWER.POWER_1] = Constants.HERO_POWER_1;
+        _powerLevelList[(int)HERO_POWER.POWER_2] = Constants.HERO_POWER_2;
+        _powerLevelList[(int)HERO_POWER.POWER_3] = Constants.HERO_POWER_3;
+        _powerLevelList[(int)HERO_POWER.POWER_4] = Constants.HERO_POWER_4;
+        _powerLevelList[(int)HERO_POWER.POWER_5] = Constants.HERO_POWER_5;
+    }
 
     public void PowerUp(HERO_POWER heroPower)
     {
-        _currentHero.PowerUp((int)(_powerLevelList[(int)heroPower] * Random.Range(0.85f, 1.15f)));
-        Debug.Log(_currentHero.powerLevel);
+        float powerLevel = (_powerLevelList[(int)heroPower] * Random.Range(0.85f, 1.15f));
+        _currentHero.PowerUp((int)powerLevel, powerLevel/_powerLevelList[(int)HERO_POWER.POWER_5]*1.15f);
+        //Debug.Log(_currentHero.powerLevel);
     }
     public void UpdatePose(ComboManager.Direction poseDirection) {
         if (_currentHero != null) {
