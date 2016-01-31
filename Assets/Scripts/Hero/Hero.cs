@@ -158,20 +158,20 @@ public class Hero : MonoBehaviour {
                 if (target.powerLevel > powerLevel)
                 {
                     target.lastHitTime = Time.time;
-                    takeDamage(target, target.powerLevel * 0.4f);
-                    powerLevel -= (int)(target.powerLevel * Constants.POWER_DECREASE_MULTIPLIER);
+                    takeDamage(target, target.powerLevel * Constants.ATTACK_MULTIPLIER);
+                    target.powerLevel -= (int)(target.powerLevel * Constants.POWER_DECREASE_MULTIPLIER);
                 }
                 else
                 {
                     lastHitTime = Time.time;
-                    target.takeDamage(this, powerLevel * 0.4f);
+                    target.takeDamage(this, powerLevel * Constants.ATTACK_MULTIPLIER);
                     powerLevel -= (int)(powerLevel * Constants.POWER_DECREASE_MULTIPLIER);
                 }
             }
             else
             {
                 lastHitTime = Time.time;
-                target.takeDamage(this, powerLevel * 0.4f);
+                target.takeDamage(this, powerLevel * Constants.ATTACK_MULTIPLIER);
                 powerLevel -= (int)(powerLevel * Constants.POWER_DECREASE_MULTIPLIER);
             }
             TogglePunchPose();
@@ -281,6 +281,7 @@ public class Hero : MonoBehaviour {
             ScaleTo(1.0f + 0.3f * scaleRatio);
             SetSprite(HERO_POSE.POWER_UP);
         }
+
     }
 
     public void moveToPlayingField(Side s)
