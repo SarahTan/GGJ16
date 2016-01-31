@@ -8,6 +8,7 @@ public class Player : MonoBehaviour {
     private InputController _inputController;
     private GameManager _gameManager;
     private BuildingManager _buildingManager;
+	private SoundManager _soundManager;
 
     public const float DEPLOY_TIME = 0.5f;
 
@@ -29,6 +30,7 @@ public class Player : MonoBehaviour {
 	public Player (int i) {
         paused = false;
 		index = i;
+		_soundManager = SoundManager.Instance;
 		_comboManager = ComboManager.Instance;
 		_inputController = InputController.Instance;
         _gameManager = GameManager.Instance;
@@ -95,7 +97,8 @@ public class Player : MonoBehaviour {
         paused = true;
         if (pass)
         {
-            
+			_soundManager.sfxPlay (SFXType.SYSTEM_EXTCORRECT);
+
             switch (currentKey)
             {
                 case 4:
@@ -121,6 +124,7 @@ public class Player : MonoBehaviour {
         }
         else
         {
+			_soundManager.sfxPlay (SFXType.SYSTEM_ERROR);
             heroManager.PowerUp(HeroManager.HERO_POWER.POWER_SHIT);
         }
 
