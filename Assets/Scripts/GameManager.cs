@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager> {
 
@@ -57,9 +58,27 @@ public class GameManager : Singleton<GameManager> {
         gameState = GameState.Playing;
     }
 
-    public void gameOver(int player)
+    public void gameOver(int loser)
     {
-        endGame();
+		endGame();
+
+		// Handle UI
+		Transform canvas = GameObject.Find("EndGame Canvas").transform;
+
+		// The BG overlay
+		canvas.GetChild(0).gameObject.SetActive(true);
+
+		// Player 1 and 2
+		for (int i = 0; i < 2; i++) {
+			GameObject p = canvas.GetChild (i + 1).gameObject;
+			p.SetActive (true);
+
+			if (i == loser) {
+				p.GetComponent<Text> ().text = "You lose!";
+			} else {
+				p.GetComponent<Text> ().text = "You win!";
+			}
+		}
     }
 
     public void endGame()
