@@ -23,6 +23,7 @@ public class GameManager : Singleton<GameManager> {
     // Handle UI
     Transform pauseCanvas;
     Transform endCanvas;
+	GameObject keyCanvas;
     public string restartKey;
 
     public enum GameState
@@ -52,6 +53,8 @@ public class GameManager : Singleton<GameManager> {
 
         pauseCanvas = GameObject.Find("PauseGame Canvas").transform;
         endCanvas = GameObject.Find("EndGame Canvas").transform;
+		keyCanvas = GameObject.Find ("Keys Canvas");
+
         
     }
 
@@ -59,13 +62,18 @@ public class GameManager : Singleton<GameManager> {
     void Start()
     {
         gameState = GameState.Menu;
+		keyCanvas.SetActive (false);
 	}
 
     public void startGame()
     {
-
-        // The BG overlay
-        endCanvas.GetChild(0).gameObject.SetActive(false);
+		foreach (Transform child in endCanvas) {
+			child.gameObject.SetActive (false);
+		}
+		foreach (Transform child in pauseCanvas) {
+			child.gameObject.SetActive (false);
+		}
+		keyCanvas.SetActive (true);
 
         // Player 1 and 2
         for (int i = 0; i < 2; i++)
@@ -83,17 +91,13 @@ public class GameManager : Singleton<GameManager> {
 		_soundManager.bgmPlay (BGMStage.BGM);
 
         gameState = GameState.Playing;
-
-		foreach (Transform child in pauseCanvas) {
-			child.gameObject.SetActive (false);
-		}
     }
 
     public void gameOver(int loser)
     {
 		endGame();
 
-		// The BG overlay
+		keyCanvas.SetActive (false);
 		foreach (Transform child in endCanvas) {
 			child.gameObject.SetActive (true);
 		}
@@ -123,6 +127,7 @@ public class GameManager : Singleton<GameManager> {
         if (paused)
         {   
             // The BG overlay
+			keyCanvas.SetActive (true);
             pauseCanvas.GetChild(0).gameObject.SetActive(false);
             GameObject gMT = pauseCanvas.FindChild("main text").gameObject;
             GameObject sMT = pauseCanvas.FindChild("secondary text").gameObject;
@@ -135,6 +140,7 @@ public class GameManager : Singleton<GameManager> {
         else
         {   
             // The BG overlay
+			keyCanvas.SetActive (false);
             pauseCanvas.GetChild(0).gameObject.SetActive(true);
             GameObject gMT = pauseCanvas.FindChild("main text").gameObject;
             GameObject sMT = pauseCanvas.FindChild("secondary text").gameObject;
