@@ -94,6 +94,14 @@ public class Config : Singleton<Config> {
                                     KeyCode p2a = _inputController.parseString(data[1].Trim());
                                     _inputController.registerTrigger(_gameManager.players[1].attack, p2a);
                                     break;
+                                case "building damage multiplier":
+                                    float bdmg = float.Parse(data[1].Trim());
+                                    Hero.buildingDamageMultiplier = bdmg;
+                                    break;
+                                case "hero damage multiplier":
+                                    float hdmg = float.Parse(data[1].Trim());
+                                    FightSimulator.heroDamageMultiplier = hdmg;
+                                    break;
                                 default:
                                     break;
                             }

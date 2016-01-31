@@ -30,8 +30,8 @@ public class GameManager : Singleton<GameManager> {
     void Awake()
     {
         PLAYER_HERO_CENTER = new Vector3[]{new Vector3(-4, -1f, 0), new Vector3(4, -1f, 0) };
-        Player player1 = new Player(0);
-        Player player2 = new Player(1);
+        Player player1 = new Player();
+        Player player2 = new Player();
         players = new Player[2];
         players[0] = player1;
         players[1] = player2;
@@ -51,6 +51,9 @@ public class GameManager : Singleton<GameManager> {
 
     public void startGame()
     {
+        players[0].init(0);
+        players[1].init(1);
+        _fightSimulator.startGame();
         _buildingManager.generateBuildings();
         _comboManager.generateSeq(0, 8);
         _comboManager.generateSeq(1, 8);
