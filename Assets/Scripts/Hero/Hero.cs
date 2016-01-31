@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Hero : MonoBehaviour {
+public class Hero : MonoBehaviour, Organism {
 
     public enum HERO_POSE {
         UP,
@@ -41,7 +41,7 @@ public class Hero : MonoBehaviour {
     private BuildingManager _buildingManager;
     private FightSimulator _fightSimulator;
 	private int _queuePosition;
-    public int powerLevel { get; private set; }
+    public int powerLevel;
     public int totalPowerLevel { get; private set; }
     private float _health;
     private float _maxQueue;
@@ -62,7 +62,7 @@ public class Hero : MonoBehaviour {
 
     public State state;
     public Side side;
-    public Hero target;
+    public Organism target;
     private bool _flyingOff;
 
     public float lastHitTime;
@@ -156,30 +156,40 @@ public class Hero : MonoBehaviour {
         }
     }
 
+    public void decreasePowerLevel()
+    {
+        powerLevel -= (int)(powerLevel * Constants.POWER_DECREASE_MULTIPLIER);
+    }
+
     public void attack()
     {
+        if (target == null || target.getState().Equals(Hero.State.Dead))
+        {
+            state = State.Idle;
+            return;
+        }
         if (cooledDown())
         {
             if (target.cooledDown())
             {
-                if (target.powerLevel > powerLevel)
+                if (target.getPowerLevel() > powerLevel)
                 {
-                    target.lastHitTime = Time.time;
-                    takeDamage(target, target.powerLevel * Constants.ATTACK_MULTIPLIER);
-                    target.powerLevel -= (int)(target.powerLevel * Constants.POWER_DECREASE_MULTIPLIER);
+                    target.hit();
+                    takeDamage(target, target.getPowerLevel() * Constants.ATTACK_MULTIPLIER);
+                    target.decreasePowerLevel();
                 }
                 else
                 {
                     lastHitTime = Time.time;
                     target.takeDamage(this, powerLevel * Constants.ATTACK_MULTIPLIER);
-                    powerLevel -= (int)(powerLevel * Constants.POWER_DECREASE_MULTIPLIER);
+                    decreasePowerLevel();
                 }
             }
             else
             {
                 lastHitTime = Time.time;
                 target.takeDamage(this, powerLevel * Constants.ATTACK_MULTIPLIER);
-                powerLevel -= (int)(powerLevel * Constants.POWER_DECREASE_MULTIPLIER);
+                decreasePowerLevel();
             }
             TogglePunchPose();
         }
@@ -206,14 +216,14 @@ public class Hero : MonoBehaviour {
         return (!state.Equals(State.Dead) && lastHitTime + _attackCooldown < Time.time);
     }
 
-    public void takeDamage(Hero attacker, float amount)
+    public void takeDamage(Organism attacker, float amount)
     {
         _health -= amount;
         if (_health <= 0)
         {
             state = State.Dead;
-            attacker.state = State.Idle;
-            attacker.target = null;
+            attacker.setState(State.Idle);
+            attacker.setTarget(null);
             if (!_flyingOff)
             {
                 flyOff();
@@ -408,5 +418,56 @@ public class Hero : MonoBehaviour {
             _currentPose = newPose;
             _spriteRenderer.sprite = spriteList[(int)_currentPose];
         }
+    }
+
+
+    public float getLastHitTime()
+    {
+        return lastHitTime;
+    }
+
+    public int getPowerLevel()
+    {
+        return powerLevel;
+    }
+
+    public void setPowerLevel(int pl)
+    {
+        powerLevel = pl;
+    }
+
+    public void hit()
+    {
+        lastHitTime = Time.time;
+    }
+
+    public Hero.State getState()
+    {
+        return state;
+    }
+
+    public void setState(Hero.State s)
+    {
+        state = s;
+    }
+
+    public Hero.Side getSide()
+    {
+        return side;
+    }
+
+    public void setSide(Hero.Side s)
+    {
+        side = s;
+    }
+
+    public Organism getTarget()
+    {
+        return target;
+    }
+
+    public void setTarget(Organism t)
+    {
+        target = t;
     }
 }
