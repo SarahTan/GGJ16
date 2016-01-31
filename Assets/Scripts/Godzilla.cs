@@ -9,7 +9,7 @@ public class Godzilla : MonoBehaviour, Organism {
     public GameObject[] spriteList;
     
     public int powerLevel = 1500;
-    public float health = 2000;
+    public float health = 3000;
     private float cooldownTime = 1f;
     public float lastHitTime;
 
