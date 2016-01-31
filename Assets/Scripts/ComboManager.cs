@@ -154,10 +154,14 @@ public class ComboManager : Singleton<ComboManager> {
 				_gameManager.players[playerNum].sequence.Length == 0) {
             return;
         }
-
-		bool pass = (dir == _gameManager.players [playerNum].sequence [
-								_gameManager.players [playerNum].currentKey]);
-
+        if (_gameManager.players[playerNum].currentKey >= _gameManager.players[playerNum].sequence.Length)
+        {
+            _gameManager.players[playerNum].ComboResult(false);
+            return;
+        } 
+		    
+        bool pass = (dir == _gameManager.players [playerNum].sequence [_gameManager.players [playerNum].currentKey]);
+        
 		// Tell Player to turn into a pile of shit :D
 		if (!pass) {
 			Debug.Log ("Wrong key!");

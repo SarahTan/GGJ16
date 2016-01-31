@@ -140,20 +140,20 @@ public class Hero : MonoBehaviour {
                 {
                     target.lastHitTime = Time.time;
                     takeDamage(target, target.powerLevel * 0.4f);
-                    powerLevel = (int)(powerLevel * 0.9f);
+                    powerLevel -= (int)(target.powerLevel * 0.3f);
                 }
                 else
                 {
                     lastHitTime = Time.time;
                     target.takeDamage(this, powerLevel * 0.4f);
-                    powerLevel = (int)(powerLevel * 0.9f);
+                    powerLevel -= (int)(powerLevel * 0.3f);
                 }
             }
             else
             {
                 lastHitTime = Time.time;
                 target.takeDamage(this, powerLevel * 0.4f);
-                powerLevel = (int)(powerLevel * 0.9f);
+                powerLevel -= (int)(powerLevel * 0.3f);
             }
             TogglePunchPose();
         }
