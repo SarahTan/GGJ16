@@ -79,6 +79,7 @@ public class GameManager : Singleton<GameManager> {
 			yield return new WaitForSeconds (1f);
 		}
 		countdownCanvas.gameObject.SetActive (false);
+		keyCanvas.SetActive(true);
 
 		gameState = GameState.Playing;
 	}
