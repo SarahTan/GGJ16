@@ -13,9 +13,7 @@ public class Hero : MonoBehaviour {
         FLY_LEFT,
         FLY_RIGHT,
         PUNCH_LEFT1,
-        PUNCH_LEFT2,
-        PUNCH_RIGHT1,
-        PUNCH_RIGHT2
+        PUNCH_LEFT2
     }
 
     public enum Side
@@ -50,6 +48,7 @@ public class Hero : MonoBehaviour {
     private float _maxXPos;
     private bool _poweredUp;
     private bool _isWalking;
+    private HERO_POSE _currentPunchPose;
 
     public State state;
     public Side side;
@@ -68,7 +67,7 @@ public class Hero : MonoBehaviour {
         _isWalking = false;
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         _buildingManager = BuildingManager.Instance;
-        _fightSimulator = FightSimulator.Instance;
+        _fightSimulator = FightSimulator.Instance;        
     }
 
 	public void Init(int queuePosition){
@@ -127,6 +126,7 @@ public class Hero : MonoBehaviour {
                 _buildingManager.damageBuildings(0, powerLevel / 10);
                 _fightSimulator.checkBuildingHealth(0);
             }
+            TogglePunchPose();
         }
     }
 
@@ -152,6 +152,18 @@ public class Hero : MonoBehaviour {
                 lastHitTime = Time.time;
                 target.takeDamage(this, powerLevel * 0.4f);
             }
+            TogglePunchPose();
+        }
+    }
+
+    private void TogglePunchPose() {        
+        if (_currentPunchPose.Equals(HERO_POSE.PUNCH_LEFT1)) {
+            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.PUNCH_LEFT2];
+            _currentPunchPose = HERO_POSE.PUNCH_LEFT2;
+            }
+        else {
+            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.PUNCH_LEFT1];
+            _currentPunchPose = HERO_POSE.PUNCH_LEFT1;
         }
     }
 
@@ -181,14 +193,13 @@ public class Hero : MonoBehaviour {
         float angle = Random.Range(30, 70) * Mathf.PI / 180;
         if (side.Equals(Side.LEFT))
         {
-            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.FLY_LEFT];
             StartCoroutine(flyOff(new Vector3(-Mathf.Cos(angle), Mathf.Sin(angle), 0)));
         }
         else
         {
-            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.FLY_RIGHT];
             StartCoroutine(flyOff(new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0)));
         }
+        _spriteRenderer.sprite = spriteList[(int)HERO_POSE.FLY_LEFT];
     }
 
     IEnumerator flyOff(Vector3 direction)
@@ -230,10 +241,9 @@ public class Hero : MonoBehaviour {
         if (powerLevel < 0) {
             // If poop level, show transformation to poop
         }else{
-            // Show transformation to super saiyan
-            Debug.Log(spriteList[(int)HERO_POSE.POWER_UP]);
-            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.POWER_UP];
+            // Show transformation to super saiyan           
             auraAnimatorController.SetBool("PowerUp", true);
+            _spriteRenderer.sprite = spriteList[(int)HERO_POSE.POWER_UP];            
         }
     }
 
@@ -242,6 +252,7 @@ public class Hero : MonoBehaviour {
         side = s;
         state = State.Moving;
         auraAnimatorController.SetBool("PowerUp", false);
+        _spriteRenderer.sprite = spriteList[(int)HERO_POSE.PUNCH_LEFT1];
         StartCoroutine(move(transform.position + Vector3.up * 1.5f));
     }
 
