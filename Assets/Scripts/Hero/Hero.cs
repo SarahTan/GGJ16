@@ -55,6 +55,8 @@ public class Hero : MonoBehaviour {
     private bool _togglePose;
     private HERO_POSE _currentPose;
 
+    public static float buildingDamageMultiplier;
+
     public State state;
     public Side side;
     public Hero target;
@@ -129,12 +131,12 @@ public class Hero : MonoBehaviour {
             lastHitTime = Time.time;
             if (side.Equals(Side.LEFT))
             {
-                _buildingManager.damageBuildings(1, totalPowerLevel / 3);
+                _buildingManager.damageBuildings(0, (int)(totalPowerLevel * buildingDamageMultiplier));
                 _fightSimulator.checkBuildingHealth(1);
             }
             else
             {
-                _buildingManager.damageBuildings(0, totalPowerLevel / 3);
+                _buildingManager.damageBuildings(0, (int)(totalPowerLevel * buildingDamageMultiplier));
                 _fightSimulator.checkBuildingHealth(0);
             }
             TogglePunchPose();

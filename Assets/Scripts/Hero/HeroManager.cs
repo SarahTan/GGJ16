@@ -68,7 +68,7 @@ public class HeroManager {
 
         _currentHero.SetToCenter();
     }
-    public void SetHeroPowerLevels() {
+    private void SetHeroPowerLevels() {
         _powerLevelList = new int[(int)HERO_POWER.SIZE];
         _powerLevelList[(int)HERO_POWER.POWER_SHIT] = Constants.HERO_POWER_SHIT;
         _powerLevelList[(int)HERO_POWER.POWER_1] = Constants.HERO_POWER_1;

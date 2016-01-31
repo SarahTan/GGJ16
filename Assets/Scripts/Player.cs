@@ -28,22 +28,23 @@ public class Player : MonoBehaviour {
 
     public bool paused;
 
-    public Player(int i)
+    public Player()
     {
-        init(i);
-    }
-
-    public void init(int i)
-    {
-
-        paused = false;
-		index = i;
 		_soundManager = SoundManager.Instance;
 		_comboManager = ComboManager.Instance;
 		_inputController = InputController.Instance;
         _gameManager = GameManager.Instance;
         _buildingManager = BuildingManager.Instance;
         _eventManager = EventManager.Instance;
+    }
+
+    public void init(int i)
+    {
+        index = i;
+        heroManager = new HeroManager(index, _gameManager.PLAYER_HERO_CENTER[index]);
+        heroList = new List<Hero>();
+
+        paused = false;
 
         arrows = new GameObject();
         arrows.name = "Player" + (index + 1) + " Arrows";
@@ -60,12 +61,6 @@ public class Player : MonoBehaviour {
                                      -cam.orthographicSize + 1, -5);
         }
 
-        heroManager = new HeroManager(index, _gameManager.PLAYER_HERO_CENTER[index]);
-
-        heroList = new List<Hero>();
-    }
-    public void InitHeroPowerLevel() {
-        heroManager.SetHeroPowerLevels();
     }
 
 	// Use this for initialization
@@ -154,7 +149,7 @@ public class Player : MonoBehaviour {
             heroManager.PowerUp(HeroManager.HERO_POWER.POWER_SHIT);
         }
 
-        _eventManager.addEvent(deploy, Constants.HERO_SENDING_DELAY, true);
+         _eventManager.addEvent(deploy, Constants.HERO_SENDING_DELAY, true);
 
 		// Reset this
 		currentKey = 0;

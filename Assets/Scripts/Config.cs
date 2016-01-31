@@ -126,6 +126,14 @@ public class Config : Singleton<Config> {
                                     float heroSendingDelay = float.Parse(data[1].Trim());
                                     Constants.HERO_SENDING_DELAY = heroSendingDelay;
                                     break;
+                                case "building damage multiplier":
+                                    float bdmg = float.Parse(data[1].Trim());
+                                    Hero.buildingDamageMultiplier = bdmg;
+                                    break;
+                                case "hero damage multiplier":
+                                    float hdmg = float.Parse(data[1].Trim());
+                                    FightSimulator.heroDamageMultiplier = hdmg;
+                                    break;
                                 default:
                                     break;
                             }
