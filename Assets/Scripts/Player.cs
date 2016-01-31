@@ -84,7 +84,18 @@ public class Player : MonoBehaviour {
         _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.DOWN), keys[1]);
         _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.LEFT), keys[2]);
         _inputController.registerTrigger(() => triggerDirection(index, ComboManager.Direction.RIGHT), keys[3]);
-	    _inputController.registerTrigger(() => _comboManager.LockIn(index), keys[4]);
+	    _inputController.registerTrigger(() => triggerLockedIn(index), keys[4]);
+    }
+
+    public void triggerLockedIn(int player)
+    {
+        if (!paused)
+        {
+            if (_gameManager.gameState.Equals(GameManager.GameState.Playing))
+            {
+                _comboManager.LockIn(player);
+            }
+        }
     }
 
     public void triggerDirection(int player, ComboManager.Direction dir)
@@ -136,7 +147,7 @@ public class Player : MonoBehaviour {
             heroManager.PowerUp(HeroManager.HERO_POWER.POWER_SHIT);
         }
 
-        _eventManager.addEvent(deploy, 1, true);
+        _eventManager.addEvent(deploy, 0.25f, true);
 
 		// Reset this
 		currentKey = 0;
@@ -150,7 +161,6 @@ public class Player : MonoBehaviour {
 
     public void deploy()
     {
-        Debug.Log("DEPLOY");
         _comboManager.generateSeq(index, seqLength);
         heroManager.SendOutHero();
         paused = false;
