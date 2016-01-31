@@ -121,7 +121,7 @@ public class SoundManager : Singleton<SoundManager>
         //if (Input.GetKeyDown("b")) bgmPlay(BGMStage.BGM);
         //if (Input.GetKeyDown("s")) bgmStop();
         //if (Input.GetKeyDown("c")) sfxPlay(SFXType.SYSTEM_CORRECT);
-        //if (Input.GetKeyDown("e")) sfxPlay(SFXType.SYSTEM_ERROR);
+        if (Input.GetKeyDown("0")) sfxPlay(SFXType.SYSTEM_ERROR);
         if (Input.GetKeyDown("4")) sfxPlay(SFXType.SYSTEM_EXTCORRECT);
         if (Input.GetKeyDown("5")) sfxPlay(SFXType.SYSTEM_EXTCORRECT5);
         if (Input.GetKeyDown("6")) sfxPlay(SFXType.SYSTEM_EXTCORRECT6);
