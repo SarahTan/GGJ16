@@ -92,7 +92,6 @@ public class Hero : MonoBehaviour {
 
     public void UpdatePose(ComboManager.Direction poseDirection, int playerNum) {
         if(!_isReadyToSend) {
-            ScaleTo(2f);
             switch (poseDirection) {
                 case ComboManager.Direction.UP:
                     SetSprite(HERO_POSE.UP);
@@ -119,7 +118,13 @@ public class Hero : MonoBehaviour {
                 default:
                     break;         
             }
-            ScaleTo(1f);
+        }
+    }
+
+    public void UpdatePose(HERO_POSE newPose) {
+        if(_spriteRenderer != null) {
+            _currentPose = newPose;
+            _spriteRenderer.sprite = spriteList[(int)_currentPose];
         }
     }
 
@@ -283,7 +288,7 @@ public class Hero : MonoBehaviour {
         side = s;
         state = State.Moving;
         if(_poweredUp) {
-            auraAnimatorController.SetBool("PowerUp", false);
+            //auraAnimatorController.SetBool("PowerUp", false);
             SetSprite(HERO_POSE.PUNCH_LEFT1);
         }
         else {
