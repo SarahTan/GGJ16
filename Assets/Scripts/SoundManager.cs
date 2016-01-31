@@ -118,7 +118,7 @@ public class SoundManager : Singleton<SoundManager>
 
     void Update()
     {
-        //if (Input.GetKeyDown("b")) bgmPlay(BGMStage.BGM);
+        if (Input.GetKeyDown("b")) bgmPlay(BGMStage.BGM);
         //if (Input.GetKeyDown("s")) bgmStop();
         //if (Input.GetKeyDown("c")) sfxPlay(SFXType.SYSTEM_CORRECT);
         if (Input.GetKeyDown("0")) sfxPlay(SFXType.SYSTEM_ERROR);
@@ -135,7 +135,7 @@ public class SoundManager : Singleton<SoundManager>
         int i,j;
 
         //bgm initiate
-        bgm[(int)BGMStage.BGM] = new SoundParam(bgmC, 0.1f, 1f);
+        bgm[(int)BGMStage.BGM] = new SoundParam(bgmC, 0.05f, 1f);
 
 
         //sfx initiate[]
@@ -144,13 +144,13 @@ public class SoundManager : Singleton<SoundManager>
                 sfx[j] = new SoundParam[1];
         }
         //sfx initiate[][]
-        sfx[(int)SFXType.SYSTEM_CORRECT][0] = new SoundParam(sfxSysCrtC, 0.3f, 1.0f);
-        sfx[(int)SFXType.SYSTEM_ERROR][0] = new SoundParam(sfxSysErrC, 0.5f, 1.0f);
-        sfx[(int)SFXType.SYSTEM_EXTCORRECT][0] = new SoundParam(sfxSysExtraCrtC, 0.5f, 1.0f);
-        sfx[(int)SFXType.SYSTEM_EXTCORRECT5][0] = new SoundParam(sfxSysExtraCrtC, 0.5f, 1.05f);
-        sfx[(int)SFXType.SYSTEM_EXTCORRECT6][0] = new SoundParam(sfxSysExtraCrtC, 0.5f, 1.1f);
-        sfx[(int)SFXType.SYSTEM_EXTCORRECT7][0] = new SoundParam(sfxSysExtraCrtC, 0.5f, 1.15f);
-        sfx[(int)SFXType.SYSTEM_EXTCORRECT8][0] = new SoundParam(sfxSysExtraCrtC, 0.5f, 1.2f);
+        sfx[(int)SFXType.SYSTEM_CORRECT][0] = new SoundParam(sfxSysCrtC, 0.8f, 1.0f);
+        sfx[(int)SFXType.SYSTEM_ERROR][0] = new SoundParam(sfxSysErrC, 0.8f, 1.0f);
+        sfx[(int)SFXType.SYSTEM_EXTCORRECT][0] = new SoundParam(sfxSysExtraCrtC, 0.8f, 1.0f);
+        sfx[(int)SFXType.SYSTEM_EXTCORRECT5][0] = new SoundParam(sfxSysExtraCrtC, 0.8f, 1.05f);
+        sfx[(int)SFXType.SYSTEM_EXTCORRECT6][0] = new SoundParam(sfxSysExtraCrtC, 0.8f, 1.1f);
+        sfx[(int)SFXType.SYSTEM_EXTCORRECT7][0] = new SoundParam(sfxSysExtraCrtC, 0.8f, 1.15f);
+        sfx[(int)SFXType.SYSTEM_EXTCORRECT8][0] = new SoundParam(sfxSysExtraCrtC, 0.8f, 1.2f);
 
     }
 
