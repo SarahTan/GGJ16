@@ -20,8 +20,7 @@ public class ComboManager : Singleton<ComboManager> {
 
     private Direction[] mappings = { Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT }; 
 
-    public enum Direction
-    {
+    public enum Direction {
         UP,
         LEFT,
         DOWN,
@@ -35,7 +34,6 @@ public class ComboManager : Singleton<ComboManager> {
         keysBG = Instantiate(Resources.Load("Prefabs/KeysBG"),
                      new Vector3(0, -Camera.main.orthographicSize + 1, -4),
                      Quaternion.identity) as GameObject;
-        //keysBG.SetActive(false);
 		arrowPrefab = Resources.Load ("Prefabs/UI arrow") as GameObject;
 		arrowWidth = arrowPrefab.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
 	}
@@ -56,9 +54,6 @@ public class ComboManager : Singleton<ComboManager> {
 		Vector3 pos = _gameManager.players [playerNum].centerPos;
 		pos.x -= ((arrowWidth * (_gameManager.players[playerNum].seqLength-1)) + (arrowGap * 3) + 
 				 bonusGap * (_gameManager.players [playerNum].seqLength-4)) / 2;
-
-//		Debug.Log ("offset: " + (((arrowWidth * _gameManager.players[playerNum].seqLength) +
-//			(arrowGap * _gameManager.players[playerNum].seqLength)) / 2));
 
 		int i = 1;
 		foreach (Direction direction in _gameManager.players[playerNum].sequence) {
@@ -109,14 +104,6 @@ public class ComboManager : Singleton<ComboManager> {
 
 		_gameManager.players [playerNum].currentKey = 0;
 		DrawArrows (playerNum);
-
-//		Debug.Log ("Player 0's sequence: " + _gameManager.players [0].sequence[0] + " " +
-//											_gameManager.players [0].sequence[1] + " " +
-//											_gameManager.players [0].sequence[2] + " " +
-//											_gameManager.players [0].sequence[3] + " " +
-//											_gameManager.players [0].sequence[4] + " " +
-//											_gameManager.players [0].sequence[5]);
-
 	}
 
 

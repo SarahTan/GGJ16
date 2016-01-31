@@ -65,6 +65,17 @@ public class GameManager : Singleton<GameManager> {
 
     public void startGame()
     {
+
+        // The BG overlay
+        endCanvas.GetChild(0).gameObject.SetActive(false);
+
+        // Player 1 and 2
+        for (int i = 0; i < 2; i++)
+        {
+            GameObject p = endCanvas.GetChild(i + 1).gameObject;
+            p.SetActive(false);
+        }
+
         players[0].init(0);
         players[1].init(1);
         _fightSimulator.startGame();
@@ -87,19 +98,19 @@ public class GameManager : Singleton<GameManager> {
 		endGame();
 
 		// The BG overlay
-		endCanvas.GetChild(0).gameObject.SetActive(true);
-
-		// Player 1 and 2
-		for (int i = 0; i < 2; i++) {
-			GameObject p = endCanvas.GetChild (i + 1).gameObject;
-			p.SetActive (true);
-
-			if (i == loser) {
-				p.GetComponent<Text> ().text = "You lose!";
-			} else {
-				p.GetComponent<Text> ().text = "You win!";
-			}
+		foreach (Transform child in endCanvas) {
+			child.gameObject.SetActive (true);
 		}
+
+		// Set text
+		endCanvas.FindChild("P" + loser + " Text").GetComponent<Text> ().text = "You lose!";
+		endCanvas.FindChild("P" + (loser+1)%2 + " Text").GetComponent<Text> ().text = "You win!";
+
+		// Set hero sprite
+		endCanvas.FindChild ("P" + (loser) + " Hero").GetComponent<Image> ().sprite =
+			Resources.Load <Sprite> ("Sprites/jam char 1/jam char 1 neutral");
+		endCanvas.FindChild("P" + ((loser+1)%2) + " Hero").GetComponent<Image> ().sprite =
+			Resources.Load <Sprite> ("Sprites/jam char 1/jam char 1 hero");
     }
 
     public void restart()
@@ -166,6 +177,8 @@ public class GameManager : Singleton<GameManager> {
 
 	// Update is called once per frame
 	void Update () {
-
+		if (Input.GetKeyUp (KeyCode.B)) {
+			gameOver (0);
+		}
 	}
 }
