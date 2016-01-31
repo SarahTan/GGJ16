@@ -166,6 +166,7 @@ public class GameManager : Singleton<GameManager> {
                 yield return new WaitForSeconds(0.5f);
             }
         }
+        startText.gameObject.SetActive(false);
         yield break;
     }
     private void HideStartCanvas() {
