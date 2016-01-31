@@ -9,7 +9,7 @@ public class GameManager : Singleton<GameManager> {
     private FightSimulator _fightSimulator;
     private EventManager _eventManager;
     private Config _config;
-
+	private SoundManager _soundManager;
     public Player[] players { get; private set; }
 
     public const float BUILDING_Z_INDEX = 0;
@@ -42,6 +42,7 @@ public class GameManager : Singleton<GameManager> {
         _fightSimulator = FightSimulator.Instance;
 		_comboManager = ComboManager.Instance;
         _eventManager = EventManager.Instance;
+		_soundManager = SoundManager.Instance;
     }
 
 	// Use this for initialization
@@ -55,7 +56,9 @@ public class GameManager : Singleton<GameManager> {
         _buildingManager.generateBuildings();
         _comboManager.generateSeq(0, 8);
         _comboManager.generateSeq(1, 8);
+
         gameState = GameState.Playing;
+		_soundManager.bgmPlay (BGMStage.BGM);
     }
 
     public void gameOver(int loser)
