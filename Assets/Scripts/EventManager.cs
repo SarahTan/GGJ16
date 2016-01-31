@@ -37,7 +37,7 @@ public class EventManager : Singleton<EventManager> {
         {
             if (relative)
             {
-                _currentEventSet.Add(new TimedEvent(gameEvent, startTime + delay));
+                _currentEventSet.Add(new TimedEvent(gameEvent, Time.time + delay));
             }
             else
             {
@@ -100,7 +100,14 @@ public class EventManager : Singleton<EventManager> {
         while (_nextEvent != null && (_nextEvent.delay + startTime) < Time.time)
         {
             _nextEvent.timedEvent();
-            _nextEvent = _currentEventSet.Pop();
+            if (_currentEventSet.Count > 0)
+            {
+                _nextEvent = _currentEventSet.Pop();
+            }
+            else
+            {
+                _nextEvent = null;
+            }
         }
 	}
 
