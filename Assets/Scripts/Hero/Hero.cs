@@ -288,7 +288,7 @@ public class Hero : MonoBehaviour {
         side = s;
         state = State.Moving;
         if(_poweredUp) {
-            //auraAnimatorController.SetBool("PowerUp", false);
+            auraAnimatorController.SetBool("PowerUp", false);
             SetSprite(HERO_POSE.PUNCH_LEFT1);
         }
         else {

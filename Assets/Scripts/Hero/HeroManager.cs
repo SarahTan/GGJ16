@@ -38,8 +38,7 @@ public class HeroManager : MonoBehaviour {
     GameObject heroParent;
 
     public HeroManager() {
-
-        _gameManager = GameManager.Instance;
+        _gameManager = GameManager.Instance;        
     }
 
     public void init(int playerNum, Vector3 centerPos)
