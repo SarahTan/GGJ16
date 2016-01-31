@@ -41,6 +41,7 @@ public class Hero : MonoBehaviour {
     private FightSimulator _fightSimulator;
 	private int _queuePosition;
     public int powerLevel { get; private set; }
+    public int totalPowerLevel { get; private set; }
     private float _health;
     private float _maxQueue;
     private float _maxScale;
@@ -237,6 +238,7 @@ public class Hero : MonoBehaviour {
     public void PowerUp(int pl) {
         powerLevel = pl;
         _health = powerLevel;
+        totalPowerLevel = powerLevel;
         _attackCooldown = 40.0f / powerLevel;
 
         _poweredUp = true;
@@ -267,7 +269,7 @@ public class Hero : MonoBehaviour {
             transform.position = Vector3.MoveTowards(transform.position, final, 0.1f);
             yield return null;
         }
-        transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+        transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
         state = State.Idle;
     }
 

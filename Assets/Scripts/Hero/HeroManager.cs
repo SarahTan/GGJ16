@@ -58,7 +58,7 @@ public class HeroManager {
         _heroPrefab[(int)HERO_TYPE.TYPE_5] = Resources.Load("Prefabs/Hero5") as GameObject;
 
         _powerLevelList = new int[(int)HERO_POWER.SIZE];
-        _powerLevelList[(int)HERO_POWER.POWER_SHIT] = -1;
+        _powerLevelList[(int)HERO_POWER.POWER_SHIT] = 10;
         _powerLevelList[(int)HERO_POWER.POWER_1] = 100;
         _powerLevelList[(int)HERO_POWER.POWER_2] = 120;
         _powerLevelList[(int)HERO_POWER.POWER_3] = 140;
@@ -78,6 +78,7 @@ public class HeroManager {
     public void PowerUp(HERO_POWER heroPower)
     {
         _currentHero.PowerUp((int)(_powerLevelList[(int)heroPower] * Random.Range(0.85f, 1.15f)));
+        Debug.Log(_currentHero.powerLevel);
     }
     public void UpdatePose(ComboManager.Direction poseDirection) {
         if (_currentHero != null) {
