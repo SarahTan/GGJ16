@@ -9,12 +9,25 @@ public class FightSimulator : Singleton<FightSimulator> {
 
     public static float heroDamageMultiplier;
 
+	GameObject[] cityHealth;
+	float halfScreenWidth;
+	float healthFactor;
+
     List<Hero> player1Heroes;
     List<Hero> player2Heroes;
     void Awake()
     {
         _buildingManager = BuildingManager.Instance;
         _gameManager = GameManager.Instance;
+
+		halfScreenWidth = Camera.main.orthographicSize * Camera.main.aspect;
+		GameObject healthBar1 = Instantiate (Resources.Load ("Prefabs/HealthBar"),
+			                    new Vector3 (-halfScreenWidth / 2, -3, -5),
+								Quaternion.identity) as GameObject;
+		GameObject healthBar2 = Instantiate (Resources.Load ("Prefabs/HealthBar"),
+								new Vector3 (halfScreenWidth / 2, -3, -5),
+								Quaternion.identity) as GameObject;
+		cityHealth = new GameObject[2] {healthBar1, healthBar2};
     }
 
 	// Use this for initialization
@@ -36,6 +49,9 @@ public class FightSimulator : Singleton<FightSimulator> {
         {
             _gameManager.gameOver(player);
         }
+			
+		Vector3 scale = new Vector3 (health / BuildingManager.GLOBAL_HEALTH, 1f, 1f);
+		cityHealth [player].transform.localScale = scale;
     }
 
 	// Update is called once per frame

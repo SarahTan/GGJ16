@@ -19,6 +19,8 @@ public class GameManager : Singleton<GameManager> {
 
     public GameState gameState;
 
+	Transform canvas;
+
     public enum GameState
     {
         Menu,
@@ -43,6 +45,8 @@ public class GameManager : Singleton<GameManager> {
 		_comboManager = ComboManager.Instance;
         _eventManager = EventManager.Instance;
 		_soundManager = SoundManager.Instance;
+
+		canvas = GameObject.Find("EndGame Canvas").transform;
     }
 
 	// Use this for initialization
@@ -58,18 +62,19 @@ public class GameManager : Singleton<GameManager> {
         _fightSimulator.startGame();
         _buildingManager.generateBuildings();
         _comboManager.generateSeq(0, 8);
-        _comboManager.generateSeq(1, 8);
+		_comboManager.generateSeq(1, 8);
+		_soundManager.bgmPlay (BGMStage.BGM);
 
         gameState = GameState.Playing;
-		_soundManager.bgmPlay (BGMStage.BGM);
+
+		foreach (Transform child in canvas) {
+			child.gameObject.SetActive (false);
+		}
     }
 
     public void gameOver(int loser)
     {
 		endGame();
-
-		// Handle UI
-		Transform canvas = GameObject.Find("EndGame Canvas").transform;
 
 		// The BG overlay
 		canvas.GetChild(0).gameObject.SetActive(true);
