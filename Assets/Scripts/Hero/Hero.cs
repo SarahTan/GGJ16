@@ -55,6 +55,9 @@ public class Hero : MonoBehaviour {
     private bool _togglePose;
     private HERO_POSE _currentPose;
 
+    private SFXType _normalSFX;
+    private SFXType _henshinSFX;
+
     public static float buildingDamageMultiplier;
 
     public State state;
@@ -79,7 +82,7 @@ public class Hero : MonoBehaviour {
         _fightSimulator = FightSimulator.Instance;        
     }
 
-	public void Init(int queuePosition){
+	public void Init(int queuePosition, SFXType normalSfx, SFXType henshinSFX){
 		_queuePosition = queuePosition;
 		powerLevel = -1;
         _maxQueue = HeroManager.HERO_LIMIT;
@@ -88,6 +91,9 @@ public class Hero : MonoBehaviour {
         _initXPos = -1.5f;
         _maxXPos = 15f;
         ScaleTo(0.5f * _maxScale);
+
+        _normalSFX = normalSfx;
+        _henshinSFX = henshinSFX;
     }
 
     public void UpdatePose(ComboManager.Direction poseDirection, int playerNum) {
@@ -118,6 +124,7 @@ public class Hero : MonoBehaviour {
                 default:
                     break;         
             }
+            SoundManager.Instance.sfxPlay(_normalSFX);
         }
     }
 
@@ -278,6 +285,7 @@ public class Hero : MonoBehaviour {
             // Show transformation to super saiyan         
             _poweredUp = true;
             auraAnimatorController.SetBool("PowerUp", true);
+            SoundManager.Instance.sfxPlay(_henshinSFX);
             ScaleTo(1.0f + 0.3f * scaleRatio);
             SetSprite(HERO_POSE.POWER_UP);
         }
