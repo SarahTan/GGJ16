@@ -91,7 +91,7 @@ public class Hero : MonoBehaviour {
     }
 
     public void UpdatePose(ComboManager.Direction poseDirection, int playerNum) {
-        if(!_isReadyToSend) {
+        if(!_isReadyToSend) {          
             switch (poseDirection) {
                 case ComboManager.Direction.UP:
                     SetSprite(HERO_POSE.UP);
@@ -109,10 +109,10 @@ public class Hero : MonoBehaviour {
                     break;
                 case ComboManager.Direction.RIGHT:
                     if(playerNum == 0) {
-                        SetSprite(HERO_POSE.LEFT);
+                        SetSprite(HERO_POSE.RIGHT);
                     }
                     else{
-                        SetSprite(HERO_POSE.RIGHT);
+                        SetSprite(HERO_POSE.LEFT);
                     }
                     break;
                 default:
