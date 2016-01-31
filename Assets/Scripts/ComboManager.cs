@@ -13,8 +13,8 @@ public class ComboManager : Singleton<ComboManager> {
 
 	GameObject arrowPrefab;
 	float arrowWidth;
-	float arrowGap = -0.05f;
-	float bonusGap = 0.5f;
+	float arrowGap = -0.03f;
+	float bonusGap = 0.2f;
 
     GameObject keysBG;
 
@@ -36,9 +36,8 @@ public class ComboManager : Singleton<ComboManager> {
                      new Vector3(0, -Camera.main.orthographicSize + 1, -4),
                      Quaternion.identity) as GameObject;
         //keysBG.SetActive(false);
-
-        arrowPrefab = Resources.Load("Prefabs/UI arrow") as GameObject;
-        arrowWidth = arrowPrefab.transform.localScale.x;
+		arrowPrefab = Resources.Load ("Prefabs/UI arrow") as GameObject;
+		arrowWidth = arrowPrefab.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
 	}
     
 	// Use this for initialization
@@ -50,48 +49,13 @@ public class ComboManager : Singleton<ComboManager> {
 	void Update () {
 
 	}
-
-	// For testing
-	IEnumerator Test() {
-		int playerNum = 1;
-
-		// Generate a player's current sequence
-		StartCoroutine (GenerateSeq (0, 8));
-		StartCoroutine (GenerateSeq (1, 8));
-
-		yield return new WaitForSeconds (0.5f);
-
-		// Check if the key being pressed is correct
-		Direction[] testInput = new Direction[6] {Direction.LEFT, 
-								Direction.RIGHT, 
-								Direction.UP, 
-								Direction.DOWN, 
-								Direction.DOWN, 
-								Direction.DOWN};
-		for (int i = 0; i < testInput.Length; i++) {
-			if (i == _gameManager.players [playerNum].currentKey) {
-				CheckKey (playerNum, testInput [i]);
-				yield return new WaitForSeconds (0.3f);
-			} else {
-				break;
-			}
-		}
-
-
-		// Submit a sequence
-		LockIn(playerNum);
-	}
-
+		
 
 	// Draw the arrow keys on screen
 	void DrawArrows (int playerNum) {
 		Vector3 pos = _gameManager.players [playerNum].centerPos;
-		pos.x -= ((arrowWidth * (_gameManager.players[playerNum].seqLength-1)) +
-				 (arrowGap * _gameManager.players[playerNum].seqLength)) / 2;
-
-		if (_gameManager.players [playerNum].seqLength > 4) {
-			pos.x -= bonusGap / 2;
-		}
+		pos.x -= ((arrowWidth * (_gameManager.players[playerNum].seqLength-1)) + (arrowGap * 3) + 
+				 bonusGap * (_gameManager.players [playerNum].seqLength-4)) / 2;
 
 //		Debug.Log ("offset: " + (((arrowWidth * _gameManager.players[playerNum].seqLength) +
 //			(arrowGap * _gameManager.players[playerNum].seqLength)) / 2));
@@ -104,10 +68,14 @@ public class ComboManager : Singleton<ComboManager> {
 											as GameObject;
 			arrow.transform.parent = _gameManager.players [playerNum].arrows.transform;
 
-			pos.x += arrowWidth + arrowGap;
+			if (i >= 4) {
+				pos.x += arrowWidth + bonusGap;
 
-			if (i == 4) {
-				pos.x += bonusGap;
+				if (i > 4) {
+					arrow.GetComponent<Animator> ().SetBool ("Bonus", true);
+				}
+			} else {
+				pos.x += arrowWidth + arrowGap;
 			}
 			i++;
 		}
