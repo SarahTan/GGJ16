@@ -22,6 +22,7 @@ public class GameManager : Singleton<GameManager> {
 
     // Handle UI
     Transform pauseCanvas;
+    Transform endCanvas;
     public string restartKey;
 
     public enum GameState
@@ -50,6 +51,8 @@ public class GameManager : Singleton<GameManager> {
 		_soundManager = SoundManager.Instance;
 
         pauseCanvas = GameObject.Find("PauseGame Canvas").transform;
+        endCanvas = GameObject.Find("EndGame Canvas").transform;
+        
     }
 
 	// Use this for initialization
@@ -80,11 +83,11 @@ public class GameManager : Singleton<GameManager> {
 		endGame();
 
 		// The BG overlay
-		pauseCanvas.GetChild(0).gameObject.SetActive(true);
+		endCanvas.GetChild(0).gameObject.SetActive(true);
 
 		// Player 1 and 2
 		for (int i = 0; i < 2; i++) {
-			GameObject p = pauseCanvas.GetChild (i + 1).gameObject;
+			GameObject p = endCanvas.GetChild (i + 1).gameObject;
 			p.SetActive (true);
 
 			if (i == loser) {
