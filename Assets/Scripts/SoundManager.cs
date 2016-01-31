@@ -23,10 +23,22 @@ public enum SFXType
     SYSTEM_CORRECT = 0,
     SYSTEM_ERROR = 1,
     SYSTEM_EXTCORRECT = 2,
-    SYSTEM_EXTCORRECT5 = 3,
-    SYSTEM_EXTCORRECT6 = 4,
-    SYSTEM_EXTCORRECT7 = 5,
-    SYSTEM_EXTCORRECT8 = 6
+    CHAR1_NORMAL = 3,
+    CHAR1_HENSHIN = 4,
+    CHAR1_HENSHIN8 = 5,
+    CHAR2_NORMAL = 6,
+    CHAR2_HENSHIN = 7,
+    CHAR2_HENSHIN8 = 8,
+    CHAR3_NORMAL = 9,
+    CHAR3_HENSHIN = 10,
+    CHAR3_HENSHIN8 = 11,
+    CHAR4_NORMAL = 12,
+    CHAR4_HENSHIN = 13,
+    CHAR4_HENSHIN8 = 14,
+    CHAR5_NORMAL = 15,
+    CHAR5_HENSHIN = 16,
+    CHAR5_HENSHIN8 = 17,
+
     //define Sound Effect type here
 }
 
@@ -58,12 +70,15 @@ public class SoundManager : Singleton<SoundManager>
     public AudioClip sfxSysCrtC;
     public AudioClip sfxSysErrC;
     public AudioClip sfxSysExtraCrtC;
+    public AudioClip[] sfxCharNor;
+    public AudioClip[] sfxCharHenshin;
+    public AudioClip[] sfxCharHenshin8;
 
     public AudioClip[] dialogC;
     //claim AudioClip here
 
     const int bgmAmount = 1;//setnum
-    const int sfxAmount = 7;//setnum
+    const int sfxAmount = 18;//setnum
     const int dialogRoleAmount = 0; //setnum
 
     SoundParam[] bgm = new SoundParam[bgmAmount];   
@@ -122,11 +137,17 @@ public class SoundManager : Singleton<SoundManager>
         //if (Input.GetKeyDown("s")) bgmStop();
         //if (Input.GetKeyDown("c")) sfxPlay(SFXType.SYSTEM_CORRECT);
         if (Input.GetKeyDown("0")) sfxPlay(SFXType.SYSTEM_ERROR);
-        if (Input.GetKeyDown("4")) sfxPlay(SFXType.SYSTEM_EXTCORRECT);
-        if (Input.GetKeyDown("5")) sfxPlay(SFXType.SYSTEM_EXTCORRECT5);
-        if (Input.GetKeyDown("6")) sfxPlay(SFXType.SYSTEM_EXTCORRECT6);
-        if (Input.GetKeyDown("7")) sfxPlay(SFXType.SYSTEM_EXTCORRECT7);
-        if (Input.GetKeyDown("8")) sfxPlay(SFXType.SYSTEM_EXTCORRECT8);
+        //if (Input.GetKeyDown("4")) sfxPlay(SFXType.SYSTEM_EXTCORRECT);
+        if (Input.GetKeyDown("1")) sfxPlay(SFXType.CHAR1_NORMAL);
+        if (Input.GetKeyDown("2")) sfxPlay(SFXType.CHAR2_NORMAL);
+        if (Input.GetKeyDown("3")) sfxPlay(SFXType.CHAR3_NORMAL);
+        if (Input.GetKeyDown("4")) sfxPlay(SFXType.CHAR4_NORMAL);
+        if (Input.GetKeyDown("5")) sfxPlay(SFXType.CHAR5_NORMAL);
+        if (Input.GetKeyDown("6")) sfxPlay(SFXType.CHAR1_HENSHIN);
+        if (Input.GetKeyDown("7")) sfxPlay(SFXType.CHAR2_HENSHIN);
+        if (Input.GetKeyDown("8")) sfxPlay(SFXType.CHAR3_HENSHIN);
+        if (Input.GetKeyDown("9")) sfxPlay(SFXType.CHAR4_HENSHIN);
+        if (Input.GetKeyDown("-")) sfxPlay(SFXType.CHAR5_HENSHIN);
     }
 
     //Initialize SFX Param (volumn and pitch of each clip)
@@ -135,22 +156,56 @@ public class SoundManager : Singleton<SoundManager>
         int i,j;
 
         //bgm initiate
-        bgm[(int)BGMStage.BGM] = new SoundParam(bgmC, 0.05f, 1f);
+        bgm[(int)BGMStage.BGM] = new SoundParam(bgmC, 0.01f, 1f);
 
 
         //sfx initiate[]
         for (j = 0; j <= sfxAmount - 1; j++)
         {
+            if (j % 3 == 0)
+            {
+                sfx[j] = new SoundParam[3]; 
+            }
+            else
+            {
                 sfx[j] = new SoundParam[1];
+            }
+                
         }
         //sfx initiate[][]
         sfx[(int)SFXType.SYSTEM_CORRECT][0] = new SoundParam(sfxSysCrtC, 0.8f, 1.0f);
         sfx[(int)SFXType.SYSTEM_ERROR][0] = new SoundParam(sfxSysErrC, 0.8f, 1.0f);
         sfx[(int)SFXType.SYSTEM_EXTCORRECT][0] = new SoundParam(sfxSysExtraCrtC, 0.8f, 1.0f);
-        sfx[(int)SFXType.SYSTEM_EXTCORRECT5][0] = new SoundParam(sfxSysExtraCrtC, 0.8f, 1.05f);
-        sfx[(int)SFXType.SYSTEM_EXTCORRECT6][0] = new SoundParam(sfxSysExtraCrtC, 0.8f, 1.1f);
-        sfx[(int)SFXType.SYSTEM_EXTCORRECT7][0] = new SoundParam(sfxSysExtraCrtC, 0.8f, 1.15f);
-        sfx[(int)SFXType.SYSTEM_EXTCORRECT8][0] = new SoundParam(sfxSysExtraCrtC, 0.8f, 1.2f);
+
+        for (i = 0; i < 3; i++)
+        {
+            sfx[(int)SFXType.CHAR1_NORMAL][i] = new SoundParam(sfxCharNor[i], 0.5f, 1.0f);
+        }
+        sfx[(int)SFXType.CHAR1_HENSHIN][0] = new SoundParam(sfxCharHenshin[0], 0.7f, 1.0f);
+
+        for (i = 0; i < 3; i++)
+        {
+            sfx[(int)SFXType.CHAR2_NORMAL][i] = new SoundParam(sfxCharNor[i+3], 0.8f, 1.0f);
+        }
+        sfx[(int)SFXType.CHAR2_HENSHIN][0] = new SoundParam(sfxCharHenshin[1], 1.0f, 1.0f);
+
+        for (i = 0; i < 3; i++)
+        {
+            sfx[(int)SFXType.CHAR3_NORMAL][i] = new SoundParam(sfxCharNor[i + 6], 0.5f, 1.0f);
+        }
+        sfx[(int)SFXType.CHAR3_HENSHIN][0] = new SoundParam(sfxCharHenshin[2], 0.7f, 1.0f);
+
+        for (i = 0; i < 3; i++)
+        {
+            sfx[(int)SFXType.CHAR4_NORMAL][i] = new SoundParam(sfxCharNor[i + 9], 0.5f, 1.0f);
+        }
+        sfx[(int)SFXType.CHAR4_HENSHIN][0] = new SoundParam(sfxCharHenshin[3], 0.7f, 1.0f);
+
+        for (i = 0; i < 3; i++)
+        {
+            sfx[(int)SFXType.CHAR5_NORMAL][i] = new SoundParam(sfxCharNor[i + 12], 0.7f, 1.0f);
+        }
+        sfx[(int)SFXType.CHAR5_HENSHIN][0] = new SoundParam(sfxCharHenshin[4], 0.9f, 1.0f);
 
     }
 
