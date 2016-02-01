@@ -10,9 +10,13 @@ This game was made in 48 hours as part of the 2016 Global Game Jam.
 **Diversifier:** No retreat, no surrender! -- The protagonist is unable to go anywhere but forward, in every situation.  
 **Awards:** Honorable mention. This was the favorite game of one of the judges, Adam Nelson (founder of Pittsburgh's City of Play)!
 
+## Installation Instructions
+Unzip the file into your destination of choice. Windows users, please ensure that the data folder is in the same folder as the executable or the game will not work. DO NOT DELETE THE CONFIG.INI FILE.
+
 ####[Download the game here.](http://ggj.s3.amazonaws.com/games/2016/01/31/1950/Zero2Hero%20Game.zip)
 
 ## Supported platforms
+Windows XP SP2+  
 Mac OS X 10.8 onwards
 
 ## Controls
