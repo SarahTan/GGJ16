@@ -10,6 +10,7 @@ This game was made in 48 hours as part of the 2016 Global Game Jam.
 **Jam site:** Pittsburgh IGDA @ ETC  
 **Diversifier:** No retreat, no surrender! -- The protagonist is unable to go anywhere but forward, in every situation.  
 **Awards:** Honorable mention. This was the favorite game of one of the judges, Adam Nelson (founder of Pittsburgh's City of Play)!
+**Showcased at:** The Rec Room: Winter Games (Feb '16)
 
 ## Installation Instructions
 Unzip the file into your destination of choice. Windows users, please ensure that the data folder is in the same folder as the executable or the game will not work. **DO NOT DELETE** the config.ini file!
@@ -52,5 +53,4 @@ Enter/Return - Power Up!
 1. Player 2's hero sometimes gets stuck powering up and does not go into battle.
 2. Dinosaur remains in the scene if the game is restarted before the dinosaur dies.
 3. End screen may not display properly on some monitors due to resolution issues.
-
-We'll be continuing work on this game! More info to come (:
+4. Players can still enter the arrow sequence when the game is paused, though the transformed characters cannot be sent out.
